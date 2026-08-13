@@ -1,0 +1,185 @@
+/// Home table for the klantdetail-desktop measures (powerbi_klantdetail_desktop.md). Contains no data.
+table _Metingen
+	lineageTag: d1d221cc-1f4c-42fe-b08e-4ab4de3a9121
+
+	/// Wanneer de pipeline voor het laatst liep. Niet de peildatum.
+	measure Laadtijd = CALCULATE(MAX(fct_sales[extracted_at]), ALL(fct_sales))
+		formatString: General Date
+		lineageTag: 9ded878b-50d2-480b-b840-9e318130ad5b
+
+	/// Laadtijd en peildatum in een regel; zie 3.1.
+	measure 'Actualiteit label' =
+			"bijgewerkt " & FORMAT([Laadtijd], "d MMM HH:mm", "nl-NL")
+			    & " · cijfers t/m " & FORMAT([Peildatum], "d MMM yyyy", "nl-NL")
+		lineageTag: 862225de-64bd-4346-8812-2a4f2076c2db
+
+	/// Start + 1 is bewust: fct_klant filtert strikt groter dan. Moet gelijk zijn aan SUM(fct_klant[omzet_12m]).
+	measure 'Omzet 12m rollend' =
+			VAR Einddatum   = [Peildatum]
+			VAR Startdatum  = EDATE(Einddatum, -12)
+			RETURN CALCULATE([Omzet], DATESBETWEEN(dim_date[datum], Startdatum + 1, Einddatum))
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 02e8eeeb-21b1-4e21-8503-6ddb5e92a9bb
+
+	measure 'Omzet vorige 12m rollend' =
+			VAR Einddatum   = EDATE([Peildatum], -12)
+			VAR Startdatum  = EDATE([Peildatum], -24)
+			RETURN CALCULATE([Omzet], DATESBETWEEN(dim_date[datum], Startdatum + 1, Einddatum))
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 36dbd76e-2f3d-4819-81b7-c2b33b4f45fd
+
+	measure 'Orders 12m rollend' =
+			VAR Einddatum   = [Peildatum]
+			VAR Startdatum  = EDATE(Einddatum, -12)
+			RETURN CALCULATE(
+			    DISTINCTCOUNT(fct_sales[ordernummer]),
+			    DATESBETWEEN(dim_date[datum], Startdatum + 1, Einddatum),
+			    fct_sales[is_revenue] = TRUE()
+			)
+		formatString: #,0
+		lineageTag: beb475c9-a386-4ede-8372-8a464a8f4e07
+
+	/// is_revenue, niet is_stock_movement: consistent met fct_klant[flessen_12m].
+	measure 'Flessen 12m rollend' =
+			VAR Einddatum   = [Peildatum]
+			VAR Startdatum  = EDATE(Einddatum, -12)
+			RETURN CALCULATE(
+			    SUM(fct_sales[aantal]),
+			    DATESBETWEEN(dim_date[datum], Startdatum + 1, Einddatum),
+			    fct_sales[is_revenue] = TRUE()
+			)
+		formatString: #,0
+		lineageTag: 92475105-fd36-45d8-aac1-67115f747045
+
+	measure 'Flessen vorige 12m rollend' =
+			VAR Einddatum   = EDATE([Peildatum], -12)
+			VAR Startdatum  = EDATE([Peildatum], -24)
+			RETURN CALCULATE(
+			    SUM(fct_sales[aantal]),
+			    DATESBETWEEN(dim_date[datum], Startdatum + 1, Einddatum),
+			    fct_sales[is_revenue] = TRUE()
+			)
+		formatString: #,0
+		lineageTag: b3789ffb-5643-4af6-9c46-d60b4e42acff
+
+	measure 'Gem. orderwaarde 12m rollend' = DIVIDE([Omzet 12m rollend], [Orders 12m rollend])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 234652f4-7593-4347-99a2-197d3bdebd54
+
+	measure 'Orders per maand 12m' = DIVIDE([Orders 12m rollend], 12)
+		formatString: 0.0
+		lineageTag: 4434d219-e54e-4431-be9d-709367387a5e
+
+	measure 'Flessen verschil 12m' = [Flessen 12m rollend] - [Flessen vorige 12m rollend]
+		formatString: #,0
+		lineageTag: 971d36b2-9cb1-4cda-ac89-ed77e15ba57f
+
+	measure 'Dagen sinds laatste order' = SELECTEDVALUE(fct_klant[dagen_sinds_laatste_order])
+		formatString: #,0
+		lineageTag: bd58d279-596d-4f2b-8e23-b3f8cdb2643e
+
+	measure 'Wijnen actief' = CALCULATE(COUNTROWS(fct_klant_product), fct_klant_product[regelstatus] = "actief")
+		formatString: #,0
+		lineageTag: 8e2a4b24-6ebb-44af-a72a-0c1073b2feae
+
+	/// Huidig venster (laatste 12 mnd) - anders dan Omzet gemist.
+	measure 'Omzet actief' = CALCULATE(SUM(fct_klant_product[omzet_12m]), fct_klant_product[regelstatus] = "actief")
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 98d8a316-a4df-4374-bd77-10c8ae47b1f5
+
+	measure 'Flessen actief' = CALCULATE(SUM(fct_klant_product[flessen_12m]), fct_klant_product[regelstatus] = "actief")
+		formatString: #,0
+		lineageTag: de147b02-2600-499a-aa41-1f299082c6c5
+
+	measure 'Wijnen gestopt' = CALCULATE(COUNTROWS(fct_klant_product), fct_klant_product[regelstatus] = "gestopt")
+		formatString: #,0
+		lineageTag: 6ebe9b57-0d85-49a8-aa30-ed66dca8604a
+
+	/// Vorige venster (12-24 mnd) op purpose - zie 3.4.
+	measure 'Omzet gemist' = CALCULATE(SUM(fct_klant_product[omzet_vorige_12m]), fct_klant_product[regelstatus] = "gestopt")
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: c41e3ca7-bc55-4249-a2aa-708475b8cfff
+
+	measure 'Flessen gemist' = CALCULATE(SUM(fct_klant_product[flessen_vorige_12m]), fct_klant_product[regelstatus] = "gestopt")
+		formatString: #,0
+		lineageTag: 8b36e2e2-6e64-4e51-a114-052326802ac3
+
+	measure 'Wijnen kans' = CALCULATE(COUNTROWS(fct_klant_product), fct_klant_product[regelstatus] = "kans")
+		formatString: #,0
+		lineageTag: dd53fad6-0a00-4e55-ad1f-558a0355e782
+
+	/// Eerder besteld geld, geen potentieel - zie 3.4.
+	measure 'Kans eerdere omzet' = CALCULATE(SUM(fct_klant_product[omzet_vorige_12m]), fct_klant_product[regelstatus] = "kans")
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 742291b7-fb51-4c2f-92e7-1d4176a190ad
+
+	measure 'Kans met historie' =
+			CALCULATE(
+			    COUNTROWS(fct_klant_product),
+			    fct_klant_product[regelstatus] = "kans",
+			    fct_klant_product[omzet_vorige_12m] > 0
+			)
+		formatString: #,0
+		lineageTag: da55e164-b4c9-4568-8229-9e8dac2fd9aa
+
+	measure 'Omzet 12m rollend label' = FORMAT([Omzet 12m rollend], "€ #,##0", "nl-NL")
+		lineageTag: d1673cb6-eb8e-4621-a5b0-61629708cad8
+
+	measure 'Orders 12m label' = FORMAT([Orders 12m rollend], "#,##0", "nl-NL")
+		lineageTag: 494c4747-b805-4414-ad98-3c0d0a113c15
+
+	measure 'Flessen 12m label' = FORMAT([Flessen 12m rollend], "#,##0", "nl-NL")
+		lineageTag: c5d25d18-d3cf-420b-84dc-fdb3c0b92e41
+
+	measure 'Omzet actief label' = FORMAT([Omzet actief], "€ #,##0", "nl-NL")
+		lineageTag: ab405e7b-5ad2-40fe-a344-efaf67d4d8ed
+
+	measure 'Omzet gemist label' = FORMAT([Omzet gemist], "€ #,##0", "nl-NL")
+		lineageTag: 9c7ea55c-060c-4592-838d-a226788151ea
+
+	measure 'Kans eerdere omzet label' = FORMAT([Kans eerdere omzet], "€ #,##0", "nl-NL")
+		lineageTag: 4d1fdb67-36bb-4a3c-bce7-845ce1cfda1c
+
+	measure 'Gem. orderwaarde 12m label' =
+			"gem. " & FORMAT([Gem. orderwaarde 12m rollend], "€ #,##0", "nl-NL")
+			    & " · " & FORMAT([Orders per maand 12m], "0.0", "nl-NL") & " per maand"
+		lineageTag: 24f8973e-bfab-4978-9795-8a5ffb28fd69
+
+	/// Meting kiest de pijl. Niet hardcoden - de mockup heeft het teken verkeerd.
+	measure 'Flessen verschil label' =
+			VAR V = [Flessen verschil 12m]
+			RETURN SWITCH(TRUE(),
+			    ISBLANK(V) || V = 0, "gelijk aan vorig jaar",
+			    V > 0,  "↗ " & FORMAT(V, "#,##0", "nl-NL") & " meer dan vorig jaar",
+			            "↘ " & FORMAT(ABS(V), "#,##0", "nl-NL") & " minder dan vorig jaar"
+			)
+		lineageTag: 7adc9dad-50c2-4b4b-b2dd-8750c5eb0da3
+
+	/// Noemt altijd het venster. Fix voor de tegenstrijdigheid in 0.
+	measure 'Groei JoJ label' =
+			VAR G = [Omzet groei JoJ]
+			RETURN SWITCH(TRUE(),
+			    ISBLANK(G), "geen vergelijkbare basis vorig jaar",
+			    G >= 0, "↗ " & FORMAT(G, "0%", "nl-NL") & " vs. zelfde 6 mnd vorig jaar",
+			            "↘ " & FORMAT(ABS(G), "0%", "nl-NL") & " vs. zelfde 6 mnd vorig jaar"
+			)
+		lineageTag: d36b1e01-929c-419e-a223-176ad5484244
+
+	measure 'Laatste order label' =
+			VAR D = [Dagen sinds laatste order]
+			RETURN SWITCH(TRUE(),
+			    ISBLANK(D), "nooit besteld",
+			    D = 0, "vandaag",
+			    D = 1, "1 dag geleden",
+			    FORMAT(D, "#,##0", "nl-NL") & " dagen geleden"
+			)
+		lineageTag: 25722b01-53a3-4e32-a362-b2234eecda37
+
+	column _
+		isNameInferred
+		sourceColumn: [_]
+
+	partition _Metingen = calculated
+		mode: import
+		source = ROW("_", BLANK())
+

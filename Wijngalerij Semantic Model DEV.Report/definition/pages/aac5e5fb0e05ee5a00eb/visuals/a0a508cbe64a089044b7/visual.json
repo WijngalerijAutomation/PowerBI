@@ -1,86 +1,86 @@
 {
-    "$schema":  "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-    "name":  "a0a508cbe64a089044b7",
-    "position":  {
-                     "x":  941.85941043083892,
-                     "y":  0,
-                     "z":  0,
-                     "height":  111.74603174603175,
-                     "width":  338.14058956916097,
-                     "tabOrder":  0
-                 },
-    "visual":  {
-                   "visualType":  "slicer",
-                   "query":  {
-                                 "queryState":  {
-                                                    "Values":  {
-                                                                   "projections":  [
-                                                                                       {
-                                                                                           "field":  {
-                                                                                                         "Column":  {
-                                                                                                                        "Expression":  {
-                                                                                                                                           "SourceRef":  {
-                                                                                                                                                             "Entity":  "dim_customer"
-                                                                                                                                                         }
-                                                                                                                                       },
-                                                                                                                        "Property":  "klant_naam"
-                                                                                                                    }
-                                                                                                     },
-                                                                                           "queryRef":  "dim_customer.klant_naam",
-                                                                                           "nativeQueryRef":  "FILTER",
-                                                                                           "active":  true,
-                                                                                           "displayName":  "FILTER"
-                                                                                       }
-                                                                                   ]
-                                                               }
-                                                }
-                             },
-                   "objects":  {
-                                   "data":  [
-                                                {
-                                                    "properties":  {
-                                                                       "mode":  {
-                                                                                    "expr":  {
-                                                                                                 "Literal":  {
-                                                                                                                 "Value":  "\u0027Dropdown\u0027"
-                                                                                                             }
-                                                                                             }
-                                                                                }
-                                                                   }
-                                                }
-                                            ],
-                                   "general":  [
-                                                   {
-                                                       "properties":  {
-                                                                          "selfFilterEnabled":  {
-                                                                                                    "expr":  {
-                                                                                                                 "Literal":  {
-                                                                                                                                 "Value":  "true"
-                                                                                                                             }
-                                                                                                             }
-                                                                                                }
-                                                                      }
-                                                   }
-                                               ]
-                               },
-                   "drillFilterOtherVisuals":  true
-               },
-    "filterConfig":  {
-                         "filters":  [
-                                         {
-                                             "name":  "3df9dfcfcb512be6c7e9",
-                                             "field":  {
-                                                           "Column":  {
-                                                                          "Expression":  {
-                                                                                             "SourceRef":  {
-                                                                                                               "Entity":  "dim_customer"
-                                                                                                           }
-                                                                                         },
-                                                                          "Property":  "klant_naam"
-                                                                      }
-                                                       },
-                                             "type":  "Categorical"
-                                         }
-                                     ]
-                     }
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "a0a508cbe64a089044b7",
+  "position": {
+    "x": 941.85941043083892,
+    "y": 0,
+    "z": 0,
+    "height": 111.74603174603175,
+    "width": 338.14058956916097,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_customer"
+                    }
+                  },
+                  "Property": "klant_naam"
+                }
+              },
+              "queryRef": "dim_customer.klant_naam",
+              "nativeQueryRef": "FILTER",
+              "active": true,
+              "displayName": "FILTER"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "selfFilterEnabled": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "3df9dfcfcb512be6c7e9",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_customer"
+              }
+            },
+            "Property": "klant_naam"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
 }

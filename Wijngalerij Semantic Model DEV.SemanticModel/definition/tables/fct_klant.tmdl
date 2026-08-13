@@ -208,11 +208,6 @@ table fct_klant
 		summarizeBy: none
 		sourceColumn: eerste_order_datum
 
-		variation Variation
-			isDefault
-			relationship: a5aabe1e-a8a2-4a2a-9e02-1089ae674f75
-			defaultHierarchy: LocalDateTable_ad423f21-504b-4e1f-8ea6-71ee41a43583.Datumshierarchie
-
 		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
@@ -225,11 +220,6 @@ table fct_klant
 		lineageTag: 977e9f98-286f-4d38-a0ac-851c99584a65
 		summarizeBy: none
 		sourceColumn: laatste_order_datum
-
-		variation Variation
-			isDefault
-			relationship: 4edadf31-f6f3-4506-88e2-ba04e874a6cc
-			defaultHierarchy: LocalDateTable_5bf0bc2a-5d8a-443a-b8a0-1ade55865075.Datumshierarchie
 
 		changedProperty = IsHidden
 
@@ -462,11 +452,6 @@ table fct_klant
 		lineageTag: b64ad8c0-9a3f-4d11-9824-c517eace071b
 		summarizeBy: none
 		sourceColumn: peildatum
-
-		variation Variation
-			isDefault
-			relationship: 86282aee-c68f-42e4-8483-f5aaff8023d6
-			defaultHierarchy: LocalDateTable_86cf2233-ebcc-4808-a06f-d4cc2bc82d28.Datumshierarchie
 
 		changedProperty = IsHidden
 

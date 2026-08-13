@@ -1,28 +1,3 @@
-relationship 6ee262d9-205e-4e63-abdc-8bae47a1a0bb
-	joinOnDateBehavior: datePartOnly
-	fromColumn: dim_customer.eerste_order_datum
-	toColumn: LocalDateTable_b42da195-e4d8-4945-a6c5-2c76742b467c.Date
-
-relationship 743424a7-c2d9-4d8d-a2c4-909238c052ab
-	joinOnDateBehavior: datePartOnly
-	fromColumn: dim_customer.laatste_order_datum
-	toColumn: LocalDateTable_6597cabb-4545-4416-8fa6-f4d53a39a92f.Date
-
-relationship d5726cb7-b1cb-4dbd-a96a-c7ba18437a43
-	joinOnDateBehavior: datePartOnly
-	fromColumn: dim_customer.extracted_at
-	toColumn: LocalDateTable_7197a5eb-8ffb-46ef-9509-b8aa7b4279ab.Date
-
-relationship da4cb930-652f-476d-ab5e-312fb4cd4d10
-	joinOnDateBehavior: datePartOnly
-	fromColumn: dim_product.extracted_at
-	toColumn: LocalDateTable_46944bf4-bf4c-4637-b6d9-27138245e3ec.Date
-
-relationship 257b8137-3ff4-4c69-8e64-4abea06d76f3
-	joinOnDateBehavior: datePartOnly
-	fromColumn: fct_sales.extracted_at
-	toColumn: LocalDateTable_3b73f9a5-4535-4056-935b-c02e03c2428e.Date
-
 relationship AutoDetected_d915db8a-266e-4be2-bc21-aa4f6a1636f9
 	crossFilteringBehavior: bothDirections
 	fromColumn: fct_sales.klant_id
@@ -37,67 +12,17 @@ relationship f4be6839-2585-456d-efb5-69d9bd9e8762
 	fromColumn: fct_sales.order_datum
 	toColumn: dim_date.datum
 
-relationship 1009f73e-646b-4160-9553-2a7fe832e2b3
-	joinOnDateBehavior: datePartOnly
-	fromColumn: fct_voorraad.verwachte_uitverkoopdatum
-	toColumn: LocalDateTable_017b343d-2427-44bf-8c0b-a5f7423843e7.Date
-
-relationship ac3e3fb0-0707-4517-badc-38810fffce80
-	joinOnDateBehavior: datePartOnly
-	fromColumn: fct_voorraad.eerste_verkoop
-	toColumn: LocalDateTable_d75981a0-8c66-4d66-9cbe-2aeef4b0c1b1.Date
-
-relationship 9641d820-0a96-4bc0-9970-04e1205537b2
-	joinOnDateBehavior: datePartOnly
-	fromColumn: fct_voorraad.laatste_verkoop
-	toColumn: LocalDateTable_0b806c9c-50ff-4cc4-ac57-510923fe4097.Date
-
-relationship be5dc855-b7db-4954-9145-eea7dad21bb3
-	joinOnDateBehavior: datePartOnly
-	fromColumn: fct_voorraad.snapshot_datum
-	toColumn: LocalDateTable_98c61a82-19c4-4639-8208-b54682176821.Date
-
 relationship AutoDetected_a8181065-9215-4ec9-a17a-31f6ece302ae
 	crossFilteringBehavior: bothDirections
 	fromCardinality: one
 	fromColumn: fct_voorraad.product_id
 	toColumn: dim_product.product_id
 
-relationship a5aabe1e-a8a2-4a2a-9e02-1089ae674f75
-	joinOnDateBehavior: datePartOnly
-	fromColumn: fct_klant.eerste_order_datum
-	toColumn: LocalDateTable_ad423f21-504b-4e1f-8ea6-71ee41a43583.Date
-
-relationship 4edadf31-f6f3-4506-88e2-ba04e874a6cc
-	joinOnDateBehavior: datePartOnly
-	fromColumn: fct_klant.laatste_order_datum
-	toColumn: LocalDateTable_5bf0bc2a-5d8a-443a-b8a0-1ade55865075.Date
-
-relationship 86282aee-c68f-42e4-8483-f5aaff8023d6
-	joinOnDateBehavior: datePartOnly
-	fromColumn: fct_klant.peildatum
-	toColumn: LocalDateTable_86cf2233-ebcc-4808-a06f-d4cc2bc82d28.Date
-
 relationship AutoDetected_b984a5e9-e2d8-4ce3-a27f-9ff88555d5d5
 	crossFilteringBehavior: bothDirections
 	fromCardinality: one
 	fromColumn: fct_klant.klant_id
 	toColumn: dim_customer.klant_id
-
-relationship d37c64a2-ff24-4bac-92b1-958bd860fe99
-	joinOnDateBehavior: datePartOnly
-	fromColumn: fct_klant_product.eerste_order_datum
-	toColumn: LocalDateTable_fc5b7797-1eb0-4b7b-bbb4-c1e5283b5265.Date
-
-relationship c42848e3-d3c6-4031-923b-2240591a532f
-	joinOnDateBehavior: datePartOnly
-	fromColumn: fct_klant_product.laatste_order_datum
-	toColumn: LocalDateTable_a4485386-025e-4450-af4b-e2764878046b.Date
-
-relationship 6754ca42-c7e6-4921-ae9d-756cf7b8c6c9
-	joinOnDateBehavior: datePartOnly
-	fromColumn: fct_klant_product.peildatum
-	toColumn: LocalDateTable_f2e92db1-d22e-4fa6-b58d-97013c37f13c.Date
 
 relationship AutoDetected_6b2406e1-1c67-40e6-8102-998ef698d91c
 	fromColumn: fct_klant_product.klant_id

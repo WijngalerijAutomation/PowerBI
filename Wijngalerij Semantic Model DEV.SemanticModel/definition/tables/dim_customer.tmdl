@@ -153,11 +153,6 @@ table dim_customer
 		summarizeBy: none
 		sourceColumn: eerste_order_datum
 
-		variation Variation
-			isDefault
-			relationship: 6ee262d9-205e-4e63-abdc-8bae47a1a0bb
-			defaultHierarchy: LocalDateTable_b42da195-e4d8-4945-a6c5-2c76742b467c.Datumshierarchie
-
 		annotation SummarizationSetBy = Automatic
 
 		annotation UnderlyingDateTimeDataType = Date
@@ -168,11 +163,6 @@ table dim_customer
 		lineageTag: bb9b1e69-cbec-4bd4-bc64-cd1228e4ad02
 		summarizeBy: none
 		sourceColumn: laatste_order_datum
-
-		variation Variation
-			isDefault
-			relationship: 743424a7-c2d9-4d8d-a2c4-909238c052ab
-			defaultHierarchy: LocalDateTable_6597cabb-4545-4416-8fa6-f4d53a39a92f.Datumshierarchie
 
 		annotation SummarizationSetBy = Automatic
 
@@ -194,11 +184,6 @@ table dim_customer
 		lineageTag: 67aafcd2-f286-43fe-a181-100f065e37f1
 		summarizeBy: none
 		sourceColumn: extracted_at
-
-		variation Variation
-			isDefault
-			relationship: d5726cb7-b1cb-4dbd-a96a-c7ba18437a43
-			defaultHierarchy: LocalDateTable_7197a5eb-8ffb-46ef-9509-b8aa7b4279ab.Datumshierarchie
 
 		annotation SummarizationSetBy = Automatic
 

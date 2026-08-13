@@ -381,11 +381,6 @@ table fct_voorraad
 		summarizeBy: none
 		sourceColumn: verwachte_uitverkoopdatum
 
-		variation Variation
-			isDefault
-			relationship: 1009f73e-646b-4160-9553-2a7fe832e2b3
-			defaultHierarchy: LocalDateTable_017b343d-2427-44bf-8c0b-a5f7423843e7.Datumshierarchie
-
 		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
@@ -421,11 +416,6 @@ table fct_voorraad
 		summarizeBy: none
 		sourceColumn: eerste_verkoop
 
-		variation Variation
-			isDefault
-			relationship: ac3e3fb0-0707-4517-badc-38810fffce80
-			defaultHierarchy: LocalDateTable_d75981a0-8c66-4d66-9cbe-2aeef4b0c1b1.Datumshierarchie
-
 		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
@@ -438,11 +428,6 @@ table fct_voorraad
 		lineageTag: 7748732b-917d-4d55-a21e-8f5c36e08135
 		summarizeBy: none
 		sourceColumn: laatste_verkoop
-
-		variation Variation
-			isDefault
-			relationship: 9641d820-0a96-4bc0-9970-04e1205537b2
-			defaultHierarchy: LocalDateTable_0b806c9c-50ff-4cc4-ac57-510923fe4097.Datumshierarchie
 
 		changedProperty = IsHidden
 
@@ -626,11 +611,6 @@ table fct_voorraad
 		lineageTag: 216b53c1-0741-4b7c-bcec-600a8a277f47
 		summarizeBy: none
 		sourceColumn: snapshot_datum
-
-		variation Variation
-			isDefault
-			relationship: be5dc855-b7db-4954-9145-eea7dad21bb3
-			defaultHierarchy: LocalDateTable_98c61a82-19c4-4639-8208-b54682176821.Datumshierarchie
 
 		changedProperty = IsHidden
 

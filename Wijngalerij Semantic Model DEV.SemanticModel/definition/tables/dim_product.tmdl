@@ -169,11 +169,6 @@ table dim_product
 		summarizeBy: none
 		sourceColumn: extracted_at
 
-		variation Variation
-			isDefault
-			relationship: da4cb930-652f-476d-ab5e-312fb4cd4d10
-			defaultHierarchy: LocalDateTable_46944bf4-bf4c-4637-b6d9-27138245e3ec.Datumshierarchie
-
 		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic

@@ -105,11 +105,6 @@ table fct_klant_product
 		summarizeBy: none
 		sourceColumn: eerste_order_datum
 
-		variation Variation
-			isDefault
-			relationship: d37c64a2-ff24-4bac-92b1-958bd860fe99
-			defaultHierarchy: LocalDateTable_fc5b7797-1eb0-4b7b-bbb4-c1e5283b5265.Datumshierarchie
-
 		annotation SummarizationSetBy = Automatic
 
 		annotation UnderlyingDateTimeDataType = Date
@@ -120,11 +115,6 @@ table fct_klant_product
 		lineageTag: 1114c84d-7167-468a-b186-35ef3dd75dbb
 		summarizeBy: none
 		sourceColumn: laatste_order_datum
-
-		variation Variation
-			isDefault
-			relationship: c42848e3-d3c6-4031-923b-2240591a532f
-			defaultHierarchy: LocalDateTable_a4485386-025e-4450-af4b-e2764878046b.Datumshierarchie
 
 		annotation SummarizationSetBy = Automatic
 
@@ -192,11 +182,6 @@ table fct_klant_product
 		lineageTag: fda56fe8-636f-44d7-aeff-d1902bae6f13
 		summarizeBy: none
 		sourceColumn: peildatum
-
-		variation Variation
-			isDefault
-			relationship: 6754ca42-c7e6-4921-ae9d-756cf7b8c6c9
-			defaultHierarchy: LocalDateTable_f2e92db1-d22e-4fa6-b58d-97013c37f13c.Datumshierarchie
 
 		annotation SummarizationSetBy = Automatic
 

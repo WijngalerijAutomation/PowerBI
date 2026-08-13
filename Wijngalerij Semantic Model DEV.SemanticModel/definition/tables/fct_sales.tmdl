@@ -205,11 +205,6 @@ table fct_sales
 		summarizeBy: none
 		sourceColumn: extracted_at
 
-		variation Variation
-			isDefault
-			relationship: 257b8137-3ff4-4c69-8e64-4abea06d76f3
-			defaultHierarchy: LocalDateTable_3b73f9a5-4535-4056-935b-c02e03c2428e.Datumshierarchie
-
 		annotation SummarizationSetBy = Automatic
 
 	partition fct_sales = m
