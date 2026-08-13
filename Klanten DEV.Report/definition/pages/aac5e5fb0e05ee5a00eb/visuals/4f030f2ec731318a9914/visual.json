@@ -1,0 +1,67 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "4f030f2ec731318a9914",
+  "position": {
+    "x": 957.82312925170061,
+    "y": 200.27210884353741,
+    "z": 2006,
+    "height": 145.12471655328798,
+    "width": 300.40816326530609,
+    "tabOrder": 2006
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fct_klant"
+                        }
+                      },
+                      "Property": "klant_segment"
+                    }
+                  },
+                  "Function": 3
+                }
+              },
+              "queryRef": "Min(fct_klant.klant_segment)",
+              "nativeQueryRef": "Segment",
+              "displayName": "Segment"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "d11daba7a80b61180106",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fct_klant"
+                  }
+                },
+                "Property": "klant_segment"
+              }
+            },
+            "Function": 3
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

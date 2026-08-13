@@ -1,0 +1,225 @@
+table fct_klant_product
+	lineageTag: afcb4515-c3fd-413f-bad3-0ea5ba4a1540
+
+	column klant_id
+		dataType: string
+		lineageTag: 59db9494-4ca1-441d-90c4-d4e77a0ee435
+		summarizeBy: none
+		sourceColumn: klant_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		lineageTag: f6ccb6d2-7b12-436f-bb9b-f9d47989068f
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column klant_naam
+		dataType: string
+		lineageTag: 70ccede5-e723-42c6-811b-cac3f4d52205
+		summarizeBy: none
+		sourceColumn: klant_naam
+
+		annotation SummarizationSetBy = Automatic
+
+	column branche
+		dataType: string
+		lineageTag: ceb81d7f-4729-4ddc-948f-2e25cc70deb6
+		summarizeBy: none
+		sourceColumn: branche
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_naam
+		dataType: string
+		lineageTag: 99312a22-2753-4cd5-8fef-9ccdf01cc843
+		summarizeBy: none
+		sourceColumn: product_naam
+
+		annotation SummarizationSetBy = Automatic
+
+	column leverancier
+		dataType: string
+		lineageTag: b0cb176a-9d0c-48a9-bd57-0078c198c2cd
+		summarizeBy: none
+		sourceColumn: leverancier
+
+		annotation SummarizationSetBy = Automatic
+
+	column flessen_12m
+		dataType: double
+		lineageTag: a16bf598-d420-43a2-8995-e2c5d6784e38
+		summarizeBy: sum
+		sourceColumn: flessen_12m
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column omzet_12m
+		dataType: double
+		lineageTag: 30636f55-b193-48bc-bbdd-d9de2d10b093
+		summarizeBy: sum
+		sourceColumn: omzet_12m
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column n_orders_12m
+		dataType: int64
+		formatString: 0
+		lineageTag: c90b4eb4-86e8-4a4e-848a-b0a671229763
+		summarizeBy: sum
+		sourceColumn: n_orders_12m
+
+		annotation SummarizationSetBy = Automatic
+
+	column gem_prijs_12m
+		dataType: double
+		lineageTag: c3c4ae18-2986-4eeb-a403-6abd6162f961
+		summarizeBy: sum
+		sourceColumn: gem_prijs_12m
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column flessen_vorige_12m
+		dataType: double
+		lineageTag: 3eb4d9de-f7ad-46a3-ab14-33360514e444
+		summarizeBy: sum
+		sourceColumn: flessen_vorige_12m
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column eerste_order_datum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d62064b3-ab7d-4910-8445-6b2d10d90149
+		summarizeBy: none
+		sourceColumn: eerste_order_datum
+
+		variation Variation
+			isDefault
+			relationship: d37c64a2-ff24-4bac-92b1-958bd860fe99
+			defaultHierarchy: LocalDateTable_fc5b7797-1eb0-4b7b-bbb4-c1e5283b5265.Datumshierarchie
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column laatste_order_datum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 1114c84d-7167-468a-b186-35ef3dd75dbb
+		summarizeBy: none
+		sourceColumn: laatste_order_datum
+
+		variation Variation
+			isDefault
+			relationship: c42848e3-d3c6-4031-923b-2240591a532f
+			defaultHierarchy: LocalDateTable_a4485386-025e-4450-af4b-e2764878046b.Datumshierarchie
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column dagen_sinds_laatste_order
+		dataType: int64
+		formatString: 0
+		lineageTag: e7e04773-1abd-4bd0-ad05-362d3ed9ba45
+		summarizeBy: sum
+		sourceColumn: dagen_sinds_laatste_order
+
+		annotation SummarizationSetBy = Automatic
+
+	column prijs_doos
+		dataType: double
+		lineageTag: 1d454055-8217-4d31-ba72-d409b67455e6
+		summarizeBy: sum
+		sourceColumn: prijs_doos
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column prijs_pallet
+		dataType: double
+		lineageTag: fd587308-5fce-424c-8ec4-4eaf98984713
+		summarizeBy: sum
+		sourceColumn: prijs_pallet
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column heeft_prijsafspraak
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e92f5b62-641f-45b7-bf86-d9996701a524
+		summarizeBy: none
+		sourceColumn: heeft_prijsafspraak
+
+		annotation SummarizationSetBy = Automatic
+
+	column prijs_vs_afspraak
+		dataType: double
+		lineageTag: f94bedc9-0ab7-45cb-bb68-7ee6a627aafe
+		summarizeBy: sum
+		sourceColumn: prijs_vs_afspraak
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column regelstatus
+		dataType: string
+		lineageTag: 66668f7d-f659-4cd9-9961-88ceeb90206f
+		summarizeBy: none
+		sourceColumn: regelstatus
+
+		annotation SummarizationSetBy = Automatic
+
+	column peildatum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: fda56fe8-636f-44d7-aeff-d1902bae6f13
+		summarizeBy: none
+		sourceColumn: peildatum
+
+		variation Variation
+			isDefault
+			relationship: 6754ca42-c7e6-4921-ae9d-756cf7b8c6c9
+			defaultHierarchy: LocalDateTable_f2e92db1-d22e-4fa6-b58d-97013c37f13c.Datumshierarchie
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column omzet_vorige_12m
+		dataType: double
+		lineageTag: 530b0d43-7e47-4e1e-8e82-2151a247cd81
+		summarizeBy: none
+		sourceColumn: omzet_vorige_12m
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fct_klant_product = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("ep-soft-salad-agt3f5p2.c-2.eu-central-1.aws.neon.tech", "neondb"),
+				  #"Navigation 1" = Source{[Schema = "marts", Item = "fct_klant_product"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

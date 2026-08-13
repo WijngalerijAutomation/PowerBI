@@ -1,0 +1,60 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "d67503ca48ab68487d67",
+  "position": {
+    "x": 242.87769784172662,
+    "y": 201.43884892086331,
+    "z": 2018,
+    "height": 161.15107913669064,
+    "width": 209.49640287769785,
+    "tabOrder": 2018
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_klant"
+                    }
+                  },
+                  "Property": "Omzet YTD label"
+                }
+              },
+              "queryRef": "fct_klant.Omzet YTD label",
+              "nativeQueryRef": "Omzet YTD",
+              "displayName": "Omzet YTD"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "7930045459526507657c",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fct_klant"
+              }
+            },
+            "Property": "Omzet YTD label"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

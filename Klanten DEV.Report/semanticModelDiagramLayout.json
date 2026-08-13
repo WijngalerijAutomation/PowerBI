@@ -1,0 +1,112 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 83,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 0,
+            "y": 10
+          },
+          "nodeIndex": "fct_sales",
+          "size": {
+            "height": 315,
+            "width": 280
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 346,
+            "y": 176
+          },
+          "nodeIndex": "dim_customer",
+          "nodeLineageTag": "c78e03d1-88da-408a-93b1-96a1a50503a8",
+          "size": {
+            "height": 335,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 664,
+            "y": 0
+          },
+          "nodeIndex": "dim_date",
+          "nodeLineageTag": "1365688d-ac53-4845-8493-f9cb8b448532",
+          "size": {
+            "height": 303,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 32,
+            "y": 464
+          },
+          "nodeIndex": "dim_product",
+          "nodeLineageTag": "fdbe7038-0c6f-410f-874c-4d0ca6b55156",
+          "size": {
+            "height": 356,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 942,
+            "y": 437
+          },
+          "nodeIndex": "fct_voorraad",
+          "nodeLineageTag": "074b9ca6-316b-454b-a6a9-87adfca23055",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 608,
+            "y": 397
+          },
+          "nodeIndex": "fct_klant",
+          "nodeLineageTag": "54e3d4a2-2797-4683-85ef-4171ab30f526",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 991,
+            "y": 83
+          },
+          "nodeIndex": "fct_klant_product",
+          "nodeLineageTag": "afcb4515-c3fd-413f-bad3-0ea5ba4a1540",
+          "size": {
+            "height": 300,
+            "width": 244
+          },
+          "zIndex": 1
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

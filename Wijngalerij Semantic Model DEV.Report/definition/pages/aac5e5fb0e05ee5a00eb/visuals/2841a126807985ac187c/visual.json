@@ -1,0 +1,60 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "2841a126807985ac187c",
+  "position": {
+    "x": 6.9064748201438846,
+    "y": 193.38129496402877,
+    "z": 2004,
+    "height": 176.11510791366905,
+    "width": 235.97122302158272,
+    "tabOrder": 2004
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_klant"
+                    }
+                  },
+                  "Property": "Klant Omzet 12m label"
+                }
+              },
+              "queryRef": "fct_klant.Klant Omzet 12m label",
+              "nativeQueryRef": "Totale omzet (12m)",
+              "displayName": "Totale omzet (12m)"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "0aaf1ecfc05ba093e109",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fct_klant"
+              }
+            },
+            "Property": "Klant Omzet 12m label"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

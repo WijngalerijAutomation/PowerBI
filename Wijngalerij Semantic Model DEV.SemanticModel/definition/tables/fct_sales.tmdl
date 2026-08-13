@@ -1,0 +1,225 @@
+table fct_sales
+	lineageTag: 0736954c-b332-4d10-8784-40996fcd8a71
+
+	measure Omzet = CALCULATE(SUM(fct_sales[regel_totaal]), fct_sales[is_revenue] = TRUE())
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: cc8a5479-ac98-452b-8c8e-998e531856b3
+
+	measure Flessen = CALCULATE(SUM(fct_sales[aantal]), fct_sales[is_stock_movement] = TRUE())
+		formatString: #,0
+		lineageTag: baf46d01-4d64-41b6-a9f3-6a8c61ab84e5
+
+	measure Orders = CALCULATE(DISTINCTCOUNT(fct_sales[ordernummer]), fct_sales[is_revenue] = TRUE())
+		formatString: 0.00
+		lineageTag: 191adde1-6c67-43a2-a5a0-e20321e6d8f7
+
+	measure 'Klanten met omzet' = CALCULATE(DISTINCTCOUNT(fct_sales[klant_id]), fct_sales[is_revenue] = TRUE())
+		formatString: 0
+		lineageTag: 745014f1-68ad-43d2-b904-3f0a528715fc
+
+	measure 'Gem. orderwaarde' = DIVIDE([Omzet], [Orders])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 5ec75913-f37b-453d-9501-fd841c858e3d
+
+	measure 'Omzet vorig jaar' = CALCULATE([Omzet], SAMEPERIODLASTYEAR(dim_date[datum]))
+		lineageTag: c9e443e4-01b8-42d3-9e80-73cd102aed45
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Omzet groei %' = DIVIDE([Omzet] - [Omzet vorig jaar], [Omzet vorig jaar])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 9939e1c9-df73-4bd8-a973-4849b7fe7855
+
+	column sales_line_id
+		dataType: string
+		lineageTag: f8912b86-3230-4886-a2ec-28963137994a
+		summarizeBy: none
+		sourceColumn: sales_line_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column ordernummer
+		dataType: string
+		lineageTag: 94377121-72a7-43f8-8723-f3dc720b87a3
+		summarizeBy: none
+		sourceColumn: ordernummer
+
+		annotation SummarizationSetBy = Automatic
+
+	column line_idx
+		dataType: int64
+		formatString: 0
+		lineageTag: c367f40d-4bdf-488e-add3-ab39107e57c2
+		summarizeBy: sum
+		sourceColumn: line_idx
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_datum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: df430ab2-e520-499f-ad45-426eb0994842
+		summarizeBy: none
+		sourceColumn: order_datum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column klant_id
+		dataType: string
+		lineageTag: d198e1e6-49f4-433b-9206-5bbe88d7a68e
+		summarizeBy: none
+		sourceColumn: klant_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		lineageTag: 450e96cd-b810-45cf-9683-36f474600f1b
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_naam
+		dataType: string
+		lineageTag: 340e4226-40b8-440a-8f7a-14ee5ace3b09
+		summarizeBy: none
+		sourceColumn: product_naam
+
+		annotation SummarizationSetBy = Automatic
+
+	column magazijn
+		dataType: string
+		lineageTag: 39bb3351-29d6-4e63-819b-3837e36ff13a
+		summarizeBy: none
+		sourceColumn: magazijn
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: b87b979c-f414-48d8-9e83-d7aa0ca5b4f5
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_type
+		dataType: string
+		lineageTag: dcc412d1-6b40-4f80-8be7-b6e02e57dfcc
+		summarizeBy: none
+		sourceColumn: order_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column aantal
+		dataType: int64
+		formatString: 0
+		lineageTag: e816e218-3b09-42e1-b4bd-549c1dbe96d1
+		summarizeBy: sum
+		sourceColumn: aantal
+
+		annotation SummarizationSetBy = Automatic
+
+	column stukprijs
+		dataType: double
+		lineageTag: 196e7912-3387-4db7-bb0a-098e9ccd2722
+		summarizeBy: sum
+		sourceColumn: stukprijs
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column btw_pct
+		dataType: double
+		lineageTag: 5b668f76-0009-4094-8ba0-ed53029aab63
+		summarizeBy: sum
+		sourceColumn: btw_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column regel_totaal
+		dataType: double
+		lineageTag: e59ea4ec-d56c-447c-ad7e-8779f6795bed
+		summarizeBy: sum
+		sourceColumn: regel_totaal
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column is_verkocht
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 9bd96cb9-c6f4-4370-9ea8-d1f80493ca3d
+		summarizeBy: none
+		sourceColumn: is_verkocht
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_revenue
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f7539f35-d9e5-4ff2-adc0-97f6b619673a
+		summarizeBy: none
+		sourceColumn: is_revenue
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_stock_movement
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 6473a477-d091-4083-9ae9-9a86b2e3abbc
+		summarizeBy: none
+		sourceColumn: is_stock_movement
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_unmatched
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 843f7045-5b56-4ac1-8897-9d80340ee20b
+		summarizeBy: none
+		sourceColumn: product_unmatched
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_naam_ambiguous
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f330d642-8742-4c8d-a29e-3e2a19bc2b39
+		summarizeBy: none
+		sourceColumn: product_naam_ambiguous
+
+		annotation SummarizationSetBy = Automatic
+
+	column extracted_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 05365bfc-96c1-41c6-8b83-d3fa800f8272
+		summarizeBy: none
+		sourceColumn: extracted_at
+
+		variation Variation
+			isDefault
+			relationship: 257b8137-3ff4-4c69-8e64-4abea06d76f3
+			defaultHierarchy: LocalDateTable_3b73f9a5-4535-4056-935b-c02e03c2428e.Datumshierarchie
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fct_sales = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("ep-soft-salad-agt3f5p2.c-2.eu-central-1.aws.neon.tech:5432", "neondb"),
+				  #"Navigation 1" = Source{[Schema = "marts", Item = "fct_sales"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "cbef93206b2449204dcd",
+  "position": {
+    "x": 860.54968287526435,
+    "y": 159.661733615222,
+    "z": 7000,
+    "height": 320.67653276955605,
+    "width": 370.73995771670195,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_klant"
+                    }
+                  },
+                  "Property": "regio"
+                }
+              },
+              "queryRef": "fct_klant.regio",
+              "nativeQueryRef": "regio",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "dim_customer"
+                        }
+                      },
+                      "Property": "omzet_totaal"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(dim_customer.omzet_totaal)",
+              "nativeQueryRef": "Sum of omzet_totaal"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Aggregation": {
+                "Expression": {
+                  "Column": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "dim_customer"
+                      }
+                    },
+                    "Property": "omzet_totaal"
+                  }
+                },
+                "Function": 0
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

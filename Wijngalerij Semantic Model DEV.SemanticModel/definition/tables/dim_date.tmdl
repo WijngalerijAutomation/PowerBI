@@ -1,0 +1,251 @@
+table dim_date
+	lineageTag: 1365688d-ac53-4845-8493-f9cb8b448532
+	dataCategory: Time
+
+	measure Peildatum = CALCULATE(MAX(dim_date[snapshot_datum]), ALL(dim_date))
+		formatString: General Date
+		lineageTag: b11e9864-f471-40f0-b987-d515f7c140fe
+
+	column datum
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: 84d45cf3-8275-4c8a-9e48-c418f88a6653
+		summarizeBy: none
+		sourceColumn: datum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column jaar
+		dataType: int64
+		formatString: 0
+		lineageTag: 23a70b68-72db-4d4c-906c-84d7381dc28f
+		summarizeBy: none
+		sourceColumn: jaar
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column kwartaal
+		dataType: int64
+		formatString: 0
+		lineageTag: fd9d0092-202b-4508-af81-7bcd872f679a
+		summarizeBy: none
+		sourceColumn: kwartaal
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column maand_nr
+		dataType: int64
+		formatString: 0
+		lineageTag: 59ab08e5-a621-4432-965b-bf05dbddef72
+		summarizeBy: none
+		sourceColumn: maand_nr
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column dag_van_maand
+		dataType: int64
+		formatString: 0
+		lineageTag: c0af0212-3d4e-410d-aa9b-24f9bdbb37ae
+		summarizeBy: none
+		sourceColumn: dag_van_maand
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column dag_van_jaar
+		dataType: int64
+		formatString: 0
+		lineageTag: 9d69cd1a-3a52-4901-be29-e5bc6e57cb73
+		summarizeBy: none
+		sourceColumn: dag_van_jaar
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column dag_van_week
+		dataType: int64
+		formatString: 0
+		lineageTag: 27cffabd-eb52-438a-b23d-11643763d998
+		summarizeBy: none
+		sourceColumn: dag_van_week
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column jaar_maand
+		dataType: string
+		lineageTag: e8a6ce39-9fdd-4c68-b7d7-d895d7cd48fa
+		summarizeBy: none
+		sourceColumn: jaar_maand
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column maand_start
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d3a3defc-3db7-4ed3-81e5-325b67571604
+		summarizeBy: none
+		sourceColumn: maand_start
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column kwartaal_start
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 07771d84-d40d-4fc0-9c8e-7273b4ca6863
+		summarizeBy: none
+		sourceColumn: kwartaal_start
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column maand_naam
+		dataType: string
+		lineageTag: 515cf295-0b6a-45ea-bfe0-b9f416fd2321
+		summarizeBy: none
+		sourceColumn: maand_naam
+		sortByColumn: maand_nr
+
+		changedProperty = SortByColumn
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column dag_naam
+		dataType: string
+		lineageTag: b7f49a74-8e05-4c7f-aa49-e9e0f935e686
+		summarizeBy: none
+		sourceColumn: dag_naam
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 22e78e8d-d1fa-4bcd-8215-4f4cd87a285f
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_ytd_vergelijkbaar
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f8f5feb1-fe43-4b46-b981-6fb1c9eda122
+		summarizeBy: none
+		sourceColumn: is_ytd_vergelijkbaar
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_in_snapshot
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 54eb7619-fcbd-4a2a-aef3-b0ce8f2174ab
+		summarizeBy: none
+		sourceColumn: is_in_snapshot
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column snapshot_datum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: cec7d608-6479-44d1-b16d-6125fd9c9c68
+		summarizeBy: none
+		sourceColumn: snapshot_datum
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column iso_week
+		dataType: int64
+		formatString: 0
+		lineageTag: e1d744cc-44ff-42a8-a7a0-601a44c72fb2
+		summarizeBy: none
+		sourceColumn: iso_week
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column iso_jaar
+		dataType: int64
+		formatString: 0
+		lineageTag: 2f2cbc86-4866-4033-8caf-7b7403f9cf97
+		summarizeBy: none
+		sourceColumn: iso_jaar
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_start
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 1fd6bdf1-b973-42e1-a2a5-c864d2520d51
+		summarizeBy: none
+		sourceColumn: week_start
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column jaar_week
+		dataType: string
+		lineageTag: bdafe6f6-2467-4930-9296-49e7a7841aee
+		summarizeBy: none
+		sourceColumn: jaar_week
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("ep-soft-salad-agt3f5p2.c-2.eu-central-1.aws.neon.tech:5432", "neondb"),
+				  #"Navigation 1" = Source{[Schema = "marts", Item = "dim_date"]}[Data]
+				in
+				  #"Navigation 1"
+
+	changedProperty = IsHidden
+
+	annotation PBI_ResultType = Table
+

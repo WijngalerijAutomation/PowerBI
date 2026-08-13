@@ -1,0 +1,383 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "5e49735267937d5e6aa2",
+  "position": {
+    "x": 0,
+    "y": 513.45646437994719,
+    "z": 9000,
+    "height": 390.325417766051,
+    "width": 960.4221635883905,
+    "tabOrder": 9000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_customer"
+                    }
+                  },
+                  "Property": "klant_naam"
+                }
+              },
+              "queryRef": "dim_customer.klant_naam",
+              "nativeQueryRef": "Klant",
+              "displayName": "Klant"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_customer"
+                    }
+                  },
+                  "Property": "accountmanager"
+                }
+              },
+              "queryRef": "dim_customer.accountmanager",
+              "nativeQueryRef": "Accountmanager",
+              "displayName": "Accountmanager"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_voorraad"
+                    }
+                  },
+                  "Property": "Omzet 12m"
+                }
+              },
+              "queryRef": "fct_voorraad.Omzet 12m",
+              "nativeQueryRef": "Omzet 12m"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fct_klant"
+                        }
+                      },
+                      "Property": "dagen_sinds_laatste_order"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(fct_klant.dagen_sinds_laatste_order)",
+              "nativeQueryRef": "Dagen sinds laatste order",
+              "displayName": "Dagen sinds laatste order"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fct_klant"
+                        }
+                      },
+                      "Property": "mediaan_dagen_tussen_orders"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(fct_klant.mediaan_dagen_tussen_orders)",
+              "nativeQueryRef": "Mediaan dagen tussen orders",
+              "displayName": "Mediaan dagen tussen orders"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fct_klant"
+                        }
+                      },
+                      "Property": "recency_ratio"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(fct_klant.recency_ratio)",
+              "nativeQueryRef": "Ratio",
+              "displayName": "Ratio"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_klant"
+                    }
+                  },
+                  "Property": "klant_segment_reden"
+                }
+              },
+              "queryRef": "fct_klant.klant_segment_reden",
+              "nativeQueryRef": "Reden hoge score",
+              "displayName": "Reden hoge score"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fct_voorraad"
+                  }
+                },
+                "Property": "Omzet 12m"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "66.14598138919195D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "dim_customer.accountmanager"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "193.04149836235766D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "dim_customer.klant_naam"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "83.3883740285957D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(fct_klant.dagen_sinds_laatste_order)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "94.41072303994835D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(fct_klant.mediaan_dagen_tussen_orders)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "55.92511051237342D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(fct_klant.recency_ratio)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "389.4598790800811D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "fct_klant.klant_segment_reden"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "86.07475805409298D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "fct_voorraad.Omzet 12m"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {}
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "12aab941170a0ba7c09a",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fct_klant"
+                  }
+                },
+                "Property": "recency_ratio"
+              }
+            },
+            "Function": 0
+          }
+        },
+        "type": "Advanced",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "f1",
+              "Entity": "fct_klant",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 2,
+                  "Left": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Source": "f1"
+                            }
+                          },
+                          "Property": "recency_ratio"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "3L"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "3ee117cf2e07b805103e",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_customer"
+              }
+            },
+            "Property": "is_testaccount"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "d",
+              "Entity": "dim_customer",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "d"
+                          }
+                        },
+                        "Property": "is_testaccount"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "false"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
+      }
+    ]
+  }
+}

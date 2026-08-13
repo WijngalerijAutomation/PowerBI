@@ -1,0 +1,107 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "eb844d81ab6a6e266486",
+  "position": {
+    "x": 446.06060606060606,
+    "y": 195.43123543123545,
+    "z": 2007,
+    "height": 165.5944055944056,
+    "width": 193.93939393939394,
+    "tabOrder": 2007
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fct_klant"
+                    }
+                  },
+                  "Property": "Omzet groei JoJ label"
+                }
+              },
+              "queryRef": "fct_klant.Omzet groei JoJ label",
+              "nativeQueryRef": "Omzet groei JoJ",
+              "displayName": "Omzet groei JoJ"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "visualHeader": [
+        {
+          "properties": {
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "background": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            },
+            "showTooltipButton": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeaderTooltip": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Deze metric vergelijkt de omzet van de afgelopen 6 maanden met dezelfde 6 maanden van vorig jaar.'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "07eef8714453e0571379",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fct_klant"
+              }
+            },
+            "Property": "Omzet groei JoJ label"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Klanten DEV"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "6a201005-02cc-404b-ada1-f9d164b5f415"
+  }
+}

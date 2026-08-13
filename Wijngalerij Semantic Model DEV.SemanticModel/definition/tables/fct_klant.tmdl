@@ -1,0 +1,531 @@
+table fct_klant
+	lineageTag: 54e3d4a2-2797-4683-85ef-4171ab30f526
+
+	measure Klanten = COUNTROWS(fct_klant)
+		formatString: 0
+		lineageTag: 456b31da-f32a-4ec8-8a7a-3cc41cc6760f
+
+		changedProperty = IsHidden
+
+	measure 'Actieve klanten' = CALCULATE([Klanten],fct_klant[klant_segment] IN {"kern","actief","nieuw"})
+		formatString: 0
+		lineageTag: b1a3fff1-b2c3-4bcc-930a-45685a7958b7
+
+		changedProperty = IsHidden
+
+	measure 'Klant omzet 12m' = SUM(fct_klant[omzet_12m])
+		lineageTag: bc8f545a-75c5-4037-a0cd-ebe9711c9881
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Omzet totaal' = SUM(fct_klant[omzet_totaal])
+		lineageTag: 542e04dd-55b8-4f30-add2-0b72aed16c1b
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Gem. orderwaarde klant' = DIVIDE([Omzet totaal], SUM(fct_klant[n_orders_verkocht]))
+		lineageTag: 85f04e2c-3eaa-4a70-ab14-772edff7af3f
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Mediane orderwaarde' = MEDIANX(FILTER(fct_klant, fct_klant[n_orders_verkocht] > 0),fct_klant[gem_orderwaarde])
+		lineageTag: 570c4c25-74e3-4b5e-887f-24e01117495e
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Brutomarge % 12m' = DIVIDE(SUM(fct_klant[brutomarge_12m]), [Omzet 12m])
+		lineageTag: 6db1dbb9-7f82-4ea0-986f-eeb5e3ad416d
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Omzet top 10 %' = DIVIDE(CALCULATE([Omzet totaal], fct_klant[omzet_rang] <= 10),CALCULATE([Omzet totaal], ALL(fct_klant)))
+		lineageTag: 8fa8d902-18ed-411c-80b6-6c36f48e5cbc
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Klanten label' = FORMAT([Actieve klanten], "#,##0", "nl-NL")
+		lineageTag: 7b5346f2-e9b9-4695-82b9-372c49e6ad61
+
+		changedProperty = IsHidden
+
+	measure 'Top 10 aandeel label' = FORMAT([Omzet top 10 %], "0,0%", "nl-NL")
+		lineageTag: fb114b51-a58c-40d2-bdb7-ff3d7c7adb8f
+
+		changedProperty = IsHidden
+
+	measure Measure
+		lineageTag: c3276c65-f107-4abe-a6db-196c5f01c98d
+
+		changedProperty = IsHidden
+
+	measure 'Klant Omzet 12m label' = FORMAT([Klant omzet 12m], "€ #,##0", "nl-NL") & ",-"
+		lineageTag: 59fa4f44-51da-4f8d-a489-a6290a8d896a
+
+	measure 'Omzet YTD' = TOTALYTD([Omzet], dim_date[datum])
+		lineageTag: b1a86e47-623a-44ec-a79f-ef92eca13d20
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Omzet groei JoJ' =
+			VAR Basis = SUM(fct_klant[omzet_zelfde_6m_vorig_jaar])
+			                  RETURN IF(Basis >= 500,
+			                      DIVIDE(SUM(fct_klant[omzet_6m]), Basis) - 1)
+		lineageTag: 3d75a952-3b82-485c-9f65-822737374239
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Omzet YTD label' = FORMAT([Omzet YTD], "€ #,##0", "nl-NL")& ",-"
+		lineageTag: e5bc9f55-e970-4be0-8a36-175af445ffc6
+
+	measure 'Omzet groei JoJ label' = FORMAT([Omzet groei JoJ], "0,0%", "nl-NL")
+		lineageTag: 5230baac-32a3-47ca-a2d4-7d1dcb6ee350
+
+	measure 'Measure 2'
+		lineageTag: e11d8aed-4c84-44cf-8a1a-17283b6dd9a1
+
+		annotation 43dbc3e8-3a1c-4b6f-9923-b49ff7d6691c = True
+
+	column klant_id
+		dataType: string
+		lineageTag: 039e059e-1c63-4385-87b0-21644e1a3009
+		summarizeBy: none
+		sourceColumn: klant_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column klant_naam
+		dataType: string
+		lineageTag: 91e01596-c666-434f-9cf4-e8d62f481ec2
+		summarizeBy: none
+		sourceColumn: klant_naam
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column branche
+		dataType: string
+		lineageTag: 21a95c7c-0fd0-4af0-9b4f-d746a2eea59c
+		summarizeBy: none
+		sourceColumn: branche
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column branche_full
+		dataType: string
+		lineageTag: 11441ecb-106e-4f5f-8d06-5bce09fa3ae8
+		summarizeBy: none
+		sourceColumn: branche_full
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column plaats
+		dataType: string
+		lineageTag: 94c49899-fcca-47ac-94d2-59139a89b326
+		summarizeBy: none
+		sourceColumn: plaats
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column regio
+		dataType: string
+		lineageTag: 7af2f7da-06ce-49dd-913c-ab96800937cd
+		summarizeBy: none
+		sourceColumn: regio
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountmanager
+		dataType: string
+		lineageTag: 3fea6a7b-a7e2-4b1e-89fd-e2811df140ac
+		summarizeBy: none
+		sourceColumn: accountmanager
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column korting_pct
+		dataType: double
+		lineageTag: f4f60e9b-5ef4-4fc0-a749-db06ab7c5e4a
+		summarizeBy: sum
+		sourceColumn: korting_pct
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column is_kostprijs
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 1fc53a25-b35f-48a6-b39f-34db5aed2aaf
+		summarizeBy: none
+		sourceColumn: is_kostprijs
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_testaccount
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a5e3b9f8-cac8-44b8-be33-2901fd6f43b0
+		summarizeBy: none
+		sourceColumn: is_testaccount
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column eerste_order_datum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c00e575a-288a-46b4-9fde-bd1a523b6d67
+		summarizeBy: none
+		sourceColumn: eerste_order_datum
+
+		variation Variation
+			isDefault
+			relationship: a5aabe1e-a8a2-4a2a-9e02-1089ae674f75
+			defaultHierarchy: LocalDateTable_ad423f21-504b-4e1f-8ea6-71ee41a43583.Datumshierarchie
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column laatste_order_datum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 977e9f98-286f-4d38-a0ac-851c99584a65
+		summarizeBy: none
+		sourceColumn: laatste_order_datum
+
+		variation Variation
+			isDefault
+			relationship: 4edadf31-f6f3-4506-88e2-ba04e874a6cc
+			defaultHierarchy: LocalDateTable_5bf0bc2a-5d8a-443a-b8a0-1ade55865075.Datumshierarchie
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column dagen_sinds_laatste_order
+		dataType: int64
+		formatString: 0
+		lineageTag: c180e1a1-b60a-473a-8f23-fca7229c6467
+		summarizeBy: sum
+		sourceColumn: dagen_sinds_laatste_order
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column mediaan_dagen_tussen_orders
+		dataType: double
+		lineageTag: 5860673d-fd6a-4606-b945-ac231ca74dea
+		summarizeBy: sum
+		sourceColumn: mediaan_dagen_tussen_orders
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column recency_ratio
+		dataType: double
+		lineageTag: 64c90d21-3ffb-40dd-8363-8cd609b724b0
+		summarizeBy: none
+		sourceColumn: recency_ratio
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column n_orders_verkocht
+		dataType: int64
+		formatString: 0
+		lineageTag: 9cfe603c-ef6f-4b19-947d-3568783e0fd7
+		summarizeBy: sum
+		sourceColumn: n_orders_verkocht
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column n_samples
+		dataType: int64
+		formatString: 0
+		lineageTag: 4c24e25b-8584-419a-be72-8a9044d4b3de
+		summarizeBy: sum
+		sourceColumn: n_samples
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column gem_orderwaarde
+		dataType: double
+		lineageTag: 0f295a7c-7ab9-4bbe-bebe-b0c59a21cebf
+		summarizeBy: sum
+		sourceColumn: gem_orderwaarde
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column omzet_totaal
+		dataType: double
+		lineageTag: 3478cf36-63f8-4077-ab94-6c00270ae694
+		summarizeBy: sum
+		sourceColumn: omzet_totaal
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column omzet_6m
+		dataType: double
+		lineageTag: 9170b0c8-b400-49e9-ae42-9751fa87dc74
+		summarizeBy: sum
+		sourceColumn: omzet_6m
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column omzet_vorige_6m
+		dataType: double
+		lineageTag: 5e1f1600-4dda-489f-9376-b3947b8c3132
+		summarizeBy: sum
+		sourceColumn: omzet_vorige_6m
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column flessen_12m
+		dataType: double
+		lineageTag: bee71079-9d0c-46a5-9970-337e538ecbd9
+		summarizeBy: sum
+		sourceColumn: flessen_12m
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column n_producten_12m
+		dataType: int64
+		formatString: 0
+		lineageTag: 3b5d7e9e-4424-4533-8fa2-61f9679cd190
+		summarizeBy: sum
+		sourceColumn: n_producten_12m
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column kostprijs_12m
+		dataType: double
+		lineageTag: c910c53b-a424-4c8c-ae21-45034d1d8e83
+		summarizeBy: sum
+		sourceColumn: kostprijs_12m
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column brutomarge_12m
+		dataType: double
+		lineageTag: 11f1782c-f085-4646-89fc-6e770a7a71a0
+		summarizeBy: sum
+		sourceColumn: brutomarge_12m
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column brutomarge_pct_12m
+		dataType: double
+		lineageTag: ec169b1a-cba1-4a7d-a68a-c9728b18a3f1
+		summarizeBy: sum
+		sourceColumn: brutomarge_pct_12m
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column omzet_rang
+		dataType: int64
+		formatString: 0
+		lineageTag: 5892ec3b-4d70-4a6e-9dcb-9828dddd1586
+		summarizeBy: none
+		sourceColumn: omzet_rang
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column omzet_aandeel_pct
+		dataType: double
+		lineageTag: 8fd8b0fd-9e6e-4504-865b-9b6babfe8694
+		summarizeBy: sum
+		sourceColumn: omzet_aandeel_pct
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column omzet_cumulatief_pct
+		dataType: double
+		lineageTag: fdb2fbe5-6f68-4f06-81d3-718f6cf59bb7
+		summarizeBy: none
+		sourceColumn: omzet_cumulatief_pct
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column klant_segment
+		dataType: string
+		lineageTag: 48e36428-87d6-4145-9164-50af50df9931
+		summarizeBy: none
+		sourceColumn: klant_segment
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column klant_segment_reden
+		dataType: string
+		lineageTag: 01631038-e764-41bd-bbf2-09b103df5d73
+		summarizeBy: none
+		sourceColumn: klant_segment_reden
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column peildatum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: b64ad8c0-9a3f-4d11-9824-c517eace071b
+		summarizeBy: none
+		sourceColumn: peildatum
+
+		variation Variation
+			isDefault
+			relationship: 86282aee-c68f-42e4-8483-f5aaff8023d6
+			defaultHierarchy: LocalDateTable_86cf2233-ebcc-4808-a06f-d4cc2bc82d28.Datumshierarchie
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column email
+		dataType: string
+		lineageTag: 952f6539-6fe7-4228-b82c-93dd55222a9e
+		summarizeBy: none
+		sourceColumn: email
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column omzet_12m
+		dataType: double
+		lineageTag: 002e8ed4-6957-4213-a347-2b3ce6111013
+		summarizeBy: sum
+		sourceColumn: omzet_12m
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column omzet_zelfde_6m_vorig_jaar
+		dataType: double
+		lineageTag: 10420b6c-3c65-4b20-91b2-f572b07c991d
+		summarizeBy: none
+		sourceColumn: omzet_zelfde_6m_vorig_jaar
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column omzet_groei_yoy_pct
+		dataType: double
+		lineageTag: 217be858-a1e6-422f-a6af-c04a6e4996f5
+		summarizeBy: none
+		sourceColumn: omzet_groei_yoy_pct
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fct_klant = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("ep-soft-salad-agt3f5p2.c-2.eu-central-1.aws.neon.tech", "neondb"),
+				  #"Navigation 1" = Source{[Schema = "marts", Item = "fct_klant"]}[Data]
+				in
+				  #"Navigation 1"
+
+	changedProperty = IsHidden
+
+	annotation PBI_ResultType = Table
+

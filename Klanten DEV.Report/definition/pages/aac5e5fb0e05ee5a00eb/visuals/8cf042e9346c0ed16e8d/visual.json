@@ -1,0 +1,67 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "8cf042e9346c0ed16e8d",
+  "position": {
+    "x": 835.91836734693879,
+    "y": 81.269841269841265,
+    "z": 2001,
+    "height": 113.19727891156462,
+    "width": 410.702947845805,
+    "tabOrder": 2001
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "dim_customer"
+                        }
+                      },
+                      "Property": "email"
+                    }
+                  },
+                  "Function": 3
+                }
+              },
+              "queryRef": "Min(dim_customer.email)",
+              "nativeQueryRef": "E-mail adres",
+              "displayName": "E-mail adres"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "90f0b7f803a264488e06",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "dim_customer"
+                  }
+                },
+                "Property": "email"
+              }
+            },
+            "Function": 3
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

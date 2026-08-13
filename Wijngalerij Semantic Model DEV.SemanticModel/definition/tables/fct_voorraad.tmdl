@@ -1,0 +1,707 @@
+table fct_voorraad
+	lineageTag: 074b9ca6-316b-454b-a6a9-87adfca23055
+
+	measure 'Totale voorraadwaarde' = SUM(fct_voorraad[voorraadwaarde])
+		lineageTag: 74a51fba-760d-4e6d-b1f0-efcb7ea06fd4
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Voorraadwaarde label' = "€ " & FORMAT([Totale voorraadwaarde], "#,##0", "nl-NL") & ",-"
+		lineageTag: fce9ec3d-0a07-4c08-a51d-e90480523bed
+
+		changedProperty = IsHidden
+
+	measure 'Voorraad flessen' = SUM(fct_voorraad[voorraad])
+		formatString: 0
+		lineageTag: e4275cff-74c4-40cf-a12e-e5cd2b3593c8
+
+		changedProperty = IsHidden
+
+	measure 'Vraag per week' = SUM(fct_voorraad[gem_per_week_12w])
+		lineageTag: 0c84e7fa-aa8c-4332-90a6-3a72259e19b7
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Dekking weken' = DIVIDE([Voorraad flessen], [Vraag per week])
+		lineageTag: 17cf8434-5d54-4e38-9f94-8aa6b66de819
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Brutomarge = SUM(fct_voorraad[brutomarge_12m])
+		lineageTag: 589330fa-725c-4415-9fc0-9dd676f630b7
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Omzet 12m' = SUM(fct_voorraad[omzet_12m])
+		lineageTag: 5153112a-9d0e-4411-8085-7bf1d9fb28a0
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Brutomarge %' = DIVIDE([Brutomarge], [Omzet 12m])
+		lineageTag: 0fd32d6d-56cf-4324-9f9a-4bdf27ee7576
+
+		changedProperty = IsHidden
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Aantal wijnen' = COUNTROWS(fct_voorraad)
+		formatString: 0
+		lineageTag: 6ff4bc7b-644c-4cd8-8864-1d4d2c6dd531
+
+		changedProperty = IsHidden
+
+	measure 'Voorraad flessen label' = FORMAT([Voorraad flessen], "#,##0", "nl-NL")
+		lineageTag: cdc0020c-ca0b-48ff-8fa1-d1ac4e5369f5
+
+		changedProperty = IsHidden
+
+	measure 'Vraag per week label' = FORMAT([Vraag per week], "#,##0.0", "nl-NL")
+		lineageTag: a11c59d0-ae16-445d-9f8e-8fbe2cd4c945
+
+		changedProperty = IsHidden
+
+	measure 'Dekking label' = FORMAT([Dekking weken], "0.0", "nl-NL") & " weken"
+		lineageTag: ea9bedce-ca27-41ce-9842-17bdb0f8f322
+
+		changedProperty = IsHidden
+
+	measure 'Brutomarge label' = "€ " & FORMAT([Brutomarge], "#,##0", "nl-NL") & ",-"
+		lineageTag: f75b011c-46d7-4ac4-aa5e-43da78532a44
+
+		changedProperty = IsHidden
+
+	measure 'Brutomarge % label' = FORMAT([Brutomarge %], "0.0%", "nl-NL")
+		lineageTag: 7435fccf-f415-4ea8-9c81-5d0faf3d8ccb
+
+		changedProperty = IsHidden
+
+	measure 'Aantal wijnen label' = FORMAT([Aantal wijnen], "#,##0", "nl-NL")
+		lineageTag: deb4e46c-290c-40e9-949a-21d83d6e70fb
+
+	measure 'Vraag per week 12w' = SUM(fct_voorraad[gem_per_week_12w])
+		lineageTag: ff0a3a2b-6414-4150-a0e5-451a1bc52c59
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Vraag per week 52w' = SUM(fct_voorraad[gem_per_week_52w])
+		lineageTag: 0d697df5-9bfd-4c35-860f-8921627c5de1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Verwachte vraag 8 weken' = ROUND([Vraag per week 12w] * 8, 0)
+		lineageTag: 6a1e2fbc-da16-4921-b7bc-271231accb09
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Vraag 8 weken label' = FORMAT([Verwachte vraag 8 weken], "#,##0", "nl-NL") & " flessen"
+		lineageTag: b22bd444-5cdc-4e86-bf5d-b868b4054acf
+
+	column product_id
+		dataType: string
+		lineageTag: f22072f5-7ef7-46c3-a644-f6e26ca36b87
+		summarizeBy: none
+		sourceColumn: product_id
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_naam
+		dataType: string
+		lineageTag: e099a7f7-2b75-45b4-bf3f-0b6a91b8266c
+		summarizeBy: none
+		sourceColumn: product_naam
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column artikelcode
+		dataType: string
+		lineageTag: 77406200-00af-4188-a33e-0428dfd72d08
+		summarizeBy: none
+		sourceColumn: artikelcode
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column leverancier
+		dataType: string
+		lineageTag: 3b35b13a-6c61-4290-85a5-79f20d5f6d01
+		summarizeBy: none
+		sourceColumn: leverancier
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column wijnhuis
+		dataType: string
+		lineageTag: 3f2e0ef6-a48a-422e-9ee7-aaa4f3fdd133
+		summarizeBy: none
+		sourceColumn: wijnhuis
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column crediteurnummer
+		dataType: string
+		lineageTag: ff3dc4b4-bc48-44ab-b82a-6ef1a961d848
+		summarizeBy: none
+		sourceColumn: crediteurnummer
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column voorraad
+		dataType: int64
+		formatString: 0
+		lineageTag: b6d0314c-4e5d-4904-8af6-6323994d2e75
+		summarizeBy: sum
+		sourceColumn: voorraad
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column gereserveerd
+		dataType: int64
+		formatString: 0
+		lineageTag: e70e2e74-e4bd-462e-bfb4-aa7213e21ef3
+		summarizeBy: sum
+		sourceColumn: gereserveerd
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column in_bestelling
+		dataType: int64
+		formatString: 0
+		lineageTag: b57eff93-e645-41b5-8c91-a69103c2d23e
+		summarizeBy: sum
+		sourceColumn: in_bestelling
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column effectieve_voorraad
+		dataType: int64
+		formatString: 0
+		lineageTag: fe02842d-5022-4b28-a41f-4b329d89318c
+		summarizeBy: sum
+		sourceColumn: effectieve_voorraad
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column kritische_voorraad
+		dataType: int64
+		formatString: 0
+		lineageTag: 28abb434-df01-4a53-8abc-b528a253844a
+		summarizeBy: sum
+		sourceColumn: kritische_voorraad
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column schapvoorraad
+		dataType: int64
+		formatString: 0
+		lineageTag: dfbfa3a4-126f-4c70-a05d-8e00662e5828
+		summarizeBy: sum
+		sourceColumn: schapvoorraad
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column voorraadstatus
+		dataType: string
+		lineageTag: 2c025cb4-ce9b-43a5-b884-2dcd13479dfa
+		summarizeBy: none
+		sourceColumn: voorraadstatus
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column inkoopprijs
+		dataType: double
+		lineageTag: 76a18927-d22e-4d67-a5e1-e952ca7fde34
+		summarizeBy: sum
+		sourceColumn: inkoopprijs
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column basisprijs
+		dataType: double
+		lineageTag: cce566bc-4062-4459-9920-f553519c63d0
+		summarizeBy: sum
+		sourceColumn: basisprijs
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column voorraadwaarde
+		dataType: double
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 6cead012-256f-4f74-9f59-79d6be02ed0a
+		summarizeBy: sum
+		sourceColumn: voorraadwaarde
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column voorraadwaarde_erp
+		dataType: double
+		lineageTag: ecbc3eaa-67dd-41aa-9a00-31fb748e8ad4
+		summarizeBy: sum
+		sourceColumn: voorraadwaarde_erp
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column marge_pct_lijst
+		dataType: double
+		lineageTag: 7056fee9-634a-49e3-ab01-d2a5128788b5
+		summarizeBy: sum
+		sourceColumn: marge_pct_lijst
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column flessen_12w
+		dataType: double
+		lineageTag: 70ff2c8b-ac49-45bf-b00f-13562098e58e
+		summarizeBy: sum
+		sourceColumn: flessen_12w
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column flessen_52w
+		dataType: double
+		lineageTag: a687ebcd-e971-48fd-be3f-f2d2ca76414c
+		summarizeBy: sum
+		sourceColumn: flessen_52w
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column gem_per_week_12w
+		dataType: double
+		lineageTag: 9a379d8b-6eae-4d6d-98ca-b98bc33ebbac
+		summarizeBy: sum
+		sourceColumn: gem_per_week_12w
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column gem_per_week_52w
+		dataType: double
+		lineageTag: 8e2c67d5-b43b-4a08-a505-264afb785cb8
+		summarizeBy: sum
+		sourceColumn: gem_per_week_52w
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column gemiddeld_per_week_erp
+		dataType: int64
+		formatString: 0
+		lineageTag: ed0ddf9b-7da6-4619-9d10-d77d7f3e25a7
+		summarizeBy: sum
+		sourceColumn: gemiddeld_per_week_erp
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column dekking_weken
+		dataType: double
+		lineageTag: 284bd9b5-41da-407f-99a9-2eca659fab2c
+		summarizeBy: sum
+		sourceColumn: dekking_weken
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column verwachte_uitverkoopdatum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e2a1243b-615d-4a10-97fe-8a8a3dd7b796
+		summarizeBy: none
+		sourceColumn: verwachte_uitverkoopdatum
+
+		variation Variation
+			isDefault
+			relationship: 1009f73e-646b-4160-9553-2a7fe832e2b3
+			defaultHierarchy: LocalDateTable_017b343d-2427-44bf-8c0b-a5f7423843e7.Datumshierarchie
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column lead_time_days
+		dataType: int64
+		formatString: 0
+		lineageTag: fe3248f8-37b9-41c1-bb8d-936bd2ea4373
+		summarizeBy: sum
+		sourceColumn: lead_time_days
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column lead_time_is_default
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 4c190f62-d981-4a7c-87ac-b8479de51417
+		summarizeBy: none
+		sourceColumn: lead_time_is_default
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column eerste_verkoop
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 222dd9b9-ffc2-4ca2-a9d1-799ec718fead
+		summarizeBy: none
+		sourceColumn: eerste_verkoop
+
+		variation Variation
+			isDefault
+			relationship: ac3e3fb0-0707-4517-badc-38810fffce80
+			defaultHierarchy: LocalDateTable_d75981a0-8c66-4d66-9cbe-2aeef4b0c1b1.Datumshierarchie
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column laatste_verkoop
+		dataType: dateTime
+		formatString: dd/mm/yy
+		lineageTag: 7748732b-917d-4d55-a21e-8f5c36e08135
+		summarizeBy: none
+		sourceColumn: laatste_verkoop
+
+		variation Variation
+			isDefault
+			relationship: 9641d820-0a96-4bc0-9970-04e1205537b2
+			defaultHierarchy: LocalDateTable_0b806c9c-50ff-4cc4-ac57-510923fe4097.Datumshierarchie
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	column maanden_sinds_laatste_verkoop
+		dataType: double
+		lineageTag: d74bdae6-b04f-40ea-97f3-d260f9c28627
+		summarizeBy: sum
+		sourceColumn: maanden_sinds_laatste_verkoop
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column n_klanten
+		dataType: int64
+		formatString: 0
+		lineageTag: 954dc332-35b2-451a-bffb-992751d0efbb
+		summarizeBy: sum
+		sourceColumn: n_klanten
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column n_orders
+		dataType: int64
+		formatString: 0
+		lineageTag: 072b86fb-839f-4c8e-94b9-bbcf89aa4001
+		summarizeBy: sum
+		sourceColumn: n_orders
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column omzet_12m
+		dataType: double
+		lineageTag: 5cb8a642-1c8d-4dae-b6fe-31bb1b465067
+		summarizeBy: sum
+		sourceColumn: omzet_12m
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column kostprijs_12m
+		dataType: double
+		lineageTag: d6345498-45dd-46ab-992c-961b27a15bf0
+		summarizeBy: sum
+		sourceColumn: kostprijs_12m
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column brutomarge_12m
+		dataType: double
+		lineageTag: 94c6c94d-ec37-46cf-b2b9-4021813f8183
+		summarizeBy: sum
+		sourceColumn: brutomarge_12m
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column brutomarge_pct_12m
+		dataType: double
+		lineageTag: 2805c36e-fd9c-4e71-89d8-efb84d6c08e4
+		summarizeBy: sum
+		sourceColumn: brutomarge_pct_12m
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column omzet_rang_12m
+		dataType: int64
+		formatString: 0
+		lineageTag: 15c5aea3-305c-470d-b53a-e5cc702fc61b
+		summarizeBy: none
+		sourceColumn: omzet_rang_12m
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column flessen_rang_12w
+		dataType: int64
+		formatString: 0
+		lineageTag: 71c699aa-4ff0-43f8-9677-6e094fdab085
+		summarizeBy: none
+		sourceColumn: flessen_rang_12w
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = User
+
+	column is_hardloper
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 49693ffd-7fb5-4623-9cc8-33ffb5600bdd
+		summarizeBy: none
+		sourceColumn: is_hardloper
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_top50_omzet
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 43b50920-a9ab-4ec4-9acc-03ba033960c4
+		summarizeBy: none
+		sourceColumn: is_top50_omzet
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column niet_verkocht_bucket
+		dataType: string
+		lineageTag: b3015436-7589-4656-ad91-6f65f4ab865f
+		summarizeBy: none
+		sourceColumn: niet_verkocht_bucket
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_slow_mover
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a0765dcd-8fed-4105-82b0-123619e37fe4
+		summarizeBy: none
+		sourceColumn: is_slow_mover
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column slow_mover_reden
+		dataType: string
+		lineageTag: 5831523f-575e-416c-a1b2-0c6251b798c0
+		summarizeBy: none
+		sourceColumn: slow_mover_reden
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_collectiepost
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: ba8fdd91-3573-4d0d-9954-65c33dd9a4b3
+		summarizeBy: none
+		sourceColumn: is_collectiepost
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column snapshot_datum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 216b53c1-0741-4b7c-bcec-600a8a277f47
+		summarizeBy: none
+		sourceColumn: snapshot_datum
+
+		variation Variation
+			isDefault
+			relationship: be5dc855-b7db-4954-9145-eea7dad21bb3
+			defaultHierarchy: LocalDateTable_98c61a82-19c4-4639-8208-b54682176821.Datumshierarchie
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column grootste_order_12w
+		dataType: int64
+		formatString: 0
+		lineageTag: a570b67b-ff88-4505-839d-e2603c6e4bc3
+		summarizeBy: none
+		sourceColumn: grootste_order_12w
+
+		annotation SummarizationSetBy = User
+
+	column vraag_geconcentreerd
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f78a9f45-86ec-414f-aaae-820a9e03d24e
+		summarizeBy: none
+		sourceColumn: vraag_geconcentreerd
+
+		annotation SummarizationSetBy = Automatic
+
+	column gem_verkoopprijs_12m
+		dataType: double
+		lineageTag: d6317e27-a8fa-4d73-940c-a875a65d8620
+		summarizeBy: none
+		sourceColumn: gem_verkoopprijs_12m
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column n_prijzen
+		dataType: int64
+		formatString: 0
+		lineageTag: d3972667-e5cc-453b-8b15-57c89caea424
+		summarizeBy: none
+		sourceColumn: n_prijzen
+
+		annotation SummarizationSetBy = User
+
+	column korting_vs_lijst_pct
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 92da60b6-4dcd-4670-bb97-fb91498dae85
+		summarizeBy: none
+		sourceColumn: korting_vs_lijst_pct
+
+		annotation SummarizationSetBy = User
+
+	column slow_mover_categorie
+		dataType: string
+		lineageTag: 0bc2fc51-24a6-4921-8067-f27ca1306fd9
+		summarizeBy: none
+		sourceColumn: slow_mover_categorie
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fct_voorraad = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("ep-soft-salad-agt3f5p2.c-2.eu-central-1.aws.neon.tech:5432", "neondb"),
+				  #"Navigation 1" = Source{[Schema = "marts", Item = "fct_voorraad"]}[Data]
+				in
+				  #"Navigation 1"
+
+	changedProperty = IsHidden
+
+	annotation PBI_ResultType = Table
+

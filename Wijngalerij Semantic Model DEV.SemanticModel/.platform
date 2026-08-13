@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Wijngalerij Semantic Model DEV"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d341e4a4-4289-4b9e-94ee-9ca3d87e3986"
+  }
+}

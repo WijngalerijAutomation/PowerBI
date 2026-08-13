@@ -1,0 +1,40 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["dim_customer","dim_date","dim_product","fct_sales","fct_voorraad","fct_klant","fct_klant_product"]
+
+annotation __LastRPTime = 134309243835127366
+
+annotation PBI_ProTooling = ["WebModelingEdit","DaxQueryView_Desktop","DevMode"]
+
+ref table dim_customer
+ref table DateTableTemplate_73c7f83b-067c-4247-bef2-9c56f1d63e1b
+ref table LocalDateTable_b42da195-e4d8-4945-a6c5-2c76742b467c
+ref table LocalDateTable_6597cabb-4545-4416-8fa6-f4d53a39a92f
+ref table LocalDateTable_7197a5eb-8ffb-46ef-9509-b8aa7b4279ab
+ref table dim_date
+ref table dim_product
+ref table LocalDateTable_46944bf4-bf4c-4637-b6d9-27138245e3ec
+ref table fct_sales
+ref table LocalDateTable_3b73f9a5-4535-4056-935b-c02e03c2428e
+ref table fct_voorraad
+ref table LocalDateTable_017b343d-2427-44bf-8c0b-a5f7423843e7
+ref table LocalDateTable_d75981a0-8c66-4d66-9cbe-2aeef4b0c1b1
+ref table LocalDateTable_0b806c9c-50ff-4cc4-ac57-510923fe4097
+ref table LocalDateTable_98c61a82-19c4-4639-8208-b54682176821
+ref table fct_klant
+ref table LocalDateTable_ad423f21-504b-4e1f-8ea6-71ee41a43583
+ref table LocalDateTable_5bf0bc2a-5d8a-443a-b8a0-1ade55865075
+ref table LocalDateTable_86cf2233-ebcc-4808-a06f-d4cc2bc82d28
+ref table fct_klant_product
+ref table LocalDateTable_fc5b7797-1eb0-4b7b-bbb4-c1e5283b5265
+ref table LocalDateTable_a4485386-025e-4450-af4b-e2764878046b
+ref table LocalDateTable_f2e92db1-d22e-4fa6-b58d-97013c37f13c
+

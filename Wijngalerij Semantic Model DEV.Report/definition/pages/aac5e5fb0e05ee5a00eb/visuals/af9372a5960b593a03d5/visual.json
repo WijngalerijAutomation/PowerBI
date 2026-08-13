@@ -1,0 +1,67 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "af9372a5960b593a03d5",
+  "position": {
+    "x": 603.718820861678,
+    "y": 345.39682539682536,
+    "z": 2008,
+    "height": 108.84353741496598,
+    "width": 676.28117913832193,
+    "tabOrder": 2008
+  },
+  "visual": {
+    "visualType": "cardVisual",
+    "query": {
+      "queryState": {
+        "Data": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fct_klant"
+                        }
+                      },
+                      "Property": "klant_segment_reden"
+                    }
+                  },
+                  "Function": 3
+                }
+              },
+              "queryRef": "Min(fct_klant.klant_segment_reden)",
+              "nativeQueryRef": "Segment reden",
+              "displayName": "Segment reden"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "a3f0276eec1babe6ed0a",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fct_klant"
+                  }
+                },
+                "Property": "klant_segment_reden"
+              }
+            },
+            "Function": 3
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

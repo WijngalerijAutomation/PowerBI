@@ -1,0 +1,249 @@
+table dim_customer
+	lineageTag: c78e03d1-88da-408a-93b1-96a1a50503a8
+
+	column klant_id
+		dataType: string
+		lineageTag: 7a360b9c-0a44-4bb1-a820-82a927998e2b
+		summarizeBy: none
+		sourceColumn: klant_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column klant_naam
+		dataType: string
+		lineageTag: 658cb071-3c1f-4ca1-807f-128f69c5bcfa
+		summarizeBy: none
+		sourceColumn: klant_naam
+
+		annotation SummarizationSetBy = Automatic
+
+	column plaats
+		dataType: string
+		lineageTag: 6e048aef-2bfd-43dd-8e6c-3460fb12c455
+		summarizeBy: none
+		sourceColumn: plaats
+
+		annotation SummarizationSetBy = Automatic
+
+	column postcode
+		dataType: string
+		lineageTag: 5caeadf4-57ca-4cde-bbdc-5a6e284bb4d3
+		summarizeBy: none
+		sourceColumn: postcode
+
+		annotation SummarizationSetBy = Automatic
+
+	column land
+		dataType: string
+		lineageTag: b3b2c5bc-2781-4ccc-82e0-0620372f40fd
+		summarizeBy: none
+		sourceColumn: land
+
+		annotation SummarizationSetBy = Automatic
+
+	column branche
+		dataType: string
+		lineageTag: 825f1c21-8d10-4db7-a9c9-17bbf1470097
+		summarizeBy: none
+		sourceColumn: branche
+
+		annotation SummarizationSetBy = Automatic
+
+	column branche_full
+		dataType: string
+		lineageTag: 9612bb99-9885-4305-aed3-3547c8ebf606
+		summarizeBy: none
+		sourceColumn: branche_full
+
+		annotation SummarizationSetBy = Automatic
+
+	column korting_pct
+		dataType: double
+		lineageTag: 1b19faad-95ae-4a97-a535-3bfedd8e8e40
+		summarizeBy: sum
+		sourceColumn: korting_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column is_kostprijs
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c3aedd7e-6c47-424d-9776-2c750684bdf2
+		summarizeBy: none
+		sourceColumn: is_kostprijs
+
+		annotation SummarizationSetBy = Automatic
+
+	column betaalconditie
+		dataType: string
+		lineageTag: cda1da66-f12f-4ab3-a6fd-0c505be6acb6
+		summarizeBy: none
+		sourceColumn: betaalconditie
+
+		annotation SummarizationSetBy = Automatic
+
+	column incasso_dagen
+		dataType: int64
+		formatString: 0
+		lineageTag: f882a4c4-c529-4df1-bbe8-972483d92477
+		summarizeBy: sum
+		sourceColumn: incasso_dagen
+
+		annotation SummarizationSetBy = Automatic
+
+	column moet_vooraf_betalen
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: c8eb5021-1698-41ca-a99f-b96ba0ed3e89
+		summarizeBy: none
+		sourceColumn: moet_vooraf_betalen
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountmanager
+		dataType: string
+		lineageTag: 41629f7b-6c55-472d-8b29-fa5df63f550d
+		summarizeBy: none
+		sourceColumn: accountmanager
+
+		annotation SummarizationSetBy = Automatic
+
+	column n_orders
+		dataType: int64
+		formatString: 0
+		lineageTag: c40ff4bf-bb8c-421c-a664-6ebd288d433f
+		summarizeBy: sum
+		sourceColumn: n_orders
+
+		annotation SummarizationSetBy = Automatic
+
+	column n_orders_verkocht
+		dataType: int64
+		formatString: 0
+		lineageTag: 119c72d7-4dc8-4f83-8ca1-b40d3516e603
+		summarizeBy: sum
+		sourceColumn: n_orders_verkocht
+
+		annotation SummarizationSetBy = Automatic
+
+	column n_samples
+		dataType: int64
+		formatString: 0
+		lineageTag: 802ce85a-4645-4d77-be40-3afed0c4b247
+		summarizeBy: sum
+		sourceColumn: n_samples
+
+		annotation SummarizationSetBy = Automatic
+
+	column heeft_ooit_besteld
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 8a79c4cc-d3be-432a-a5bf-b8d875bc1061
+		summarizeBy: none
+		sourceColumn: heeft_ooit_besteld
+
+		annotation SummarizationSetBy = Automatic
+
+	column eerste_order_datum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d9e07267-402d-4498-b246-456b2718ae23
+		summarizeBy: none
+		sourceColumn: eerste_order_datum
+
+		variation Variation
+			isDefault
+			relationship: 6ee262d9-205e-4e63-abdc-8bae47a1a0bb
+			defaultHierarchy: LocalDateTable_b42da195-e4d8-4945-a6c5-2c76742b467c.Datumshierarchie
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column laatste_order_datum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: bb9b1e69-cbec-4bd4-bc64-cd1228e4ad02
+		summarizeBy: none
+		sourceColumn: laatste_order_datum
+
+		variation Variation
+			isDefault
+			relationship: 743424a7-c2d9-4d8d-a2c4-909238c052ab
+			defaultHierarchy: LocalDateTable_6597cabb-4545-4416-8fa6-f4d53a39a92f.Datumshierarchie
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column omzet_totaal
+		dataType: double
+		lineageTag: c8ea61a7-1dee-4069-8b48-d6d9138394ee
+		summarizeBy: sum
+		sourceColumn: omzet_totaal
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column extracted_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 67aafcd2-f286-43fe-a181-100f065e37f1
+		summarizeBy: none
+		sourceColumn: extracted_at
+
+		variation Variation
+			isDefault
+			relationship: d5726cb7-b1cb-4dbd-a96a-c7ba18437a43
+			defaultHierarchy: LocalDateTable_7197a5eb-8ffb-46ef-9509-b8aa7b4279ab.Datumshierarchie
+
+		annotation SummarizationSetBy = Automatic
+
+	column regio
+		dataType: string
+		lineageTag: 7033c22b-2566-475d-8efc-10f1bcc9113f
+		summarizeBy: none
+		sourceColumn: regio
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_testaccount
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d6e60492-688a-4ae2-b10c-5b2a0fa5c64d
+		summarizeBy: none
+		sourceColumn: is_testaccount
+
+		annotation SummarizationSetBy = Automatic
+
+	column email
+		dataType: string
+		lineageTag: d8c0a0f7-24e2-4284-9ffd-1d46518e7c2d
+		summarizeBy: none
+		sourceColumn: email
+
+		annotation SummarizationSetBy = Automatic
+
+	column detail_compleet
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f4574ccd-24f1-4a46-bcda-89fbc033e7c5
+		summarizeBy: none
+		sourceColumn: detail_compleet
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_customer = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("ep-soft-salad-agt3f5p2.c-2.eu-central-1.aws.neon.tech:5432", "neondb"),
+				  #"Navigation 1" = Source{[Schema = "marts", Item = "dim_customer"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+
