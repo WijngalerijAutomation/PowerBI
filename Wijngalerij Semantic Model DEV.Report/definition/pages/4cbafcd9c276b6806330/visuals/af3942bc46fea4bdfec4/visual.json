@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "5c89898bf974e0f4b5aa",
+  "name": "af3942bc46fea4bdfec4",
   "position": {
-    "x": 0,
-    "y": 144,
-    "z": 109,
-    "height": 76,
-    "width": 1280,
-    "tabOrder": 109
+    "x": 16,
+    "y": 184,
+    "z": 140,
+    "height": 24,
+    "width": 1248,
+    "tabOrder": 140
   },
   "visual": {
     "visualType": "cardVisual",
@@ -23,11 +23,11 @@
                       "Entity": "_Metingen"
                     }
                   },
-                  "Property": "Signaal regel 1"
+                  "Property": "Signaal regel 2"
                 }
               },
-              "queryRef": "_Metingen.Signaal regel 1",
-              "nativeQueryRef": "Signaal regel 1"
+              "queryRef": "_Metingen.Signaal regel 2",
+              "nativeQueryRef": "Signaal regel 2"
             }
           ]
         }
@@ -44,17 +44,17 @@
                 }
               }
             },
-            "textWrap": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
             "horizontalAlignment": {
               "expr": {
                 "Literal": {
                   "Value": "'left'"
+                }
+              }
+            },
+            "textWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             },
@@ -117,66 +117,6 @@
           }
         }
       ],
-      "fillCustom": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "fillColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Aggregation": {
-                      "Expression": {
-                        "Column": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Entity": "fct_klant"
-                            }
-                          },
-                          "Property": "signaal_kleur"
-                        }
-                      },
-                      "Function": 3
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "id": "default"
-          }
-        }
-      ],
-      "shapeCustomRectangle": [
-        {
-          "properties": {
-            "tileShape": {
-              "expr": {
-                "Literal": {
-                  "Value": "'rectangleRoundedByPixel'"
-                }
-              }
-            },
-            "rectangleRoundedCurve": {
-              "expr": {
-                "Literal": {
-                  "Value": "8L"
-                }
-              }
-            }
-          },
-          "selector": {
-            "id": "default"
-          }
-        }
-      ],
       "padding": [
         {
           "properties": {
@@ -220,7 +160,7 @@
             "topOuterMargin": {
               "expr": {
                 "Literal": {
-                  "Value": "14L"
+                  "Value": "0L"
                 }
               }
             },
@@ -234,14 +174,14 @@
             "leftOuterMargin": {
               "expr": {
                 "Literal": {
-                  "Value": "16L"
+                  "Value": "0L"
                 }
               }
             },
             "rightOuterMargin": {
               "expr": {
                 "Literal": {
-                  "Value": "16L"
+                  "Value": "0L"
                 }
               }
             }
