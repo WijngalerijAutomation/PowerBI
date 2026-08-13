@@ -175,6 +175,180 @@ table _Metingen
 			)
 		lineageTag: 25722b01-53a3-4e32-a362-b2234eecda37
 
+	/// Drempels: 3x eigen ritme, of -25% JoJ. Hoort op termijn in fct_klant.
+	measure Risicovlag =
+			VAR R = SELECTEDVALUE(fct_klant[recency_ratio])
+			VAR G = [Omzet groei JoJ]
+			VAR S = SELECTEDVALUE(fct_klant[klant_segment])
+			RETURN SWITCH(TRUE(),
+			    S IN { "verloren", "slapend" },        UNICHAR(9888) & " Risico",
+			    NOT ISBLANK(R) && R >= 3,              UNICHAR(9888) & " Risico",
+			    NOT ISBLANK(G) && G <= -0.25,          UNICHAR(9888) & " Risico",
+			    BLANK()
+			)
+		lineageTag: 58bac0a6-9769-47f3-bc40-70a8bbf442b3
+
+	/// Neutrale terugval i.p.v. BLANK, zie 6. Venster staat altijd in de tekst.
+	measure Signaal =
+			VAR G        = [Omzet groei JoJ]
+			VAR NGestopt = [Wijnen gestopt]
+			VAR Gemist   = [Omzet gemist]
+			VAR Zin1 =
+			    SWITCH(TRUE(),
+			        ISBLANK(G), BLANK(),
+			        G <= -0.10,
+			            "Omzet daalt " & FORMAT(ABS(G), "0%", "nl-NL") &
+			            " over de laatste zes maanden, tegenover dezelfde zes maanden vorig jaar.",
+			        G >= 0.10,
+			            "Omzet stijgt " & FORMAT(G, "0%", "nl-NL") &
+			            " over de laatste zes maanden, tegenover dezelfde zes maanden vorig jaar.",
+			        BLANK()
+			    )
+			VAR Zin2 =
+			    IF(NGestopt > 0,
+			        FORMAT(NGestopt, "#,##0", "nl-NL") & " wijnen gestopt, samen goed voor " &
+			        FORMAT(Gemist, "€ #,##0", "nl-NL") & " omzet in de twaalf maanden daarvoor.",
+			        BLANK()
+			    )
+			RETURN
+			    SWITCH(TRUE(),
+			        ISBLANK(Zin1) && ISBLANK(Zin2),
+			            "Geen bijzonderheden in de cijfers van de laatste twaalf maanden.",
+			        ISBLANK(Zin1), Zin2,
+			        ISBLANK(Zin2), Zin1,
+			        Zin1 & UNICHAR(10) & Zin2
+			    )
+		lineageTag: 9c6058b9-46f8-4558-9b5d-01e0aedb42ca
+
+	measure 'Signaal kleur' =
+			VAR G = [Omzet groei JoJ]
+			RETURN IF(NOT ISBLANK(G) && G <= -0.10, "#FDECEA", "#F2F5F2")
+		lineageTag: 55dda75b-7658-425a-bff9-d334fb050593
+
+	measure 'Signaal tekstkleur' =
+			VAR G = [Omzet groei JoJ]
+			RETURN IF(NOT ISBLANK(G) && G <= -0.10, "#A2515F", "#1B2523")
+		lineageTag: dcbcbbcf-eec4-4d3f-abf2-4360e67ee838
+
+	measure Statuslabel =
+			VAR S = SELECTEDVALUE(fct_klant_product[regelstatus], "meerdere")
+			VAR D = MAX(fct_klant_product[laatste_order_datum])
+			RETURN SWITCH(S,
+			    "actief",      "Actief",
+			    "gestopt",     "Gestopt · " & FORMAT(D, "mmm yy", "nl-NL"),
+			    "kans",        "Kans",
+			    "incidenteel", "Incidenteel",
+			    S
+			)
+		lineageTag: 47ae4736-9c0c-4fd9-a43c-0c2115c786d7
+
+	measure 'Flessen tabel' =
+			VAR S = SELECTEDVALUE(fct_klant_product[regelstatus], "meerdere")
+			RETURN IF(S IN { "gestopt", "kans" },
+			    SUM(fct_klant_product[flessen_vorige_12m]),
+			    SUM(fct_klant_product[flessen_12m])
+			)
+		formatString: #,0
+		lineageTag: 5d460b73-bfff-460c-aa23-2c75c721b659
+
+	/// Mengt twee vensters in een kolom - zie 3.8.
+	measure 'Omzet tabel' =
+			VAR S = SELECTEDVALUE(fct_klant_product[regelstatus], "meerdere")
+			RETURN IF(S IN { "gestopt", "kans" },
+			    SUM(fct_klant_product[omzet_vorige_12m]),
+			    SUM(fct_klant_product[omzet_12m])
+			)
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 577bb4c1-88c8-4f51-86c3-6222564b3620
+
+	measure Sorteerwaarde =
+			MAX(
+			    SUM(fct_klant_product[omzet_12m]),
+			    SUM(fct_klant_product[omzet_vorige_12m])
+			)
+		isHidden
+		lineageTag: 8fda9306-bc12-4c71-8a49-d76f0c0581c4
+
+	measure 'Wijnen actief label' = FORMAT(COALESCE([Wijnen actief], 0), "#,##0", "nl-NL") & " wijnen"
+		lineageTag: 0e7403f7-702f-4a6d-955b-cb039b1ffbef
+
+	/// COALESCE: Wijnen gestopt is BLANK zonder gestopte wijnen, anders leest de tegel als ' wijnen'.
+	measure 'Wijnen gestopt label' = FORMAT(COALESCE([Wijnen gestopt], 0), "#,##0", "nl-NL") & " wijnen"
+		lineageTag: 872b7bb1-b2b4-49c5-9d45-2251dc144cc3
+
+	measure 'Wijnen kans label' = FORMAT(COALESCE([Wijnen kans], 0), "#,##0", "nl-NL") & " wijnen"
+		lineageTag: 8dd60a23-e83d-4819-819a-feecb35ceb07
+
+	/// MIN, niet MAX: MAX laat een halve maand extra door (13 punten i.p.v. 12). Optie 1 uit 8.3 - eindigt op de laatste complete maand.
+	measure 'In laatste 12 maanden' =
+			VAR Einddatum  = [Peildatum]
+			VAR Startdatum = EDATE(Einddatum, -13)
+			VAR M          = MIN(dim_date[datum])
+			RETURN IF(M > Startdatum && M <= EOMONTH(Einddatum, -1), 1, 0)
+		lineageTag: 41c4ada6-a5ca-4d9f-bf3f-85bfd17578fc
+
+	/// IF-guard: zonder klantselectie blank, waardoor Power BI de knop uitschakelt.
+	measure 'Pierre verkoopadvies' =
+			VAR KlantId = SELECTEDVALUE(dim_customer[klant_id])
+			RETURN
+			    IF(NOT ISBLANK(KlantId),
+			        "https://wijngalerij-agent.fly.dev/?klant=" & KlantId & "&vraag=verkoopadvies")
+		lineageTag: 1c3b4bef-aecf-45dd-9e9b-54c5633fa58c
+
+	/// Geen DATESBETWEEN: die wist als time-intelligence functie alle filters op dim_date (ook maand_naam), waardoor elke maand het 24-maands totaal gaf. FILTER op alleen dim_date[datum] laat de maandfilter staan.
+	measure Piekmaanden =
+			VAR Einddatum  = [Peildatum]
+			VAR Startdatum = EDATE(Einddatum, -24)
+			VAR PerMaand =
+			    ADDCOLUMNS(
+			        VALUES(dim_date[maand_naam]),
+			        "@Omzet",
+			        CALCULATE(
+			            [Omzet],
+			            KEEPFILTERS(
+			                FILTER(
+			                    ALL(dim_date[datum]),
+			                    dim_date[datum] > Startdatum && dim_date[datum] <= Einddatum
+			                )
+			            )
+			        )
+			    )
+			VAR Top2 = TOPN(2, PerMaand, [@Omzet], DESC)
+			RETURN
+			    IF(HASONEVALUE(dim_customer[klant_naam]),
+			        "Piekmaanden over de laatste twee jaar: "
+			        & CONCATENATEX(Top2, dim_date[maand_naam], " en ", [@Omzet], DESC) & ".")
+		lineageTag: 68675a8d-3c77-4e16-9fea-0339cd002377
+
+	measure 'Grootste verlies' =
+			VAR Rij = TOPN(1,
+			    FILTER(fct_klant_product, fct_klant_product[regelstatus] = "gestopt"),
+			    fct_klant_product[omzet_vorige_12m], DESC)
+			VAR Naam   = MAXX(Rij, fct_klant_product[product_naam])
+			VAR Bedrag = MAXX(Rij, fct_klant_product[omzet_vorige_12m])
+			VAR Datum  = MAXX(Rij, fct_klant_product[laatste_order_datum])
+			RETURN IF(NOT ISBLANK(Naam),
+			    "Grootste weggevallen wijn: " & Naam & " — " &
+			    FORMAT(Bedrag, "€ #,##0", "nl-NL") & " in de twaalf maanden ervoor, laatst besteld " &
+			    FORMAT(Datum, "d MMMM yyyy", "nl-NL") & ".")
+		lineageTag: 0832e7b4-fb0b-4b2d-9266-8ce71012ca0d
+
+	measure 'Kopregel sub' =
+			VAR Branche = SELECTEDVALUE(fct_klant[branche])
+			VAR Plaats  = SELECTEDVALUE(fct_klant[plaats])
+			VAR AM      = SELECTEDVALUE(fct_klant[accountmanager])
+			VAR Mail    = SELECTEDVALUE(fct_klant[email])
+			VAR Delen =
+			    FILTER(
+			        { Branche, Plaats, IF(NOT ISBLANK(AM), "Accountmanager " & AM), Mail },
+			        NOT ISBLANK([Value]) && [Value] <> ""
+			    )
+			RETURN CONCATENATEX(Delen, [Value], " · ")
+		lineageTag: 614aa07a-0c51-421c-b7c2-8ddd541f4110
+
+	measure 'Peildatum label' = "Cijfers per " & FORMAT([Peildatum], "d MMMM yyyy", "nl-NL")
+		lineageTag: 6626861a-6d05-4393-878a-ec8dd3bc8066
+
 	column _
 		isNameInferred
 		sourceColumn: [_]
