@@ -349,7 +349,18 @@ table _Metingen
 	measure 'Peildatum label' = "Cijfers per " & FORMAT([Peildatum], "d MMMM yyyy", "nl-NL")
 		lineageTag: 6626861a-6d05-4393-878a-ec8dd3bc8066
 
+	/// Card Data-rol accepteert alleen measures, geen kolommen (PBIR_ROLE_KIND_MISMATCH).
+	measure Klantnaam = SELECTEDVALUE(dim_customer[klant_naam], "Meerdere klanten")
+		lineageTag: 05322f8b-2b26-4cfa-841b-472ca9f48e3a
+
+	/// Idem, en levert meteen het formaat d MMM yyyy uit 5.
+	measure 'Laatste order datum label' =
+			VAR D = SELECTEDVALUE(fct_klant[laatste_order_datum])
+			RETURN IF(NOT ISBLANK(D), FORMAT(D, "d MMM yyyy", "nl-NL"))
+		lineageTag: 7fec11eb-1872-425e-90ba-17af999c7438
+
 	column _
+		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
 		isNameInferred
 		sourceColumn: [_]
 
