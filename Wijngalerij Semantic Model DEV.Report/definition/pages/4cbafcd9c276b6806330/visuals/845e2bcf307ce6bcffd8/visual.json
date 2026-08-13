@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "87db302f90cf1f950a98",
+  "name": "845e2bcf307ce6bcffd8",
   "position": {
-    "x": 470,
-    "y": 70,
-    "z": 107,
-    "height": 26,
-    "width": 90,
-    "tabOrder": 107
+    "x": 341,
+    "y": 270,
+    "z": 124,
+    "height": 40,
+    "width": 280,
+    "tabOrder": 124
   },
   "visual": {
     "visualType": "cardVisual",
@@ -23,11 +23,11 @@
                       "Entity": "_Metingen"
                     }
                   },
-                  "Property": "Segment badge"
+                  "Property": "Omzet YTD tegel label"
                 }
               },
-              "queryRef": "_Metingen.Segment badge",
-              "nativeQueryRef": "Segment badge"
+              "queryRef": "_Metingen.Omzet YTD tegel label",
+              "nativeQueryRef": "Omzet YTD tegel label"
             }
           ]
         }
@@ -40,7 +40,14 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "12D"
+                  "Value": "26D"
+                }
+              }
+            },
+            "horizontalAlignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'left'"
                 }
               }
             },
@@ -48,27 +55,17 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Aggregation": {
-                      "Expression": {
-                        "Column": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Entity": "fct_klant"
-                            }
-                          },
-                          "Property": "segment_tekstkleur"
-                        }
-                      },
-                      "Function": 3
+                    "Literal": {
+                      "Value": "'#1B2523'"
                     }
                   }
                 }
               }
             },
-            "horizontalAlignment": {
+            "bold": {
               "expr": {
                 "Literal": {
-                  "Value": "'center'"
+                  "Value": "true"
                 }
               }
             }
@@ -101,66 +98,6 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
-                }
-              }
-            }
-          },
-          "selector": {
-            "id": "default"
-          }
-        }
-      ],
-      "fillCustom": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "fillColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Aggregation": {
-                      "Expression": {
-                        "Column": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Entity": "fct_klant"
-                            }
-                          },
-                          "Property": "segment_kleur"
-                        }
-                      },
-                      "Function": 3
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "selector": {
-            "id": "default"
-          }
-        }
-      ],
-      "shapeCustomRectangle": [
-        {
-          "properties": {
-            "tileShape": {
-              "expr": {
-                "Literal": {
-                  "Value": "'rectangleRoundedByPixel'"
-                }
-              }
-            },
-            "rectangleRoundedCurve": {
-              "expr": {
-                "Literal": {
-                  "Value": "13L"
                 }
               }
             }
