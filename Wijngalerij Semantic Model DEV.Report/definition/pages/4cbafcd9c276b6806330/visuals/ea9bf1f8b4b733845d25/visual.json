@@ -252,18 +252,18 @@
                             "Comparison": {
                               "ComparisonKind": 0,
                               "Left": {
-                                "Column": {
+                                "Measure": {
                                   "Expression": {
                                     "SourceRef": {
-                                      "Entity": "fct_klant_product"
+                                      "Entity": "_Metingen"
                                     }
                                   },
-                                  "Property": "regelstatus"
+                                  "Property": "Statuscode"
                                 }
                               },
                               "Right": {
                                 "Literal": {
-                                  "Value": "'actief'"
+                                  "Value": "1D"
                                 }
                               }
                             }
@@ -279,18 +279,18 @@
                             "Comparison": {
                               "ComparisonKind": 0,
                               "Left": {
-                                "Column": {
+                                "Measure": {
                                   "Expression": {
                                     "SourceRef": {
-                                      "Entity": "fct_klant_product"
+                                      "Entity": "_Metingen"
                                     }
                                   },
-                                  "Property": "regelstatus"
+                                  "Property": "Statuscode"
                                 }
                               },
                               "Right": {
                                 "Literal": {
-                                  "Value": "'gestopt'"
+                                  "Value": "2D"
                                 }
                               }
                             }
@@ -306,18 +306,18 @@
                             "Comparison": {
                               "ComparisonKind": 0,
                               "Left": {
-                                "Column": {
+                                "Measure": {
                                   "Expression": {
                                     "SourceRef": {
-                                      "Entity": "fct_klant_product"
+                                      "Entity": "_Metingen"
                                     }
                                   },
-                                  "Property": "regelstatus"
+                                  "Property": "Statuscode"
                                 }
                               },
                               "Right": {
                                 "Literal": {
-                                  "Value": "'kans'"
+                                  "Value": "3D"
                                 }
                               }
                             }
@@ -364,18 +364,18 @@
                             "Comparison": {
                               "ComparisonKind": 0,
                               "Left": {
-                                "Column": {
+                                "Measure": {
                                   "Expression": {
                                     "SourceRef": {
-                                      "Entity": "fct_klant_product"
+                                      "Entity": "_Metingen"
                                     }
                                   },
-                                  "Property": "regelstatus"
+                                  "Property": "Statuscode"
                                 }
                               },
                               "Right": {
                                 "Literal": {
-                                  "Value": "'actief'"
+                                  "Value": "1D"
                                 }
                               }
                             }
@@ -391,18 +391,18 @@
                             "Comparison": {
                               "ComparisonKind": 0,
                               "Left": {
-                                "Column": {
+                                "Measure": {
                                   "Expression": {
                                     "SourceRef": {
-                                      "Entity": "fct_klant_product"
+                                      "Entity": "_Metingen"
                                     }
                                   },
-                                  "Property": "regelstatus"
+                                  "Property": "Statuscode"
                                 }
                               },
                               "Right": {
                                 "Literal": {
-                                  "Value": "'gestopt'"
+                                  "Value": "2D"
                                 }
                               }
                             }
@@ -418,18 +418,18 @@
                             "Comparison": {
                               "ComparisonKind": 0,
                               "Left": {
-                                "Column": {
+                                "Measure": {
                                   "Expression": {
                                     "SourceRef": {
-                                      "Entity": "fct_klant_product"
+                                      "Entity": "_Metingen"
                                     }
                                   },
-                                  "Property": "regelstatus"
+                                  "Property": "Statuscode"
                                 }
                               },
                               "Right": {
                                 "Literal": {
-                                  "Value": "'kans'"
+                                  "Value": "3D"
                                 }
                               }
                             }
