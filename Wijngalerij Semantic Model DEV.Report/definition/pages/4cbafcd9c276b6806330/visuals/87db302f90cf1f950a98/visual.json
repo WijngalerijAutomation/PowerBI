@@ -48,8 +48,18 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#577D79'"
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "fct_klant"
+                            }
+                          },
+                          "Property": "segment_tekstkleur"
+                        }
+                      },
+                      "Function": 3
                     }
                   }
                 }
@@ -114,8 +124,18 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#DCEAE7'"
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "fct_klant"
+                            }
+                          },
+                          "Property": "segment_kleur"
+                        }
+                      },
+                      "Function": 3
                     }
                   }
                 }
