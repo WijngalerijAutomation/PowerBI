@@ -3,11 +3,11 @@
   "name": "af3942bc46fea4bdfec4",
   "position": {
     "x": 16,
-    "y": 184,
-    "z": 140,
+    "y": 182,
+    "z": 142,
     "height": 24,
     "width": 1248,
-    "tabOrder": 140
+    "tabOrder": 142
   },
   "visual": {
     "visualType": "cardVisual",
@@ -184,6 +184,13 @@
                   "Value": "0L"
                 }
               }
+            },
+            "backgroundShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
             }
           },
           "selector": {
@@ -206,22 +213,46 @@
             "id": "default"
           }
         }
-      ]
-    },
-    "visualContainerObjects": {
-      "background": [
+      ],
+      "fillCustom": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
+                }
+              }
+            },
+            "fillColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "fct_klant"
+                            }
+                          },
+                          "Property": "signaal_kleur"
+                        }
+                      },
+                      "Function": 3
+                    }
+                  }
                 }
               }
             }
+          },
+          "selector": {
+            "id": "default"
           }
         }
-      ],
+      ]
+    },
+    "visualContainerObjects": {
       "border": [
         {
           "properties": {
