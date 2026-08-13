@@ -9,59 +9,6 @@
     "width": 1280,
     "tabOrder": 150
   },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "Filterf7257ad008f0c3fabd0ed76c",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Metingen"
-              }
-            },
-            "Property": "In laatste 12 maanden"
-          }
-        },
-        "type": "Advanced",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "m",
-              "Entity": "_Metingen",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "Comparison": {
-                  "ComparisonKind": 0,
-                  "Left": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Source": "m"
-                        }
-                      },
-                      "Property": "In laatste 12 maanden"
-                    }
-                  },
-                  "Right": {
-                    "Literal": {
-                      "Value": "1L"
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User"
-      }
-    ]
-  },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
     "query": {
@@ -76,11 +23,11 @@
                       "Entity": "dim_date"
                     }
                   },
-                  "Property": "maand_label"
+                  "Property": "maand_kort"
                 }
               },
-              "queryRef": "dim_date.maand_label",
-              "nativeQueryRef": "maand_label"
+              "queryRef": "dim_date.maand_kort",
+              "nativeQueryRef": "maand_kort"
             }
           ]
         },
@@ -91,14 +38,14 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "fct_sales"
+                      "Entity": "_Metingen"
                     }
                   },
-                  "Property": "Omzet"
+                  "Property": "Dit jaar"
                 }
               },
-              "queryRef": "fct_sales.Omzet",
-              "nativeQueryRef": "Omzet"
+              "queryRef": "_Metingen.Dit jaar",
+              "nativeQueryRef": "Dit jaar"
             }
           ]
         },
@@ -109,14 +56,14 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "fct_sales"
+                      "Entity": "_Metingen"
                     }
                   },
-                  "Property": "Omzet vorig jaar"
+                  "Property": "Vorig jaar"
                 }
               },
-              "queryRef": "fct_sales.Omzet vorig jaar",
-              "nativeQueryRef": "Omzet vorig jaar"
+              "queryRef": "_Metingen.Vorig jaar",
+              "nativeQueryRef": "Vorig jaar"
             }
           ]
         }
@@ -131,7 +78,7 @@
                     "Entity": "dim_date"
                   }
                 },
-                "Property": "maand_label"
+                "Property": "maand_kort"
               }
             },
             "direction": "Ascending"
@@ -172,7 +119,7 @@
             }
           },
           "selector": {
-            "metadata": "fct_sales.Omzet vorig jaar"
+            "metadata": "_Metingen.Vorig jaar"
           }
         }
       ],
@@ -199,10 +146,17 @@
                   "Value": "false"
                 }
               }
+            },
+            "lineChartType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'smooth'"
+                }
+              }
             }
           },
           "selector": {
-            "metadata": "fct_sales.Omzet vorig jaar"
+            "metadata": "_Metingen.Vorig jaar"
           }
         }
       ],
@@ -227,6 +181,17 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            },
+            "labelColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1B2523'"
+                    }
+                  }
                 }
               }
             }
@@ -263,6 +228,17 @@
                   "Value": "false"
                 }
               }
+            },
+            "labelColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#5C6B66'"
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -281,6 +257,63 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
+                }
+              }
+            },
+            "gridlineShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridlineColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#E4E9E4'"
+                    }
+                  }
+                }
+              }
+            },
+            "gridlineThickness": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "gridlineStyle": {
+              "expr": {
+                "Literal": {
+                  "Value": "'solid'"
+                }
+              }
+            },
+            "labelColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#5C6B66'"
+                    }
+                  }
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1000D"
+                }
+              }
+            },
+            "labelPrecision": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
                 }
               }
             }
@@ -395,5 +428,58 @@
         }
       ]
     }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "Filterf7257ad008f0c3fabd0ed76c",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Metingen"
+              }
+            },
+            "Property": "In laatste 12 maanden"
+          }
+        },
+        "type": "Advanced",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "m",
+              "Entity": "_Metingen",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 0,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "m"
+                        }
+                      },
+                      "Property": "In laatste 12 maanden"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "1L"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
+      }
+    ]
   }
 }
