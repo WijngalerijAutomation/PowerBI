@@ -23,11 +23,11 @@
                       "Entity": "dim_date"
                     }
                   },
-                  "Property": "maand_kort"
+                  "Property": "maand_label"
                 }
               },
-              "queryRef": "dim_date.maand_kort",
-              "nativeQueryRef": "maand_kort"
+              "queryRef": "dim_date.maand_label",
+              "nativeQueryRef": "maand_label"
             }
           ]
         },
@@ -78,7 +78,7 @@
                     "Entity": "dim_date"
                   }
                 },
-                "Property": "maand_kort"
+                "Property": "maand_label"
               }
             },
             "direction": "Ascending"
