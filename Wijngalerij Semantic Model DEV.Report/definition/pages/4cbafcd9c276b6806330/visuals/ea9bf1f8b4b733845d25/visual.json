@@ -9,63 +9,6 @@
     "width": 1280,
     "tabOrder": 180
   },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "Filter197446f9c6f41d512316e991",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "fct_klant_product"
-              }
-            },
-            "Property": "regelstatus"
-          }
-        },
-        "type": "Advanced",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "f",
-              "Entity": "fct_klant_product",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "Not": {
-                  "Expression": {
-                    "Comparison": {
-                      "ComparisonKind": 0,
-                      "Left": {
-                        "Column": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Source": "f"
-                            }
-                          },
-                          "Property": "regelstatus"
-                        }
-                      },
-                      "Right": {
-                        "Literal": {
-                          "Value": "'incidenteel'"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User"
-      }
-    ]
-  },
   "visual": {
     "visualType": "pivotTable",
     "query": {
@@ -85,6 +28,7 @@
               },
               "queryRef": "fct_klant_product.product_naam",
               "nativeQueryRef": "product_naam",
+              "active": true,
               "displayName": "Wijn"
             }
           ]
@@ -507,6 +451,22 @@
             }
           }
         }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "605.3333201210614D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "fct_klant_product.product_naam"
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -584,5 +544,62 @@
         }
       ]
     }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "Filter197446f9c6f41d512316e991",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fct_klant_product"
+              }
+            },
+            "Property": "regelstatus"
+          }
+        },
+        "type": "Advanced",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "f",
+              "Entity": "fct_klant_product",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Not": {
+                  "Expression": {
+                    "Comparison": {
+                      "ComparisonKind": 0,
+                      "Left": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Source": "f"
+                            }
+                          },
+                          "Property": "regelstatus"
+                        }
+                      },
+                      "Right": {
+                        "Literal": {
+                          "Value": "'incidenteel'"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
+      }
+    ]
   }
 }

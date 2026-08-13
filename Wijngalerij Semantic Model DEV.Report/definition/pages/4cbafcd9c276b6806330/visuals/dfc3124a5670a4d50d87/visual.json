@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_date.maand_label",
-              "nativeQueryRef": "maand_label"
+              "nativeQueryRef": "maand_label",
+              "active": true
             }
           ]
         },

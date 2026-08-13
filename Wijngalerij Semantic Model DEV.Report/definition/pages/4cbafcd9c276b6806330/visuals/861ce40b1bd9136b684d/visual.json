@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "c77088ca161f612b52ee",
+  "name": "861ce40b1bd9136b684d",
   "position": {
-    "x": 882,
-    "y": 752,
-    "z": 176,
-    "height": 18,
-    "width": 200,
-    "tabOrder": 176
+    "x": 16,
+    "y": 1216,
+    "z": 191,
+    "height": 24,
+    "width": 700,
+    "tabOrder": 191
   },
   "visual": {
     "visualType": "textbox",
@@ -19,11 +19,12 @@
               {
                 "textRuns": [
                   {
-                    "value": "Kans",
+                    "value": "Actiepunten voor het volgende bezoek",
                     "textStyle": {
-                      "fontFamily": "Segoe UI",
-                      "fontSize": "11px",
-                      "color": "#5C6B66"
+                      "fontFamily": "Segoe UI Semibold",
+                      "fontSize": "14px",
+                      "color": "#1B2523",
+                      "fontWeight": "bold"
                     }
                   }
                 ],

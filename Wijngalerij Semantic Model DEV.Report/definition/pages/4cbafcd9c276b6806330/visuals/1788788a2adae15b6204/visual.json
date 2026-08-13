@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "fbaa18239c8f16fead0b",
+  "name": "1788788a2adae15b6204",
   "position": {
-    "x": 449,
-    "y": 816,
-    "z": 175,
-    "height": 20,
-    "width": 380,
-    "tabOrder": 175
+    "x": 16,
+    "y": 1382,
+    "z": 195,
+    "height": 18,
+    "width": 760,
+    "tabOrder": 195
   },
   "visual": {
     "visualType": "cardVisual",
@@ -23,11 +23,11 @@
                       "Entity": "_Metingen"
                     }
                   },
-                  "Property": "Portfolio gestopt subregel"
+                  "Property": "Actualiteit label"
                 }
               },
-              "queryRef": "_Metingen.Portfolio gestopt subregel",
-              "nativeQueryRef": "Portfolio gestopt subregel"
+              "queryRef": "_Metingen.Actualiteit label",
+              "nativeQueryRef": "Actualiteit label"
             }
           ]
         }
@@ -40,7 +40,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "11D"
+                  "Value": "10D"
                 }
               }
             },
@@ -56,9 +56,16 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#5C6B66'"
+                      "Value": "'#839182'"
                     }
                   }
+                }
+              }
+            },
+            "textWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

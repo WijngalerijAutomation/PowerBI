@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "fbaa18239c8f16fead0b",
+  "name": "2eddd77272ac2e99fcb6",
   "position": {
-    "x": 449,
-    "y": 816,
-    "z": 175,
-    "height": 20,
-    "width": 380,
-    "tabOrder": 175
+    "x": 16,
+    "y": 1256,
+    "z": 192,
+    "height": 24,
+    "width": 1040,
+    "tabOrder": 192
   },
   "visual": {
     "visualType": "cardVisual",
@@ -23,11 +23,11 @@
                       "Entity": "_Metingen"
                     }
                   },
-                  "Property": "Portfolio gestopt subregel"
+                  "Property": "Piekmaanden"
                 }
               },
-              "queryRef": "_Metingen.Portfolio gestopt subregel",
-              "nativeQueryRef": "Portfolio gestopt subregel"
+              "queryRef": "_Metingen.Piekmaanden",
+              "nativeQueryRef": "Piekmaanden"
             }
           ]
         }
@@ -40,7 +40,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "11D"
+                  "Value": "12D"
                 }
               }
             },
@@ -56,9 +56,16 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#5C6B66'"
+                      "Value": "'#1B2523'"
                     }
                   }
+                }
+              }
+            },
+            "textWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }
