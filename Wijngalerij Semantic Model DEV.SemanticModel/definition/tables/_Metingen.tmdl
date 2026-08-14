@@ -1044,26 +1044,24 @@ table _Metingen
 			RETURN IF(NOT ISBLANK(Pid), CALCULATE(SELECTEDVALUE(fct_klant_product[regelstatus]), fct_klant_product[product_id] = Pid), "")
 		lineageTag: eed5fdc1-7e47-4728-833e-9357b58c962f
 
-	/// Visual-filter voor de klantentabel op Productdetail: zonder relatie tussen fct_klant_product en dim_product zou de tabel elke klant tonen.
+	/// Visual-filter voor de klantentabel op Productdetail. Vereist omzet in het venster, zodat de tabel precies de klanten toont die de kop telt en 'klanten die deze wijn kopen' ook echt kopers zijn.
 	measure 'Regel hoort bij wijn' =
 			VAR Pid = SELECTEDVALUE(fct_voorraad[product_id])
-			VAR N = IF(NOT ISBLANK(Pid), CALCULATE(COUNTROWS(fct_klant_product), fct_klant_product[product_id] = Pid))
+			VAR N =
+			    IF(NOT ISBLANK(Pid),
+			        CALCULATE(
+			            COUNTROWS(fct_klant_product),
+			            fct_klant_product[product_id] = Pid,
+			            fct_klant_product[omzet_12m] > 0
+			        )
+			    )
 			RETURN IF(NOT ISBLANK(N) && N > 0, 1, 0)
 		formatString: 0
 		isHidden
 		lineageTag: a39fbbc4-ed9a-4208-a91f-b62561c096fc
 
-	/// Telt de zakelijke klanten die de tabel eronder toont, zodat kop en lijst hetzelfde aantal geven. De omzet in die tabel telt bewust niet op tot de omzet-KPI: consumenten zitten wel in het product-totaal maar niet in de lijst.
-	measure 'Wijn klanten in lijst' =
-			VAR Pid = SELECTEDVALUE(fct_voorraad[product_id])
-			RETURN
-			    IF(NOT ISBLANK(Pid),
-			        CALCULATE(
-			            DISTINCTCOUNT(fct_klant_product[klant_id]),
-			            fct_klant_product[product_id] = Pid,
-			            fct_klant_product[is_zakelijk] = 1
-			        )
-			    )
+	/// Zakelijke klanten met omzet op deze wijn in het venster. Telt precies de rijen die de tabel eronder toont, en vormt samen met klanten_vorige_12m een vergelijkbaar paar voor de groei. Niet [Klanten per wijn]: die mart-kolom telt alle klanten inclusief consumenten en ook regels zonder omzet.
+	measure 'Wijn klanten in lijst' = SUM(fct_voorraad[klanten_nu_zakelijk])
 		formatString: #,0
 		lineageTag: abec7e5c-cdac-4903-998a-c3fd4a87ed1b
 
@@ -1160,9 +1158,11 @@ table _Metingen
 			RETURN IF(ISBLANK(V) || V = 0 || ISBLANK(G), "nieuw", IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
 		lineageTag: 8a662dc6-c11e-461b-8426-9bca4f4d6a7a
 
+	/// Vergelijkt zakelijke klanten met omzet nu tegen dezelfde afbakening vorig venster - hetzelfde getal dat de kaart toont.
 	measure 'Wijn klanten groei label' =
 			VAR V = [Wijn klanten vorig]
-			VAR G = DIVIDE([Klanten per wijn] - V, V)
+			VAR N = [Wijn klanten in lijst]
+			VAR G = DIVIDE(N - V, V)
 			RETURN IF(ISBLANK(V) || V = 0 || ISBLANK(G), "nieuw", IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
 		lineageTag: b26d59ff-70a9-40b1-82d4-16ebdbb1bb5d
 

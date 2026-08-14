@@ -720,14 +720,16 @@ table fct_voorraad
 		lineageTag: 8ad1cf22-d032-4c0a-8568-2cd1eb148fc7
 		summarizeBy: sum
 
-	/// fct_klant_product heeft een rij per klant per product, dus COUNTROWS telt hier klanten.
+	/// Zakelijke klanten met omzet op deze wijn in het vorige venster. Zelfde afbakening als klanten_nu_zakelijk.
 	column klanten_vorige_12m =
 			VAR Pid = fct_voorraad[product_id]
 			RETURN
 			    COUNTROWS(
 			        FILTER(
 			            ALL(fct_klant_product),
-			            fct_klant_product[product_id] = Pid && fct_klant_product[omzet_vorige_12m] > 0
+			            fct_klant_product[product_id] = Pid
+			                && fct_klant_product[is_zakelijk] = 1
+			                && fct_klant_product[omzet_vorige_12m] > 0
 			        )
 			    )
 		dataType: int64
@@ -752,7 +754,7 @@ table fct_voorraad
 		summarizeBy: none
 
 	column klanten_groei_kleur =
-			VAR Nu = fct_voorraad[n_klanten]
+			VAR Nu = fct_voorraad[klanten_nu_zakelijk]
 			VAR Vorig = fct_voorraad[klanten_vorige_12m]
 			RETURN IF(ISBLANK(Vorig) || Vorig = 0 || Nu >= Vorig, "#1F9D55", "#CC3B2F")
 		dataType: string
@@ -766,6 +768,22 @@ table fct_voorraad
 		dataType: string
 		lineageTag: 6e1af692-ba18-4128-ad9e-6740da8069ba
 		summarizeBy: none
+
+	/// Zakelijke klanten met omzet op deze wijn in het huidige venster. Tegenhanger van klanten_vorige_12m, zodat de groei appels met appels vergelijkt. Niet fct_voorraad[n_klanten]: die telt alle klanten inclusief consumenten en telt ook regels zonder omzet mee.
+	column klanten_nu_zakelijk =
+			VAR Pid = fct_voorraad[product_id]
+			RETURN
+			    COUNTROWS(
+			        FILTER(
+			            ALL(fct_klant_product),
+			            fct_klant_product[product_id] = Pid
+			                && fct_klant_product[is_zakelijk] = 1
+			                && fct_klant_product[omzet_12m] > 0
+			        )
+			    )
+		dataType: int64
+		lineageTag: b48156e1-d710-4171-814f-f4261deac488
+		summarizeBy: sum
 
 	partition fct_voorraad = m
 		mode: import

@@ -4,10 +4,10 @@
   "position": {
     "x": 648,
     "y": 310,
-    "z": 160,
+    "z": 24000,
     "height": 19.17,
     "width": 292,
-    "tabOrder": 160
+    "tabOrder": 24000
   },
   "visual": {
     "visualType": "textbox",
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Zakelijke klanten",
+                    "value": "Klanten",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10.5pt",
