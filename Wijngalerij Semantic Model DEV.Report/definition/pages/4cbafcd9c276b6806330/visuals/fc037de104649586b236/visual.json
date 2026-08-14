@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "fc037de104649586b236",
   "position": {
-    "x": 977.8,
-    "y": 250,
+    "x": 977.5,
+    "y": 241.25,
     "z": 23000,
-    "height": 18,
-    "width": 231,
+    "height": 26.25,
+    "width": 231.25,
     "tabOrder": 23000
   },
   "visual": {
@@ -22,12 +22,11 @@
                     "value": "Flessen 12 mnd",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11px",
-                      "color": "#5C6B66"
+                      "fontSize": "12pt",
+                      "color": "#5c6b66"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               }
             ]
           }

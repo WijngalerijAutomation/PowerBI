@@ -253,5 +253,23 @@
         }
       ]
     }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "3b90c89cac1bbb7aa46e",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Metingen"
+              }
+            },
+            "Property": "YTD periode label"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

@@ -3,10 +3,10 @@
   "name": "80cfe29df81b9699bc63",
   "position": {
     "x": 665,
-    "y": 250,
+    "y": 241.25,
     "z": 20000,
-    "height": 18,
-    "width": 231,
+    "height": 26.25,
+    "width": 231.25,
     "tabOrder": 20000
   },
   "visual": {
@@ -22,12 +22,11 @@
                     "value": "Orders 12 mnd",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11px",
-                      "color": "#5C6B66"
+                      "fontSize": "12pt",
+                      "color": "#5c6b66"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               }
             ]
           }

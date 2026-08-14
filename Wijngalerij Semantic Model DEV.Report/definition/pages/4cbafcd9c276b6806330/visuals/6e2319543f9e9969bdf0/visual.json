@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "6e2319543f9e9969bdf0",
   "position": {
-    "x": 352.2,
-    "y": 250,
+    "x": 352.5,
+    "y": 241.25,
     "z": 17000,
-    "height": 18,
-    "width": 231,
+    "height": 26.25,
+    "width": 231.25,
     "tabOrder": 17000
   },
   "visual": {
@@ -22,12 +22,11 @@
                     "value": "Omzet YTD",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11px",
-                      "color": "#5C6B66"
+                      "fontSize": "12pt",
+                      "color": "#5c6b66"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               }
             ]
           }

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "abe1da75dea0fb24f945",
   "position": {
-    "x": 39.4,
-    "y": 250,
+    "x": 40,
+    "y": 241.25,
     "z": 14000,
-    "height": 18,
-    "width": 231,
+    "height": 26.25,
+    "width": 230,
     "tabOrder": 14000
   },
   "visual": {
@@ -22,12 +22,11 @@
                     "value": "Omzet 12 mnd",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11px",
-                      "color": "#5C6B66"
+                      "fontSize": "10.5pt",
+                      "color": "#5c6b66"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               }
             ]
           }

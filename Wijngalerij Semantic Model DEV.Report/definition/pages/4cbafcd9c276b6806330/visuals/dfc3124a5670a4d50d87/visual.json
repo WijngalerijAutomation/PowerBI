@@ -480,6 +480,48 @@
           ]
         },
         "howCreated": "User"
+      },
+      {
+        "name": "deaa9608353f68ce665e",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_date"
+              }
+            },
+            "Property": "maand_label"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "bd0d3c1ead9de98597d0",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Metingen"
+              }
+            },
+            "Property": "Dit jaar"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "a7d4a42c67b287131059",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Metingen"
+              }
+            },
+            "Property": "Vorig jaar"
+          }
+        },
+        "type": "Advanced"
       }
     ]
   }

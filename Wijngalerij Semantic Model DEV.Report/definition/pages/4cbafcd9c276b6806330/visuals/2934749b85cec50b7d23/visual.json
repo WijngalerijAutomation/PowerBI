@@ -260,5 +260,23 @@
         }
       ]
     }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "f22cd9ad46dbc40ca9fd",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Metingen"
+              }
+            },
+            "Property": "Omzet 12m rollend label"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

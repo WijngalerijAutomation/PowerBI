@@ -21,6 +21,7 @@
                   {
                     "value": "LAATSTE ORDER",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontFamily": "Segoe UI",
                       "fontSize": "11px",
                       "color": "#839182"
