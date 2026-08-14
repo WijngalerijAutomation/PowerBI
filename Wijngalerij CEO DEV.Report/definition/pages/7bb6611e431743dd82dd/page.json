@@ -1,9 +1,9 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
   "name": "7bb6611e431743dd82dd",
-  "displayName": "Overzicht",
+  "displayName": "CEO dashboard",
   "displayOption": "ActualSize",
-  "height": 720,
+  "height": 1080,
   "width": 1280,
   "objects": {
     "background": [
