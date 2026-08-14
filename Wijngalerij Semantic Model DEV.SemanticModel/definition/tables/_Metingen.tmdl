@@ -395,13 +395,17 @@ table _Metingen
 
 	/// Lege string i.p.v. BLANK: een cardVisual rendert BLANK als '--' op de tweede bannerregel.
 	measure 'Signaal regel 2' =
-			VAR N = [Wijnen gestopt]
-			VAR Gemist = [Omzet gemist]
-			RETURN IF(N > 0,
-			    FORMAT(N, "#,##0", "nl-NL") & " wijnen gestopt, samen goed voor " &
-			    FORMAT(Gemist, "€ #,##0", "nl-NL") & " omzet in de twaalf maanden daarvoor.",
-			    ""
-			)
+			VAR N      = COALESCE([Wijnen gestopt], 0)
+			VAR Gemist = COALESCE([Omzet gemist], 0)
+			VAR Onderwerp = IF(N = 1, " wijn gestopt", " wijnen gestopt")
+			VAR Staart =
+			    IF(Gemist > 0,
+			        IF(N = 1, ", goed voor ", ", samen goed voor ") &
+			        FORMAT(Gemist, "€ #,##0", "nl-NL") & " omzet in de twaalf maanden daarvoor.",
+			        ", zonder omzet in de twaalf maanden daarvoor."
+			    )
+			RETURN
+			    IF(N > 0, FORMAT(N, "#,##0", "nl-NL") & Onderwerp & Staart, "")
 		lineageTag: 944c0463-9039-4ee1-bab5-01450ae8fdd3
 
 	/// Alias van [Omzet] puur voor de legenda: Power BI toont de measurenaam (8.2).
