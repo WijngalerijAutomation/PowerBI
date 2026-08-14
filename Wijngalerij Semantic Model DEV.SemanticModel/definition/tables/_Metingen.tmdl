@@ -680,6 +680,199 @@ table _Metingen
 		isHidden
 		lineageTag: 9aa22fb7-597b-4909-b636-89595ecdbbab
 
+	/// YTD via dim_date[is_ytd_vergelijkbaar], niet via SAMEPERIODLASTYEAR: die verschuift zonder datumfilter de hele tabel en geeft het volledige vorige jaar terug.
+	measure 'Omzet YTD dit jaar' =
+			VAR Jr = YEAR([Peildatum])
+			RETURN
+			    CALCULATE(
+			        [Omzet],
+			        REMOVEFILTERS(dim_date),
+			        dim_date[is_ytd_vergelijkbaar] = TRUE(),
+			        dim_date[jaar] = Jr
+			    )
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 0213579d-c333-44a1-9533-91bd15e49937
+
+	/// Dezelfde kalenderperiode vorig jaar (1 jan t/m de dag van de peildatum).
+	measure 'Omzet YTD vorig jaar' =
+			VAR Jr = YEAR([Peildatum]) - 1
+			RETURN
+			    CALCULATE(
+			        [Omzet],
+			        REMOVEFILTERS(dim_date),
+			        dim_date[is_ytd_vergelijkbaar] = TRUE(),
+			        dim_date[jaar] = Jr
+			    )
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: a1cf9392-c3a8-4b1c-bdf5-4b4f939fc9e6
+
+	measure 'Omzet YTD groei' = DIVIDE([Omzet YTD dit jaar] - [Omzet YTD vorig jaar], [Omzet YTD vorig jaar])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: bf6d9bde-60bc-45d6-b2f6-8c1bf0be9c85
+
+	measure 'Orders YTD dit jaar' =
+			VAR Jr = YEAR([Peildatum])
+			RETURN
+			    CALCULATE([Orders], REMOVEFILTERS(dim_date), dim_date[is_ytd_vergelijkbaar] = TRUE(), dim_date[jaar] = Jr)
+		formatString: #,0
+		lineageTag: bd50b696-16ef-49ed-8c24-0bc747490f16
+
+	measure 'Orders YTD vorig jaar' =
+			VAR Jr = YEAR([Peildatum]) - 1
+			RETURN
+			    CALCULATE([Orders], REMOVEFILTERS(dim_date), dim_date[is_ytd_vergelijkbaar] = TRUE(), dim_date[jaar] = Jr)
+		formatString: #,0
+		lineageTag: 07698699-069b-4df6-bdec-eb208a4bfe4a
+
+	measure 'Orders YTD groei' = DIVIDE([Orders YTD dit jaar] - [Orders YTD vorig jaar], [Orders YTD vorig jaar])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 23fb8985-93c4-41ce-98b9-75c174cc8a30
+
+	/// is_revenue, niet is_stock_movement: gratis samples tellen niet als verkocht en de hele pagina is revenue-consistent.
+	measure 'Flessen verkocht YTD dit jaar' =
+			VAR Jr = YEAR([Peildatum])
+			RETURN
+			    CALCULATE(
+			        SUM(fct_sales[aantal]),
+			        fct_sales[is_revenue] = TRUE(),
+			        REMOVEFILTERS(dim_date),
+			        dim_date[is_ytd_vergelijkbaar] = TRUE(),
+			        dim_date[jaar] = Jr
+			    )
+		formatString: #,0
+		lineageTag: a3038fe3-6fb7-4a8a-8282-65edb990e977
+
+	measure 'Flessen verkocht YTD vorig jaar' =
+			VAR Jr = YEAR([Peildatum]) - 1
+			RETURN
+			    CALCULATE(
+			        SUM(fct_sales[aantal]),
+			        fct_sales[is_revenue] = TRUE(),
+			        REMOVEFILTERS(dim_date),
+			        dim_date[is_ytd_vergelijkbaar] = TRUE(),
+			        dim_date[jaar] = Jr
+			    )
+		formatString: #,0
+		lineageTag: 669d6e93-755c-4076-b3d9-8ce271a4c017
+
+	measure 'Flessen verkocht YTD groei' = DIVIDE([Flessen verkocht YTD dit jaar] - [Flessen verkocht YTD vorig jaar], [Flessen verkocht YTD vorig jaar])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 5e05447a-b265-4631-ad5a-7a278fd37a8a
+
+	measure 'Gem. orderwaarde YTD dit jaar' = DIVIDE([Omzet YTD dit jaar], [Orders YTD dit jaar])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 66e4a3bf-7c41-4154-adaf-f66b45279d51
+
+	measure 'Gem. orderwaarde YTD vorig jaar' = DIVIDE([Omzet YTD vorig jaar], [Orders YTD vorig jaar])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: c93bbeb4-bbd3-4962-afe2-36350e265605
+
+	measure 'Gem. orderwaarde YTD groei' = DIVIDE([Gem. orderwaarde YTD dit jaar] - [Gem. orderwaarde YTD vorig jaar], [Gem. orderwaarde YTD vorig jaar])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: a104a2d6-5a8e-4a7b-b179-26ba7ba2e463
+
+	measure 'Flessen per order YTD dit jaar' = DIVIDE([Flessen verkocht YTD dit jaar], [Orders YTD dit jaar])
+		formatString: 0.0
+		lineageTag: fe4bffc8-f21c-4a6f-9b11-b35a179cc972
+
+	measure 'Flessen per order YTD vorig jaar' = DIVIDE([Flessen verkocht YTD vorig jaar], [Orders YTD vorig jaar])
+		formatString: 0.0
+		lineageTag: 115445ed-ae96-4040-b0d1-837daa697849
+
+	measure 'Flessen per order YTD groei' = DIVIDE([Flessen per order YTD dit jaar] - [Flessen per order YTD vorig jaar], [Flessen per order YTD vorig jaar])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: a0752d50-6ab6-49dc-a4f3-920962e430d5
+
+	/// Het hele vorige kalenderjaar, de basis onder de prognose.
+	measure 'Omzet vorig jaar volledig' =
+			VAR Jr = YEAR([Peildatum]) - 1
+			RETURN CALCULATE([Omzet], REMOVEFILTERS(dim_date), dim_date[jaar] = Jr)
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 642e6eb1-2be9-456c-b825-abf4981baab5
+
+	/// Vorig jaar volledig maal de YTD-groei. Volgt de seizoensvorm van vorig jaar in plaats van het dagtempo tot nu toe; dat scheelt hier ruim twee ton omdat het najaar zwaarder weegt. Berust op een enkel volledig voorgaand jaar - 2024 begint pas in oktober.
+	measure 'Prognose omzet jaar' =
+			VAR Vorig = [Omzet vorig jaar volledig]
+			VAR Groei = [Omzet YTD groei]
+			RETURN IF(NOT ISBLANK(Vorig) && NOT ISBLANK(Groei), Vorig * (1 + Groei))
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 7f54acd9-aa74-42b1-9aa7-be03fc5e0538
+
+	measure 'Prognose rest van jaar' = [Prognose omzet jaar] - [Omzet YTD dit jaar]
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: e6adf86b-92d7-491b-83d4-7a7775666c99
+
+	measure 'Omzet YTD dit jaar label' = FORMAT([Omzet YTD dit jaar], "€ #,##0", "nl-NL")
+		lineageTag: 032e066c-c4ea-41ec-b43d-7a0001a57cc9
+
+	/// Pijl in de waarde zelf: de tegelkleur kan hier niet datagestuurd, want er is geen tabel met rijcontext om een hex-kolom uit te lezen.
+	measure 'Omzet YTD groei label' =
+			VAR G = [Omzet YTD groei]
+			RETURN IF(ISBLANK(G), "", IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+		lineageTag: 7f7ecc2f-0cd0-466d-80d4-8d2369b4a3bd
+
+	measure 'Orders YTD dit jaar label' = FORMAT([Orders YTD dit jaar], "#,##0", "nl-NL")
+		lineageTag: 606a6c71-79e1-49db-ac64-a4030d2ea951
+
+	measure 'Gem. orderwaarde YTD label' = FORMAT([Gem. orderwaarde YTD dit jaar], "€ #,##0", "nl-NL")
+		lineageTag: 6287cc63-067a-4b93-b1ef-2e465351102f
+
+	measure 'Flessen verkocht YTD label' = FORMAT([Flessen verkocht YTD dit jaar], "#,##0", "nl-NL")
+		lineageTag: 7aef8e09-61e1-4846-b225-eb562be6d98c
+
+	/// "0.0" en niet "0,0": dat laatste is een groeperingsformaat, geen decimaal.
+	measure 'Flessen per order YTD label' = FORMAT([Flessen per order YTD dit jaar], "0.0", "nl-NL")
+		lineageTag: d7e612ea-ca70-4c2b-bf56-5a1cc005b531
+
+	measure 'Prognose omzet jaar label' = FORMAT([Prognose omzet jaar], "€ #,##0", "nl-NL")
+		lineageTag: 390bfc2f-d77d-4331-b5e5-a59b17f6ccaf
+
+	measure 'Omzet YTD subregel' =
+			VAR G = [Omzet YTD groei]
+			VAR Pijl = IF(ISBLANK(G), "", " · " & IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+			RETURN "vs. " & FORMAT([Omzet YTD vorig jaar], "€ #,##0", "nl-NL") & " vorig jaar" & Pijl
+		lineageTag: c8101117-b41f-402d-ac86-a3584a9ecfef
+
+	measure 'Orders YTD subregel' =
+			VAR G = [Orders YTD groei]
+			VAR Pijl = IF(ISBLANK(G), "", " · " & IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+			RETURN "vs. " & FORMAT([Orders YTD vorig jaar], "#,##0", "nl-NL") & " vorig jaar" & Pijl
+		lineageTag: a50ea71e-1910-44c4-a4f5-2054dd64826f
+
+	measure 'Gem. orderwaarde YTD subregel' =
+			VAR G = [Gem. orderwaarde YTD groei]
+			VAR Pijl = IF(ISBLANK(G), "", " · " & IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+			RETURN "vs. " & FORMAT([Gem. orderwaarde YTD vorig jaar], "€ #,##0", "nl-NL") & " vorig jaar" & Pijl
+		lineageTag: 570733be-f6a5-4921-9497-149296e8e202
+
+	measure 'Flessen verkocht YTD subregel' =
+			VAR G = [Flessen verkocht YTD groei]
+			VAR Pijl = IF(ISBLANK(G), "", " · " & IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+			RETURN "vs. " & FORMAT([Flessen verkocht YTD vorig jaar], "#,##0", "nl-NL") & " vorig jaar" & Pijl
+		lineageTag: df4a393a-0f36-4626-9fa0-61482344dc8a
+
+	measure 'Flessen per order YTD subregel' =
+			VAR G = [Flessen per order YTD groei]
+			VAR Pijl = IF(ISBLANK(G), "", " · " & IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+			RETURN "vs. " & FORMAT([Flessen per order YTD vorig jaar], "0.0", "nl-NL") & " vorig jaar" & Pijl
+		lineageTag: 6266222e-a615-4349-bfa7-45d7f7cbf909
+
+	measure 'Omzet YTD groei subregel' = FORMAT([Omzet YTD dit jaar], "€ #,##0", "nl-NL") & " tegenover " & FORMAT([Omzet YTD vorig jaar], "€ #,##0", "nl-NL")
+		lineageTag: c397423c-8e3b-4907-9bec-97eb09fb4b9b
+
+	/// Noemt de basis: de prognose volgt de seizoensvorm van vorig jaar, niet het dagtempo.
+	measure 'Prognose subregel' =
+			VAR Rest = [Prognose rest van jaar]
+			VAR Jr = YEAR([Peildatum]) - 1
+			RETURN IF(ISBLANK(Rest), "",
+			    FORMAT(Rest, "€ #,##0", "nl-NL") & " te gaan · op basis van de vorm van " & FORMAT(Jr, "0"))
+		lineageTag: 9a044217-158d-4e02-b5a6-6c14c73f3668
+
+	measure 'CEO kopregel sub' =
+			"1 jan t/m " & FORMAT([Peildatum], "d MMM yyyy", "nl-NL") &
+			" · vergeleken met dezelfde periode " & FORMAT(YEAR([Peildatum]) - 1, "0")
+		lineageTag: 89b46418-5718-47b4-9656-1bfaf59351c6
+
 	column _
 		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
 		isNameInferred

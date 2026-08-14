@@ -265,6 +265,12 @@ table dim_date
 		lineageTag: 8e577442-4cbe-4e92-bf19-604de837eade
 		summarizeBy: none
 
+	/// 0 = het jaar van de peildatum, -1 = het jaar daarvoor. Laat de CEO-grafiek op het huidige jaar filteren zonder het jaartal hard te coderen. Zelfde patroon als maand_volgorde en in_venster, die ook [Peildatum] vanuit een berekende kolom gebruiken.
+	column jaar_offset = dim_date[jaar] - YEAR([Peildatum])
+		dataType: int64
+		lineageTag: 7aa504f5-3153-49da-8821-26fa411594bc
+		summarizeBy: none
+
 	partition dim_date = m
 		mode: import
 		source =
