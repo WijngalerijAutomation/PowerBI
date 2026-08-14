@@ -84,19 +84,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "product_naam"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Wijn": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_klant_product.regelstatus": {
 			      "Definition": {
@@ -123,19 +111,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Flessen tabel"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Flessen": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.omzet_tabel": {
 			      "Definition": {
@@ -144,19 +120,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Omzet tabel"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Omzet": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.statuslabel": {
 			      "Definition": {
@@ -165,19 +129,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Statuslabel"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Status": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "dim_date.maand_label": {
 			      "Definition": {
@@ -186,19 +138,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "maand_label"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Maand": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_sales.product_naam": {
 			      "Definition": {
@@ -207,19 +147,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "product_naam"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Wijn": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.flessen_per_maand": {
 			      "Definition": {
@@ -228,19 +156,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Flessen per maand"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Flessen": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_klant.klant_label": {
 			      "Definition": {
@@ -249,19 +165,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "klant_label"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Klant": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_klant.klant_omzet_12m": {
 			      "Definition": {
@@ -270,19 +174,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Klant omzet 12m"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Omzet 12 mnd": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.klantrang_omzet": {
 			      "Definition": {
@@ -291,19 +183,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Klantrang omzet"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "#": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.klant_marge_12m": {
 			      "Definition": {
@@ -312,19 +192,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Klant marge 12m"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Marge": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.klant_marge_pct": {
 			      "Definition": {
@@ -333,19 +201,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Klant marge pct"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Marge %": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.klant_segment": {
 			      "Definition": {
@@ -354,19 +210,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Klant segment"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Segment": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.laatste_order_datum_label": {
 			      "Definition": {
@@ -375,19 +219,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Laatste order datum label"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Laatste order": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.cumulatief_omzet_pct": {
 			      "Definition": {
@@ -396,19 +228,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Cumulatief omzet pct"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Cumulatief %": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.dagen_stil": {
 			      "Definition": {
@@ -417,10 +237,28 @@ cultureInfo en-US
 			          "ConceptualProperty": "Dagen stil"
 			        }
 			      },
+			      "State": "Generated"
+			    },
+			    "table_metingen.eerste_order_label": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Eerste order label"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "table_metingen.omzet_cumulatief_dit_jaar": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Omzet cumulatief dit jaar"
+			        }
+			      },
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Dagen": {
+			          "Realisatie": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -431,17 +269,38 @@ cultureInfo en-US
 			        }
 			      ]
 			    },
-			    "table_metingen.eerste_order_label": {
+			    "table_metingen.prognose_cumulatief": {
 			      "Definition": {
 			        "Binding": {
 			          "ConceptualEntity": "_Metingen",
-			          "ConceptualProperty": "Eerste order label"
+			          "ConceptualProperty": "Prognose cumulatief"
 			        }
 			      },
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Eerste order": {
+			          "Prognose": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_metingen.omzet_cumulatief_vorig_jaar": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Omzet cumulatief vorig jaar"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Vorig jaar": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",

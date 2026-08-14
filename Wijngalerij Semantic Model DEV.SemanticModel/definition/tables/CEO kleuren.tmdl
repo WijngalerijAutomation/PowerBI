@@ -1,0 +1,43 @@
+/// Eenrijige, losstaande tabel met hex-kleuren voor de groeicijfers op het CEO-dashboard. Een cardVisual kan zijn fontColor alleen datagestuurd maken via Aggregation(Min) over een kolom; deze cijfers zijn bedrijfstotalen en hebben geen tabel met rijcontext, vandaar deze tabel. Geen relatie.
+table 'CEO kleuren'
+	lineageTag: cf809c33-bf94-40cd-acc1-9a688b72ae50
+
+	column omzet_kleur
+		lineageTag: 394bc3a1-56e2-41ed-945f-ca5bfeac3f46
+		isNameInferred
+		sourceColumn: [omzet_kleur]
+
+	column orders_kleur
+		lineageTag: 86ab420d-bbb2-4aa2-a137-a576f882b163
+		isNameInferred
+		sourceColumn: [orders_kleur]
+
+	column gem_orderwaarde_kleur
+		lineageTag: 5a47f092-957a-40fb-ab5d-a6032912347f
+		isNameInferred
+		sourceColumn: [gem_orderwaarde_kleur]
+
+	column flessen_kleur
+		lineageTag: 5b4570bf-d24f-496a-bfca-020e6fec11e5
+		isNameInferred
+		sourceColumn: [flessen_kleur]
+
+	column flessen_per_order_kleur
+		lineageTag: e3121036-5e78-47eb-a80f-49a3f1961674
+		isNameInferred
+		sourceColumn: [flessen_per_order_kleur]
+
+	partition 'CEO kleuren' = calculated
+		mode: import
+		source =
+				VAR Groen = "#1F9D55"
+				VAR Rood  = "#CC3B2F"
+				RETURN
+				ROW(
+				    "omzet_kleur",             IF([Omzet YTD groei] >= 0, Groen, Rood),
+				    "orders_kleur",            IF([Orders YTD groei] >= 0, Groen, Rood),
+				    "gem_orderwaarde_kleur",   IF([Gem. orderwaarde YTD groei] >= 0, Groen, Rood),
+				    "flessen_kleur",           IF([Flessen verkocht YTD groei] >= 0, Groen, Rood),
+				    "flessen_per_order_kleur", IF([Flessen per order YTD groei] >= 0, Groen, Rood)
+				)
+

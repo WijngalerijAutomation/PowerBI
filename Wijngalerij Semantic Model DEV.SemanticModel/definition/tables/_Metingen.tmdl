@@ -873,6 +873,73 @@ table _Metingen
 			" · vergeleken met dezelfde periode " & FORMAT(YEAR([Peildatum]) - 1, "0")
 		lineageTag: 89b46418-5718-47b4-9656-1bfaf59351c6
 
+	/// Cumulatief per maand, alleen t/m de maand van de peildatum. Loopt niet door na de peildatum: een vlakke lijn daarna leest als omzet die stilvalt.
+	measure 'Omzet cumulatief dit jaar' =
+			VAR Jr = YEAR([Peildatum])
+			VAR Mp = MONTH([Peildatum])
+			VAR M  = MAX(dim_date[maand_nr])
+			RETURN
+			    IF(M <= Mp,
+			        CALCULATE([Omzet], REMOVEFILTERS(dim_date), dim_date[jaar] = Jr, dim_date[maand_nr] <= M))
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 9002c061-5314-499e-ab34-4589a8cec0c1
+
+	measure 'Omzet cumulatief vorig jaar' =
+			VAR Jr = YEAR([Peildatum]) - 1
+			VAR M  = MAX(dim_date[maand_nr])
+			RETURN CALCULATE([Omzet], REMOVEFILTERS(dim_date), dim_date[jaar] = Jr, dim_date[maand_nr] <= M)
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 5c912a8d-b3b2-4196-9a44-02672e045777
+
+	/// Verankerd op de gerealiseerde YTD-omzet en daarna opgehoogd met de resterende maanden van vorig jaar maal de groei. Niet 'vorig jaar cumulatief maal groei': dat zou in de peildatum-maand boven de realisatie uitkomen puur omdat die maand nog niet af is. Eindigt in december exact op [Prognose omzet jaar].
+	measure 'Prognose cumulatief' =
+			VAR Jr = YEAR([Peildatum]) - 1
+			VAR Mp = MONTH([Peildatum])
+			VAR M  = MAX(dim_date[maand_nr])
+			VAR VorigCum = CALCULATE([Omzet], REMOVEFILTERS(dim_date), dim_date[jaar] = Jr, dim_date[maand_nr] <= M)
+			VAR Groei = [Omzet YTD groei]
+			RETURN
+			    IF(M >= Mp,
+			        [Omzet YTD dit jaar] + (VorigCum - [Omzet YTD vorig jaar]) * (1 + Groei))
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 92d831eb-104e-4ad6-886a-e2e6f8811a8d
+
+	measure 'Orders YTD groei label' =
+			VAR G = [Orders YTD groei]
+			RETURN IF(ISBLANK(G), "", IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+		lineageTag: 477c10e9-0fd3-466e-9392-ab2deb1006cd
+
+	measure 'Gem. orderwaarde YTD groei label' =
+			VAR G = [Gem. orderwaarde YTD groei]
+			RETURN IF(ISBLANK(G), "", IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+		lineageTag: 03a3599b-1922-440e-a14b-5fe08d50e505
+
+	measure 'Flessen verkocht YTD groei label' =
+			VAR G = [Flessen verkocht YTD groei]
+			RETURN IF(ISBLANK(G), "", IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+		lineageTag: f0cfa47e-8482-4fb7-b35e-0bc20c03a6ac
+
+	measure 'Flessen per order YTD groei label' =
+			VAR G = [Flessen per order YTD groei]
+			RETURN IF(ISBLANK(G), "", IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+		lineageTag: 0fa7e033-cbed-4509-b0a1-d33faa0a82e7
+
+	/// Subregel zonder het groeicijfer: dat staat in een eigen kaart zodat het groen of rood kan kleuren.
+	measure 'Omzet YTD vergelijking' = "vs. " & FORMAT([Omzet YTD vorig jaar], "€ #,##0", "nl-NL") & " vorig jaar"
+		lineageTag: 18272e2c-961d-4d2b-99fc-7e58c02b82a8
+
+	measure 'Orders YTD vergelijking' = "vs. " & FORMAT([Orders YTD vorig jaar], "#,##0", "nl-NL") & " vorig jaar"
+		lineageTag: 68c0333b-fad5-4315-aa57-82d37f02d6a7
+
+	measure 'Gem. orderwaarde YTD vergelijking' = "vs. " & FORMAT([Gem. orderwaarde YTD vorig jaar], "€ #,##0", "nl-NL") & " vorig jaar"
+		lineageTag: 294427d0-747b-4fc4-9bad-9c061a8456b6
+
+	measure 'Flessen verkocht YTD vergelijking' = "vs. " & FORMAT([Flessen verkocht YTD vorig jaar], "#,##0", "nl-NL") & " vorig jaar"
+		lineageTag: 86cf0a49-c3f9-4ad3-bed8-76a816582a5f
+
+	measure 'Flessen per order YTD vergelijking' = "vs. " & FORMAT([Flessen per order YTD vorig jaar], "0.0", "nl-NL") & " vorig jaar"
+		lineageTag: 22a7fa89-258e-4ac1-a4b6-f4c4ab3fc2ff
+
 	column _
 		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
 		isNameInferred

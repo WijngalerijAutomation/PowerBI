@@ -3,9 +3,9 @@
   "name": "36285a63e0c70181a908",
   "position": {
     "x": 40,
-    "y": 74,
+    "y": 74.285714285714292,
     "z": 11,
-    "height": 44,
+    "height": 45.714285714285715,
     "width": 600,
     "tabOrder": 11
   },
@@ -21,14 +21,13 @@
                   {
                     "value": "Dashboard",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontFamily": "Segoe UI Semibold",
                       "fontSize": "21pt",
-                      "color": "#1B2523",
-                      "fontWeight": "bold"
+                      "color": "#1b2523"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               }
             ]
           }
