@@ -1132,6 +1132,81 @@ table _Metingen
 		isHidden
 		lineageTag: b89c6042-a0cd-42e1-a2ec-13f7b36121e9
 
+	measure 'Wijn omzet vorig' = SUM(fct_voorraad[omzet_vorige_12m])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: f249d396-8f57-4b42-b4df-f0245dd822b2
+
+	measure 'Wijn flessen vorig' = SUM(fct_voorraad[flessen_vorige_12m])
+		formatString: #,0
+		lineageTag: f2f105a9-7b9d-4311-aae4-629f8b5853f2
+
+	measure 'Wijn klanten vorig' = SUM(fct_voorraad[klanten_vorige_12m])
+		formatString: #,0
+		lineageTag: 8b20af67-c2d7-4627-9453-573c74911966
+
+	measure 'Wijn gem verkoopprijs vorig' = DIVIDE([Wijn omzet vorig], [Wijn flessen vorig])
+		lineageTag: 61c93108-c993-4cf3-8aa3-660b8df1a967
+
+	/// Pijl plus percentage. 'nieuw' als er geen vorig venster is - een wijn die pas dit jaar is ingevoerd heeft geen zinnige groei.
+	measure 'Wijn omzet groei label' =
+			VAR V = [Wijn omzet vorig]
+			VAR G = DIVIDE([Omzet 12m] - V, V)
+			RETURN IF(ISBLANK(V) || V = 0 || ISBLANK(G), "nieuw", IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+		lineageTag: 9d8929a9-57ef-4251-a082-9c636ac63ee6
+
+	measure 'Wijn flessen groei label' =
+			VAR V = [Wijn flessen vorig]
+			VAR G = DIVIDE([Wijn flessen 12m] - V, V)
+			RETURN IF(ISBLANK(V) || V = 0 || ISBLANK(G), "nieuw", IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+		lineageTag: 8a662dc6-c11e-461b-8426-9bca4f4d6a7a
+
+	measure 'Wijn klanten groei label' =
+			VAR V = [Wijn klanten vorig]
+			VAR G = DIVIDE([Klanten per wijn] - V, V)
+			RETURN IF(ISBLANK(V) || V = 0 || ISBLANK(G), "nieuw", IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+		lineageTag: b26d59ff-70a9-40b1-82d4-16ebdbb1bb5d
+
+	measure 'Wijn prijs groei label' =
+			VAR V = [Wijn gem verkoopprijs vorig]
+			VAR Nu = DIVIDE([Omzet 12m], [Wijn flessen 12m])
+			VAR G = DIVIDE(Nu - V, V)
+			RETURN IF(ISBLANK(V) || V = 0 || ISBLANK(G), "nieuw", IF(G >= 0, "↗ ", "↘ ") & FORMAT(ABS(G), "0.0%", "nl-NL"))
+		lineageTag: e95f9b8d-b32c-4679-a7e1-69b896f63a0a
+
+	measure 'Wijn omzet vergelijking' =
+			VAR V = [Wijn omzet vorig]
+			RETURN IF(ISBLANK(V) || V = 0, "geen vorig venster", "vs. " & FORMAT(V, "€ #,##0", "nl-NL"))
+		lineageTag: ae3c722c-0d45-4396-86a1-d6eed73f68bd
+
+	measure 'Wijn flessen vergelijking' =
+			VAR V = [Wijn flessen vorig]
+			RETURN IF(ISBLANK(V) || V = 0, "geen vorig venster", "vs. " & FORMAT(V, "#,##0", "nl-NL"))
+		lineageTag: 289645bd-0cd7-4760-a8ec-088c24edd174
+
+	measure 'Wijn klanten vergelijking' =
+			VAR V = [Wijn klanten vorig]
+			RETURN IF(ISBLANK(V) || V = 0, "geen vorig venster", "vs. " & FORMAT(V, "#,##0", "nl-NL"))
+		lineageTag: b1de9934-7f8f-4e63-b73c-77d83445f702
+
+	measure 'Wijn prijs vergelijking' =
+			VAR V = [Wijn gem verkoopprijs vorig]
+			RETURN IF(ISBLANK(V) || V = 0, "geen vorig venster", "vs. " & FORMAT(V, "€ #,##0.00", "nl-NL"))
+		lineageTag: 0b21b1f4-0a68-4898-bba5-d359fbd2aaf4
+
+	/// Waarschuwt dat het vorige venster deels voor de start van de data ligt (2 okt 2024), waardoor groei structureel te rooskleurig oogt.
+	measure 'Wijn vergelijking sub' =
+			VAR Eind = [Peildatum]
+			VAR VorigStart = EDATE(Eind, -24) + 1
+			VAR VorigEind = EDATE(Eind, -12)
+			VAR DataStart = CALCULATE(MIN(fct_sales[order_datum]), ALL(fct_sales))
+			VAR Ontbreekt = INT(DataStart - VorigStart)
+			RETURN
+			    "Vergeleken met " & FORMAT(VorigStart, "d MMM yyyy", "nl-NL") & " t/m " & FORMAT(VorigEind, "d MMM yyyy", "nl-NL") &
+			    IF(Ontbreekt > 0,
+			        " · let op: de eerste " & FORMAT(Ontbreekt, "#,##0", "nl-NL") & " dagen daarvan liggen vóór de start van de data, dus groei valt hoger uit",
+			        "")
+		lineageTag: 538cabae-e1af-4bf6-b83e-6157126baa26
+
 	column _
 		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
 		isNameInferred

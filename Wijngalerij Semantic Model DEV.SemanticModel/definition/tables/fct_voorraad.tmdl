@@ -697,6 +697,76 @@ table fct_voorraad
 		lineageTag: 8874d6a7-b66a-4681-8724-923346849ba2
 		summarizeBy: none
 
+	/// Omzet in het vorige 12-maandsvenster, opgeteld uit fct_klant_product. Die mart heeft omzet_12m en omzet_vorige_12m als gekoppeld paar en het huidige venster sluit exact aan op fct_voorraad[omzet_12m]. SUMX over ALL() en geen CALCULATE: CALCULATE doet contexttransitie in een berekende kolom en maakt de kolom afhankelijk van de hele tabel, wat een circulaire afhankelijkheid geeft met de andere venster-kolommen.
+	column omzet_vorige_12m =
+			VAR Pid = fct_voorraad[product_id]
+			RETURN
+			    SUMX(
+			        FILTER(ALL(fct_klant_product), fct_klant_product[product_id] = Pid),
+			        fct_klant_product[omzet_vorige_12m]
+			    )
+		dataType: double
+		lineageTag: 498e02ce-acb2-4aee-9e3d-b259b36fd968
+		summarizeBy: sum
+
+	column flessen_vorige_12m =
+			VAR Pid = fct_voorraad[product_id]
+			RETURN
+			    SUMX(
+			        FILTER(ALL(fct_klant_product), fct_klant_product[product_id] = Pid),
+			        fct_klant_product[flessen_vorige_12m]
+			    )
+		dataType: double
+		lineageTag: 8ad1cf22-d032-4c0a-8568-2cd1eb148fc7
+		summarizeBy: sum
+
+	/// fct_klant_product heeft een rij per klant per product, dus COUNTROWS telt hier klanten.
+	column klanten_vorige_12m =
+			VAR Pid = fct_voorraad[product_id]
+			RETURN
+			    COUNTROWS(
+			        FILTER(
+			            ALL(fct_klant_product),
+			            fct_klant_product[product_id] = Pid && fct_klant_product[omzet_vorige_12m] > 0
+			        )
+			    )
+		dataType: int64
+		lineageTag: f60047d9-0e89-4017-94d5-c6ab2e354984
+		summarizeBy: sum
+
+	/// Hexkleur voor het groeicijfer op Productdetail. Een cardVisual kan zijn fontColor alleen datagestuurd maken via Aggregation(Min) over een kolom. Geen CALCULATE: dat geeft contexttransitie en circulaire afhankelijkheden tussen deze kolommen.
+	column omzet_groei_kleur =
+			VAR Nu = fct_voorraad[omzet_12m]
+			VAR Vorig = fct_voorraad[omzet_vorige_12m]
+			RETURN IF(ISBLANK(Vorig) || Vorig = 0 || Nu >= Vorig, "#1F9D55", "#CC3B2F")
+		dataType: string
+		lineageTag: f8486b43-fe7f-4ac3-8be6-682db3a2f1b9
+		summarizeBy: none
+
+	column flessen_groei_kleur =
+			VAR Nu = fct_voorraad[flessen_52w]
+			VAR Vorig = fct_voorraad[flessen_vorige_12m]
+			RETURN IF(ISBLANK(Vorig) || Vorig = 0 || Nu >= Vorig, "#1F9D55", "#CC3B2F")
+		dataType: string
+		lineageTag: e03a70df-626b-4944-8ffd-b255e1161ccf
+		summarizeBy: none
+
+	column klanten_groei_kleur =
+			VAR Nu = fct_voorraad[n_klanten]
+			VAR Vorig = fct_voorraad[klanten_vorige_12m]
+			RETURN IF(ISBLANK(Vorig) || Vorig = 0 || Nu >= Vorig, "#1F9D55", "#CC3B2F")
+		dataType: string
+		lineageTag: 95ad3017-4428-4bc4-b64b-3c032eeee0da
+		summarizeBy: none
+
+	column prijs_groei_kleur =
+			VAR NuPrijs = DIVIDE(fct_voorraad[omzet_12m], fct_voorraad[flessen_52w])
+			VAR VorigPrijs = DIVIDE(fct_voorraad[omzet_vorige_12m], fct_voorraad[flessen_vorige_12m])
+			RETURN IF(ISBLANK(VorigPrijs) || VorigPrijs = 0 || NuPrijs >= VorigPrijs, "#1F9D55", "#CC3B2F")
+		dataType: string
+		lineageTag: 6e1af692-ba18-4128-ad9e-6740da8069ba
+		summarizeBy: none
+
 	partition fct_voorraad = m
 		mode: import
 		source =
