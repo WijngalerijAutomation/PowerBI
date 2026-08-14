@@ -98,8 +98,7 @@
             },
             "direction": "Descending"
           }
-        ],
-        "isDefaultSort": true
+        ]
       }
     },
     "objects": {
@@ -109,14 +108,14 @@
             "autoSizeColumnWidth": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "true"
                 }
               }
             },
             "columnAdjustment": {
               "expr": {
                 "Literal": {
-                  "Value": "'fixedWidth'"
+                  "Value": "'fitToContent'"
                 }
               }
             },
@@ -139,6 +138,13 @@
                       "Value": "'#FFFFFF'"
                     }
                   }
+                }
+              }
+            },
+            "defaultColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "90D"
                 }
               }
             }
@@ -458,7 +464,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "820D"
+                  "Value": "700D"
                 }
               }
             }
@@ -472,7 +478,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "78D"
+                  "Value": "133.71431062660554D"
                 }
               }
             }
@@ -486,7 +492,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "92D"
+                  "Value": "164.857115236985D"
                 }
               }
             }
@@ -500,7 +506,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "230D"
+                  "Value": "218.74500647822913D"
                 }
               }
             }
