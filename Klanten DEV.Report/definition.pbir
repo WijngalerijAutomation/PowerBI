@@ -3,7 +3,7 @@
   "version": "4.0",
   "datasetReference": {
     "byPath": {
-      "path": "C:/PBI/Wijngalerij Semantic Model DEV.pbip"
+      "path": "../Wijngalerij Semantic Model DEV.SemanticModel"
     }
   }
 }
