@@ -1053,10 +1053,17 @@ table _Metingen
 		isHidden
 		lineageTag: a39fbbc4-ed9a-4208-a91f-b62561c096fc
 
-	/// Telt de klanten die de tabel eronder toont. Niet [Klanten per wijn]: de mart telt n_klanten net iets anders (77 rijen tegenover 76) en een kop die afwijkt van de lijst eronder levert vragen op. Omzet reconcilieert wel exact tussen beide marts.
+	/// Telt de zakelijke klanten die de tabel eronder toont, zodat kop en lijst hetzelfde aantal geven. De omzet in die tabel telt bewust niet op tot de omzet-KPI: consumenten zitten wel in het product-totaal maar niet in de lijst.
 	measure 'Wijn klanten in lijst' =
 			VAR Pid = SELECTEDVALUE(fct_voorraad[product_id])
-			RETURN IF(NOT ISBLANK(Pid), CALCULATE(DISTINCTCOUNT(fct_klant_product[klant_id]), fct_klant_product[product_id] = Pid))
+			RETURN
+			    IF(NOT ISBLANK(Pid),
+			        CALCULATE(
+			            DISTINCTCOUNT(fct_klant_product[klant_id]),
+			            fct_klant_product[product_id] = Pid,
+			            fct_klant_product[is_zakelijk] = 1
+			        )
+			    )
 		formatString: #,0
 		lineageTag: abec7e5c-cdac-4903-998a-c3fd4a87ed1b
 

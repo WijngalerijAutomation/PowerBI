@@ -210,6 +210,14 @@ table fct_klant_product
 		lineageTag: 68443839-8cfa-4a43-8628-e50bb3719cf1
 		summarizeBy: none
 
+	/// 0 voor consumenten en voor rijen zonder branche, 1 voor zakelijke klanten. Zelfde afbakening als [Zakelijke klant] op Klant algemeen. Kolom en geen measure, zodat het filter op de klantentabel voor het groeperen werkt.
+	column is_zakelijk =
+			VAR B = fct_klant_product[branche]
+			RETURN IF(ISBLANK(B) || B = "Consument", 0, 1)
+		dataType: int64
+		lineageTag: 8ecda821-c4f4-4b34-b3e8-a6acc52e32b1
+		summarizeBy: none
+
 	partition fct_klant_product = m
 		mode: import
 		source =

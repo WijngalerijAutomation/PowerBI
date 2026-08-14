@@ -684,12 +684,12 @@ table fct_voorraad
 		lineageTag: 02e98ce9-219a-43ab-921f-a75477bf100d
 		summarizeBy: none
 
-	/// 0 voor de dienstregels Accijns, Divers, Statiegeld en Transport (en voor de lege unknown-member rij), 1 voor echte producten. Kolom en geen measure: een kolomfilter werkt voor het groeperen en is dus grain-safe. Niet afleiden uit een lege artikelcode - Poujol Lacoste Blanc, Villa Blanche Chardonnay en Ruinart hebben er ook geen.
+	/// 0 voor de dienstregels Accijns, Divers, Statiegeld, Transport, Vrachtkosten en Verzending (en voor de lege unknown-member rij), 1 voor echte producten. Kolom en geen measure: een kolomfilter werkt voor het groeperen en is dus grain-safe. Niet afleiden uit een lege artikelcode - Poujol Lacoste Blanc, Villa Blanche Chardonnay en Ruinart hebben er ook geen.
 	column is_wijn =
 			VAR N = fct_voorraad[product_naam]
 			RETURN
 			    IF(
-			        ISBLANK(N) || N IN {"Accijns", "Divers", "Statiegeld", "Transport"},
+			        ISBLANK(N) || N IN {"Accijns", "Divers", "Statiegeld", "Transport", "Vrachtkosten", "Verzending"},
 			        0,
 			        1
 			    )

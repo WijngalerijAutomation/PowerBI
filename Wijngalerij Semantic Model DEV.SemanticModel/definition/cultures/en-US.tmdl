@@ -299,6 +299,27 @@ cultureInfo en-US
 			      },
 			      "State": "Generated"
 			    },
+			    "fct_voorraad.product_label": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fct_voorraad",
+			          "ConceptualProperty": "product_label"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Wijn": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
 			    "fct_voorraad.wijnhuis": {
 			      "Definition": {
 			        "Binding": {
@@ -331,27 +352,6 @@ cultureInfo en-US
 			      "Terms": [
 			        {
 			          "Omzet": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
-			    },
-			    "fct_voorraad.product_label": {
-			      "Definition": {
-			        "Binding": {
-			          "ConceptualEntity": "fct_voorraad",
-			          "ConceptualProperty": "product_label"
-			        }
-			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Wijn": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
