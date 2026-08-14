@@ -1,8 +1,0 @@
-{
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "5aef0f115cceba800015",
-  "displayName": "Klantoverzicht",
-  "displayOption": "FitToPage",
-  "height": 1200,
-  "width": 1400
-}
