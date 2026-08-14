@@ -564,6 +564,14 @@ table fct_klant
 		lineageTag: 4827679c-b074-4de0-9f86-530083f2376d
 		summarizeBy: none
 
+	/// Unieke weergavenaam: 774 klanten delen 759 namen, 14 namen komen 2-3x voor. Groeperen op klant_naam voegt die klanten samen en laat SELECTEDVALUE leeglopen. Voegt het klant_id toe bij dubbele namen.
+	column klant_label =
+			VAR Voorkomens = CALCULATE(COUNTROWS(fct_klant), ALLEXCEPT(fct_klant, fct_klant[klant_naam]))
+			RETURN IF(Voorkomens > 1, fct_klant[klant_naam] & " (" & fct_klant[klant_id] & ")", fct_klant[klant_naam])
+		dataType: string
+		lineageTag: 1a8934ee-6f75-4cbe-ac93-7d45a5b8d465
+		summarizeBy: none
+
 	partition fct_klant = m
 		mode: import
 		source =

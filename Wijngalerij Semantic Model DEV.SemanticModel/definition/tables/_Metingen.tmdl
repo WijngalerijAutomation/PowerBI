@@ -462,6 +462,200 @@ table _Metingen
 		isHidden
 		lineageTag: 93ca1715-9527-4f48-b6d6-c766160cec5f
 
+	/// Paginafilter voor Klant algemeen: consumenten zijn 406 van 774 klanten maar 2,7% van de omzet. Wordt op klantrij-niveau geevalueerd en is dus grain-safe.
+	measure 'Zakelijke klant' =
+			VAR B = SELECTEDVALUE(fct_klant[branche])
+			RETURN IF(ISBLANK(B) || B = "Consument", 0, 1)
+		formatString: 0
+		isHidden
+		lineageTag: 08faf4d5-b263-464d-b8b9-157c9af67614
+
+	measure 'Klant marge 12m' = SUM(fct_klant[brutomarge_12m])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 4469b96d-e586-42f6-a5cb-618372abdb27
+
+	/// Keuze uit de losstaande parameter-tabel; valt terug op 20.
+	measure 'TopN waarde' = SELECTEDVALUE('TopN keuze'[Aantal], 20)
+		formatString: 0
+		lineageTag: 92f4b0a0-8a2e-40a8-9355-558b00226425
+
+	/// Rangschikt over klant_label, niet klant_naam: de visuals groeperen op klant_label en een RANKX over een andere kolom levert rang 1 voor elke rij.
+	measure 'Klantrang omzet' =
+			IF(NOT ISBLANK([Klant omzet 12m]),
+			    RANKX(ALLSELECTED(fct_klant[klant_label]), [Klant omzet 12m], , DESC, DENSE))
+		formatString: 0
+		lineageTag: 64723e84-d91c-43c7-b100-0834eb64f2a1
+
+	measure 'Klantrang marge' =
+			IF(NOT ISBLANK([Klant marge 12m]),
+			    RANKX(ALLSELECTED(fct_klant[klant_label]), [Klant marge 12m], , DESC, DENSE))
+		formatString: 0
+		lineageTag: 2639de02-599d-47d5-8e1c-9e1db802400e
+
+	measure 'In top N' = IF([Klantrang omzet] <= [TopN waarde], 1, 0)
+		formatString: 0
+		isHidden
+		lineageTag: c219c248-0186-40dc-a2b3-14641bd7ece1
+
+	/// Noemer voor de concentratiecijfers. Niet [Klanten met omzet] op fct_sales: die telt all-time en inclusief consumenten.
+	measure 'Zakelijke klanten met omzet' =
+			COUNTROWS(
+			    FILTER(
+			        ALLSELECTED(fct_klant),
+			        fct_klant[omzet_12m] > 0
+			            && fct_klant[branche] <> "Consument"
+			            && NOT ISBLANK(fct_klant[branche])
+			    )
+			)
+		formatString: #,0
+		lineageTag: 3dfed271-6276-46f4-a947-74ce9e018a03
+
+	measure 'Zakelijke omzet 12m' =
+			SUMX(
+			    FILTER(
+			        ALLSELECTED(fct_klant),
+			        fct_klant[omzet_12m] > 0
+			            && fct_klant[branche] <> "Consument"
+			            && NOT ISBLANK(fct_klant[branche])
+			    ),
+			    fct_klant[omzet_12m]
+			)
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: eabfb34f-e2c4-4c82-8f1d-fd3401caab1e
+
+	measure 'Aandeel top 10 pct omzet' =
+			VAR Populatie =
+			    FILTER(
+			        ALLSELECTED(fct_klant),
+			        fct_klant[omzet_12m] > 0 && fct_klant[branche] <> "Consument" && NOT ISBLANK(fct_klant[branche])
+			    )
+			VAR Aantal = COUNTROWS(Populatie)
+			VAR Totaal = SUMX(Populatie, fct_klant[omzet_12m])
+			VAR Grens = ROUND(Aantal * 0.1, 0)
+			RETURN DIVIDE(SUMX(TOPN(Grens, Populatie, fct_klant[omzet_12m], DESC), fct_klant[omzet_12m]), Totaal)
+		formatString: 0.0%
+		lineageTag: 11a86e9b-6a60-4a02-9953-23312e4d838b
+
+	measure 'Aandeel top 20 pct omzet' =
+			VAR Populatie =
+			    FILTER(
+			        ALLSELECTED(fct_klant),
+			        fct_klant[omzet_12m] > 0 && fct_klant[branche] <> "Consument" && NOT ISBLANK(fct_klant[branche])
+			    )
+			VAR Aantal = COUNTROWS(Populatie)
+			VAR Totaal = SUMX(Populatie, fct_klant[omzet_12m])
+			VAR Grens = ROUND(Aantal * 0.2, 0)
+			RETURN DIVIDE(SUMX(TOPN(Grens, Populatie, fct_klant[omzet_12m], DESC), fct_klant[omzet_12m]), Totaal)
+		formatString: 0.0%
+		lineageTag: 80ec3b61-673e-437e-934a-bba6c11833b4
+
+	measure 'Aandeel top 10 pct marge' =
+			VAR Populatie =
+			    FILTER(
+			        ALLSELECTED(fct_klant),
+			        fct_klant[omzet_12m] > 0 && fct_klant[branche] <> "Consument" && NOT ISBLANK(fct_klant[branche])
+			    )
+			VAR Aantal = COUNTROWS(Populatie)
+			VAR Totaal = SUMX(Populatie, fct_klant[brutomarge_12m])
+			VAR Grens = ROUND(Aantal * 0.1, 0)
+			RETURN DIVIDE(SUMX(TOPN(Grens, Populatie, fct_klant[brutomarge_12m], DESC), fct_klant[brutomarge_12m]), Totaal)
+		formatString: 0.0%
+		lineageTag: 418afdc1-1837-48db-a454-84d991434aa7
+
+	measure 'Aandeel top 20 pct marge' =
+			VAR Populatie =
+			    FILTER(
+			        ALLSELECTED(fct_klant),
+			        fct_klant[omzet_12m] > 0 && fct_klant[branche] <> "Consument" && NOT ISBLANK(fct_klant[branche])
+			    )
+			VAR Aantal = COUNTROWS(Populatie)
+			VAR Totaal = SUMX(Populatie, fct_klant[brutomarge_12m])
+			VAR Grens = ROUND(Aantal * 0.2, 0)
+			RETURN DIVIDE(SUMX(TOPN(Grens, Populatie, fct_klant[brutomarge_12m], DESC), fct_klant[brutomarge_12m]), Totaal)
+		formatString: 0.0%
+		lineageTag: 55ea1ffd-efc4-43f1-a92e-9c90e299a99c
+
+	/// Pareto-lijn over klant_label, passend bij de groepering van de grafiek.
+	measure 'Cumulatief omzet pct' =
+			VAR R = [Klantrang omzet]
+			VAR Zichtbaar = ALLSELECTED(fct_klant[klant_label])
+			VAR Totaal = CALCULATE([Klant omzet 12m], Zichtbaar)
+			RETURN
+			    IF(NOT ISBLANK(R),
+			        DIVIDE(
+			            SUMX(FILTER(Zichtbaar, [Klantrang omzet] <= R), [Klant omzet 12m]),
+			            Totaal
+			        )
+			    )
+		formatString: 0.0%
+		lineageTag: d897a6ef-b981-47ee-b166-9739a9c05226
+
+	measure 'Zakelijke klanten label' = FORMAT([Zakelijke klanten met omzet], "#,##0", "nl-NL")
+		lineageTag: 1b5677f6-3dca-4dcf-af8a-935c6b1cac74
+
+	measure 'Zakelijke omzet label' = FORMAT([Zakelijke omzet 12m], "€ #,##0", "nl-NL")
+		lineageTag: d3a50b5c-17c6-4dd1-8936-bcdf884fb865
+
+	measure 'Top 10 pct omzet label' = FORMAT([Aandeel top 10 pct omzet], "0.0%", "nl-NL")
+		lineageTag: 64c81e97-1371-4373-b47b-9066f0ba61a8
+
+	measure 'Top 20 pct omzet label' = FORMAT([Aandeel top 20 pct omzet], "0.0%", "nl-NL")
+		lineageTag: 1d0bbefb-7828-46a8-9ade-bb20919a4725
+
+	measure 'Top 10 pct marge label' = FORMAT([Aandeel top 10 pct marge], "0.0%", "nl-NL")
+		lineageTag: bbd7194e-a272-4eb6-aa57-c85e02fb9604
+
+	measure 'Top 20 pct marge label' = FORMAT([Aandeel top 20 pct marge], "0.0%", "nl-NL")
+		lineageTag: 62113eed-da44-43e8-8bf5-514196e300c0
+
+	measure 'Top 10 pct aantal label' = FORMAT(ROUND([Zakelijke klanten met omzet] * 0.1, 0), "#,##0", "nl-NL") & " van " & FORMAT([Zakelijke klanten met omzet], "#,##0", "nl-NL") & " klanten"
+		lineageTag: fe048d1f-a656-40de-b1f5-2945a40dbd9a
+
+	measure 'Top 20 pct aantal label' = FORMAT(ROUND([Zakelijke klanten met omzet] * 0.2, 0), "#,##0", "nl-NL") & " van " & FORMAT([Zakelijke klanten met omzet], "#,##0", "nl-NL") & " klanten"
+		lineageTag: 6fefd715-af09-422d-91ea-c785ece78074
+
+	measure 'Klant algemeen subregel' = "Zakelijke klanten · laatste 12 maanden · " & FORMAT([Zakelijke klanten met omzet], "#,##0", "nl-NL") & " klanten met omzet · consumenten uitgesloten"
+		lineageTag: f166c83b-8ab0-46ba-9ce5-fe6a11e326f9
+
+	/// Eerste order binnen 60 dagen voor de peildatum.
+	measure 'Nieuwe klant 60d' =
+			VAR D = SELECTEDVALUE(fct_klant[eerste_order_datum])
+			RETURN IF(NOT ISBLANK(D) && D >= [Peildatum] - 60, 1, 0)
+		formatString: 0
+		isHidden
+		lineageTag: 35db413a-747b-4246-80b6-bff1a77094cf
+
+	/// Actieve segmenten die 21+ dagen niet besteld hebben - de belronde. Niet alle 248 achterstallige klanten: die bevatten klanten die jaren geleden vertrokken.
+	measure 'Stil 21 dagen' =
+			VAR D = SELECTEDVALUE(fct_klant[dagen_sinds_laatste_order])
+			VAR S = SELECTEDVALUE(fct_klant[klant_segment])
+			RETURN IF(NOT ISBLANK(D) && D > 21 && S IN { "kern", "actief", "nieuw" }, 1, 0)
+		formatString: 0
+		isHidden
+		lineageTag: 3b5ba791-345a-4a25-aaef-74a95309f975
+
+	measure 'Eerste order label' =
+			VAR D = SELECTEDVALUE(fct_klant[eerste_order_datum])
+			RETURN IF(NOT ISBLANK(D), FORMAT(D, "d MMM yyyy", "nl-NL"))
+		lineageTag: 57842732-0936-4262-b5ff-91c8333b31e5
+
+	measure 'Dagen stil' = SELECTEDVALUE(fct_klant[dagen_sinds_laatste_order])
+		formatString: #,0
+		lineageTag: cde625ec-ddc7-4efb-8851-bdb13b51db4e
+
+	measure 'Klant segment' = SELECTEDVALUE(fct_klant[klant_segment])
+		lineageTag: 0b46d2b5-5816-4595-b4ca-91db9a9dc1a4
+
+	measure 'Klant marge pct' = DIVIDE([Klant marge 12m], [Klant omzet 12m])
+		formatString: 0%
+		lineageTag: e9d45a71-62e4-4526-a302-3f1eea2a6db0
+
+	/// Visual-filter voor de Pareto en de Top-N tabel. [Zakelijke klant] alleen laat 207 zakelijke klanten zonder 12-maands omzet toe, die als nulbalken zouden verschijnen.
+	measure 'Zakelijke klant met omzet' = IF([Zakelijke klant] = 1 && [Klant omzet 12m] > 0, 1, 0)
+		formatString: 0
+		isHidden
+		lineageTag: 9aa22fb7-597b-4909-b636-89595ecdbbab
+
 	column _
 		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
 		isNameInferred

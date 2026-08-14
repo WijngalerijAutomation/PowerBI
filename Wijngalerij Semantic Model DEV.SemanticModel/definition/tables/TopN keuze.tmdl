@@ -1,0 +1,13 @@
+/// Losstaande parameter-tabel voor de Top-N selector op Klant algemeen. Geen relatie.
+table 'TopN keuze'
+	lineageTag: 03c6c68e-626e-409e-a43d-379cb2233829
+
+	column Aantal
+		lineageTag: be02002e-6695-4f03-9967-409634b73362
+		isNameInferred
+		sourceColumn: [Aantal]
+
+	partition 'TopN keuze' = calculated
+		mode: import
+		source = DATATABLE("Aantal", INTEGER, {{20},{30},{50}})
+
