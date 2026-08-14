@@ -572,6 +572,21 @@ table fct_klant
 		lineageTag: 1a8934ee-6f75-4cbe-ac93-7d45a5b8d465
 		summarizeBy: none
 
+	/// Vulkleur voor de risicobadge. Wit als er geen risico is, zodat de badge wegvalt tegen het canvas: een lege string haalt de '--' weg maar laat anders een lege roze pil staan. Spiegelt de logica van [Risicovlag] op rijniveau.
+	column risico_kleur =
+			VAR R = fct_klant[recency_ratio]
+			VAR Basis = fct_klant[omzet_zelfde_6m_vorig_jaar]
+			VAR G = IF(Basis >= 500, DIVIDE(fct_klant[omzet_6m], Basis) - 1)
+			VAR S = fct_klant[klant_segment]
+			VAR HeeftRisico =
+			    S IN { "verloren", "slapend" }
+			    || (NOT ISBLANK(R) && R >= 3)
+			    || (NOT ISBLANK(G) && G <= -0.25)
+			RETURN IF(HeeftRisico, "#F6E7EA", "#FFFFFF")
+		dataType: string
+		lineageTag: ae8652f9-1eab-4b93-b4c2-96d0272ec03b
+		summarizeBy: none
+
 	partition fct_klant = m
 		mode: import
 		source =

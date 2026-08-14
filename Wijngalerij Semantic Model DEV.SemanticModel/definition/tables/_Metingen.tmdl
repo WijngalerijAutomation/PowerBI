@@ -178,7 +178,7 @@ table _Metingen
 			)
 		lineageTag: 25722b01-53a3-4e32-a362-b2234eecda37
 
-	/// Drempels: 3x eigen ritme, of -25% JoJ. Hoort op termijn in fct_klant.
+	/// Lege string i.p.v. BLANK: een cardVisual rendert BLANK als '--'. Drempels: 3x eigen ritme, of -25% JoJ.
 	measure Risicovlag =
 			VAR R = SELECTEDVALUE(fct_klant[recency_ratio])
 			VAR G = [Omzet groei JoJ]
@@ -187,7 +187,7 @@ table _Metingen
 			    S IN { "verloren", "slapend" },        UNICHAR(9888) & " Risico",
 			    NOT ISBLANK(R) && R >= 3,              UNICHAR(9888) & " Risico",
 			    NOT ISBLANK(G) && G <= -0.25,          UNICHAR(9888) & " Risico",
-			    BLANK()
+			    ""
 			)
 		lineageTag: 58bac0a6-9769-47f3-bc40-70a8bbf442b3
 
@@ -389,13 +389,14 @@ table _Metingen
 			)
 		lineageTag: 24ecc6a4-d112-4e4a-afe1-2ef510eb4d25
 
-	/// Regel 2 van de banner; blank als er geen gestopte wijnen zijn.
+	/// Lege string i.p.v. BLANK: een cardVisual rendert BLANK als '--' op de tweede bannerregel.
 	measure 'Signaal regel 2' =
 			VAR N = [Wijnen gestopt]
 			VAR Gemist = [Omzet gemist]
 			RETURN IF(N > 0,
 			    FORMAT(N, "#,##0", "nl-NL") & " wijnen gestopt, samen goed voor " &
-			    FORMAT(Gemist, "€ #,##0", "nl-NL") & " omzet in de twaalf maanden daarvoor."
+			    FORMAT(Gemist, "€ #,##0", "nl-NL") & " omzet in de twaalf maanden daarvoor.",
+			    ""
 			)
 		lineageTag: 944c0463-9039-4ee1-bab5-01450ae8fdd3
 

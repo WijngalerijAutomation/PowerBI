@@ -12,19 +12,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "klant_naam"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Klant": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "dim_customer.accountmanager": {
 			      "Definition": {
@@ -33,19 +21,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "accountmanager"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Accountmanager": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_klant.klant_segment_reden": {
 			      "Definition": {
@@ -54,19 +30,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "klant_segment_reden"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Reden hoge score": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_klant.omzet_rang": {
 			      "Definition": {
@@ -75,19 +39,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "omzet_rang"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Bestellende klanten": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_klant.klant_omzet_12m_label": {
 			      "Definition": {
