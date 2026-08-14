@@ -4,10 +4,10 @@
   "position": {
     "x": 241.83381088825215,
     "y": 0,
-    "z": 2011,
+    "z": 10000,
     "height": 80.229226361031508,
     "width": 700.28653295128936,
-    "tabOrder": 2011
+    "tabOrder": 10000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -221,28 +221,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "ec286326c49461e4cbbd",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "dim_customer"
-                  }
-                },
-                "Property": "klant_naam"
-              }
-            },
-            "Function": 3
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

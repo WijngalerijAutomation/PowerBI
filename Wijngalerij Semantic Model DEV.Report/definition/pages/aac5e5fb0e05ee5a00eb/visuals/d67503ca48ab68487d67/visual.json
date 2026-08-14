@@ -4,10 +4,10 @@
   "position": {
     "x": 242.87769784172662,
     "y": 201.43884892086331,
-    "z": 2018,
+    "z": 17000,
     "height": 161.15107913669064,
     "width": 209.49640287769785,
-    "tabOrder": 2018
+    "tabOrder": 17000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -38,23 +38,5 @@
       }
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "7930045459526507657c",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "fct_klant"
-              }
-            },
-            "Property": "Omzet YTD label"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

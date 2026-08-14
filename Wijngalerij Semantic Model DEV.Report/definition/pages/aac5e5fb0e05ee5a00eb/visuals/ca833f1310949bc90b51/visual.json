@@ -4,10 +4,10 @@
   "position": {
     "x": 640,
     "y": 200.27210884353741,
-    "z": 2005,
+    "z": 5000,
     "height": 145.12471655328798,
     "width": 288.79818594104307,
-    "tabOrder": 2005
+    "tabOrder": 5000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -64,28 +64,5 @@
       }
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "12a48dd59051dbcc6566",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "dim_customer"
-                  }
-                },
-                "Property": "laatste_order_datum"
-              }
-            },
-            "Function": 4
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

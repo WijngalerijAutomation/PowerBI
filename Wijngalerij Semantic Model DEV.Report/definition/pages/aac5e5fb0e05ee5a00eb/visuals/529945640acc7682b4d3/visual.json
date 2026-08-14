@@ -4,10 +4,10 @@
   "position": {
     "x": 0,
     "y": 429.56916099773241,
-    "z": 2009,
+    "z": 9000,
     "height": 233.65079365079364,
     "width": 603.718820861678,
-    "tabOrder": 2009
+    "tabOrder": 9000
   },
   "visual": {
     "visualType": "tableEx",
@@ -133,58 +133,6 @@
   },
   "filterConfig": {
     "filters": [
-      {
-        "name": "b4841f4a604192c5290d",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "fct_klant_product"
-              }
-            },
-            "Property": "product_naam"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "1c4c598abb588b0e4290",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fct_klant_product"
-                  }
-                },
-                "Property": "flessen_12m"
-              }
-            },
-            "Function": 0
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "bcfe2817e76a0dba203a",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fct_klant_product"
-                  }
-                },
-                "Property": "omzet_12m"
-              }
-            },
-            "Function": 0
-          }
-        },
-        "type": "Advanced"
-      },
       {
         "name": "5b86367f212cdbee328e",
         "field": {

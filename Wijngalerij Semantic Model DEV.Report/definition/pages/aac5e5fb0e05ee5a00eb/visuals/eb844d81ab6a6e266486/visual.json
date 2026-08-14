@@ -4,10 +4,10 @@
   "position": {
     "x": 446.06060606060606,
     "y": 195.43123543123545,
-    "z": 2007,
+    "z": 7000,
     "height": 165.5944055944056,
     "width": 193.93939393939394,
-    "tabOrder": 2007
+    "tabOrder": 7000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -85,23 +85,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "07eef8714453e0571379",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "fct_klant"
-              }
-            },
-            "Property": "Omzet groei JoJ label"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

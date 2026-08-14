@@ -4,10 +4,10 @@
   "position": {
     "x": 603.718820861678,
     "y": 454.24036281179139,
-    "z": 2017,
+    "z": 16000,
     "height": 210,
     "width": 676,
-    "tabOrder": 2017
+    "tabOrder": 16000
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -163,34 +163,6 @@
           ]
         },
         "howCreated": "User"
-      },
-      {
-        "name": "0cfa9886647e903bb8d8",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_date"
-              }
-            },
-            "Property": "jaar_maand"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "5ecf06e0558ce1993310",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "fct_sales"
-              }
-            },
-            "Property": "Omzet"
-          }
-        },
-        "type": "Advanced"
       },
       {
         "name": "5230329b9cc8729ee509",

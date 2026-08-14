@@ -4,10 +4,10 @@
   "position": {
     "x": 6.9064748201438846,
     "y": 193.38129496402877,
-    "z": 2004,
+    "z": 4000,
     "height": 176.11510791366905,
     "width": 235.97122302158272,
-    "tabOrder": 2004
+    "tabOrder": 4000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -38,23 +38,5 @@
       }
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "0aaf1ecfc05ba093e109",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "fct_klant"
-              }
-            },
-            "Property": "Klant Omzet 12m label"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

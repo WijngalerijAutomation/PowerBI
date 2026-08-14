@@ -4,10 +4,10 @@
   "position": {
     "x": 835.91836734693879,
     "y": 81.269841269841265,
-    "z": 2001,
+    "z": 3000,
     "height": 113.19727891156462,
     "width": 410.702947845805,
-    "tabOrder": 2001
+    "tabOrder": 3000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -40,28 +40,5 @@
       }
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "90f0b7f803a264488e06",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "dim_customer"
-                  }
-                },
-                "Property": "email"
-              }
-            },
-            "Function": 3
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

@@ -4,10 +4,10 @@
   "position": {
     "x": 0,
     "y": 994.10430839002265,
-    "z": 2015,
+    "z": 14000,
     "height": 206.07709750566892,
     "width": 603.718820861678,
-    "tabOrder": 2015
+    "tabOrder": 14000
   },
   "visual": {
     "visualType": "tableEx",
@@ -195,53 +195,6 @@
             }
           ]
         }
-      },
-      {
-        "name": "f1dd80270c091114cb58",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fct_klant_product"
-                  }
-                },
-                "Property": "flessen_vorige_12m"
-              }
-            },
-            "Function": 0
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "c6f412ff0b71dec09d42",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "fct_klant_product"
-              }
-            },
-            "Property": "product_naam"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "a926f34888bb0c851a67",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "fct_klant_product"
-              }
-            },
-            "Property": "laatste_order_datum"
-          }
-        },
-        "type": "Categorical"
       }
     ]
   }

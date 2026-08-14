@@ -4,10 +4,10 @@
   "position": {
     "x": 957.82312925170061,
     "y": 200.27210884353741,
-    "z": 2006,
+    "z": 6000,
     "height": 145.12471655328798,
     "width": 300.40816326530609,
-    "tabOrder": 2006
+    "tabOrder": 6000
   },
   "visual": {
     "visualType": "cardVisual",
@@ -40,28 +40,5 @@
       }
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "d11daba7a80b61180106",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "fct_klant"
-                  }
-                },
-                "Property": "klant_segment"
-              }
-            },
-            "Function": 3
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

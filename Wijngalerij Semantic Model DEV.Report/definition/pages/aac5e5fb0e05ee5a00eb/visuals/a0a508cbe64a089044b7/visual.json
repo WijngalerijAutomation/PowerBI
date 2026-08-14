@@ -64,23 +64,5 @@
       ]
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "3df9dfcfcb512be6c7e9",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_customer"
-              }
-            },
-            "Property": "klant_naam"
-          }
-        },
-        "type": "Categorical"
-      }
-    ]
   }
 }
