@@ -34,7 +34,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "Filterc7532278aa14569a404a20cc",
+        "name": "Filterb6b90f33d3d50da704abc6b8",
         "field": {
           "Column": {
             "Expression": {
@@ -55,8 +55,8 @@
     "type": "Drillthrough",
     "parameters": [
       {
-        "name": "Param_Filterc7532278aa14569a404a20cc",
-        "boundFilter": "Filterc7532278aa14569a404a20cc",
+        "name": "Param_Filterb6b90f33d3d50da704abc6b8",
+        "boundFilter": "Filterb6b90f33d3d50da704abc6b8",
         "fieldExpr": {
           "Column": {
             "Expression": {
