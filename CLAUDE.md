@@ -68,6 +68,11 @@ reads **prod** despite the DEV name.
   "Something's wrong with one or more fields". The offline validator cannot catch this.
 - **`RANKX` must rank over the same column the visual groups by**, or it returns rank 1 for
   every row.
+- **A `shape` outline needs *two* entries to turn off** — one with `selector: {id: "default"}`
+  and one with no selector. With only the selector entry, the unselectored level falls back to
+  the theme, which sets `border: [{width: 1}]` with no colour and so draws a 1px accent-blue
+  line. It hid behind the band's own pink outline until that was removed. The same dual-entry
+  pattern applies to `shape`/`fill`; validation cannot catch it.
 - **Measure-based visual filters are grain-sensitive.** A filter built on
   `MIN(dim_date[datum])` returns 0 at a row grain that has no date in context. For row-level
   windows use a flag *column* (`dim_date[in_venster]`), which filters before grouping.
