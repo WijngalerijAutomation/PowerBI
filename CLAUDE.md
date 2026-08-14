@@ -68,6 +68,10 @@ reads **prod** despite the DEV name.
   "Something's wrong with one or more fields". The offline validator cannot catch this.
 - **`RANKX` must rank over the same column the visual groups by**, or it returns rank 1 for
   every row.
+- **Typing in a slicer's search box makes Desktop write an invalid `general.selfFilter`** —
+  the validator rejects it (`PBIR_FORMATTING_PROP_NESTED`). It only stores the remembered
+  search string; delete the `selfFilter` property and the selection in `general.filter`
+  survives. This is what the old report's "pre-existing" defect actually was.
 - **A `shape` outline needs *two* entries to turn off** — one with `selector: {id: "default"}`
   and one with no selector. With only the selector entry, the unselectored level falls back to
   the theme, which sets `border: [{width: 1}]` with no colour and so draws a 1px accent-blue
