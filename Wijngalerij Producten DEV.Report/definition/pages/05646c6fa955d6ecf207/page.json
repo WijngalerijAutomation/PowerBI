@@ -3,7 +3,7 @@
   "name": "05646c6fa955d6ecf207",
   "displayName": "Productdetail",
   "displayOption": "ActualSize",
-  "height": 1120,
+  "height": 1180,
   "width": 1280,
   "objects": {
     "background": [
@@ -34,7 +34,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "Filterde1744572a9822dd3d8bb63b",
+        "name": "Filterfce2bed61e492e4b1c907ab1",
         "field": {
           "Column": {
             "Expression": {
@@ -49,7 +49,7 @@
         "howCreated": "Drillthrough"
       },
       {
-        "name": "Filtera6c32ec03a537c85c2aad0d2",
+        "name": "Filtereefa8654400c045c894b4510",
         "field": {
           "Column": {
             "Expression": {
@@ -109,8 +109,8 @@
     "type": "Drillthrough",
     "parameters": [
       {
-        "name": "Param_Filterde1744572a9822dd3d8bb63b",
-        "boundFilter": "Filterde1744572a9822dd3d8bb63b",
+        "name": "Param_Filterfce2bed61e492e4b1c907ab1",
+        "boundFilter": "Filterfce2bed61e492e4b1c907ab1",
         "fieldExpr": {
           "Column": {
             "Expression": {
