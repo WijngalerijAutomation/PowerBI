@@ -374,11 +374,11 @@ table _Metingen
 	measure 'YTD periode label' = "1 jan t/m " & FORMAT([Peildatum], "d MMM yyyy", "nl-NL")
 		lineageTag: 73307f61-8e7d-49e5-b8f6-e002f08e9316
 
-	/// Regel 1 van de banner. Gesplitst omdat Desktop UNICHAR(10) als spatie rendert en textWrap/overFlow niet honoreert - zie 6.
+	/// Lege string als er geen vergelijkbare basis is: 'Geen vergelijkbare basis' is geen conclusie, en samen met een lege regel 2 verdwijnt de hele banner via signaal_kleur = wit.
 	measure 'Signaal regel 1' =
 			VAR G = [Omzet groei JoJ]
 			RETURN SWITCH(TRUE(),
-			    ISBLANK(G), "Geen vergelijkbare basis in dezelfde periode vorig jaar.",
+			    ISBLANK(G), "",
 			    G <= -0.10,
 			        "Omzet daalt " & FORMAT(ABS(G), "0%", "nl-NL") &
 			        " over de laatste zes maanden, tegenover dezelfde zes maanden vorig jaar.",
