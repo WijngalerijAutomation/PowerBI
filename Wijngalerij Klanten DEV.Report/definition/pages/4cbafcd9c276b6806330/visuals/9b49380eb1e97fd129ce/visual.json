@@ -114,8 +114,18 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Literal": {
-                      "Value": "'#F6E7EA'"
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "fct_klant"
+                            }
+                          },
+                          "Property": "risico_kleur"
+                        }
+                      },
+                      "Function": 3
                     }
                   }
                 }
