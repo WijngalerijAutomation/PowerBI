@@ -672,6 +672,31 @@ table fct_voorraad
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Unieke weergavenaam: product_naam is niet uniek (737 namen voor 740 producten). Voegt de artikelcode toe waar namen botsen, net als fct_klant[klant_label].
+	column product_label =
+			VAR Voorkomens =
+			    CALCULATE(COUNTROWS(fct_voorraad), ALLEXCEPT(fct_voorraad, fct_voorraad[product_naam]))
+			RETURN
+			    IF(Voorkomens > 1,
+			        fct_voorraad[product_naam] & " (" & fct_voorraad[artikelcode] & ")",
+			        fct_voorraad[product_naam])
+		dataType: string
+		lineageTag: 02e98ce9-219a-43ab-921f-a75477bf100d
+		summarizeBy: none
+
+	/// 0 voor de dienstregels Accijns, Divers, Statiegeld en Transport (en voor de lege unknown-member rij), 1 voor echte producten. Kolom en geen measure: een kolomfilter werkt voor het groeperen en is dus grain-safe. Niet afleiden uit een lege artikelcode - Poujol Lacoste Blanc, Villa Blanche Chardonnay en Ruinart hebben er ook geen.
+	column is_wijn =
+			VAR N = fct_voorraad[product_naam]
+			RETURN
+			    IF(
+			        ISBLANK(N) || N IN {"Accijns", "Divers", "Statiegeld", "Transport"},
+			        0,
+			        1
+			    )
+		dataType: int64
+		lineageTag: 8874d6a7-b66a-4681-8724-923346849ba2
+		summarizeBy: none
+
 	partition fct_voorraad = m
 		mode: import
 		source =

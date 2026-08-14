@@ -940,6 +940,191 @@ table _Metingen
 	measure 'Flessen per order YTD vergelijking' = "vs. " & FORMAT([Flessen per order YTD vorig jaar], "0.0", "nl-NL") & " vorig jaar"
 		lineageTag: 22a7fa89-258e-4ac1-a4b6-f4c4ab3fc2ff
 
+	/// Flessen over de laatste 52 weken uit de productmart. Consistent met omzet_12m/brutomarge_12m uit dezelfde rij.
+	measure 'Wijn flessen 12m' = SUM(fct_voorraad[flessen_52w])
+		formatString: #,0
+		lineageTag: b7ce10cc-5020-40ab-af9c-d1edc7241259
+
+	measure 'Marge per fles' = DIVIDE([Brutomarge], [Wijn flessen 12m])
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: f34558c3-1e15-4e76-97d6-fab115aaa689
+
+	measure 'Klanten per wijn' = SUM(fct_voorraad[n_klanten])
+		formatString: #,0
+		lineageTag: e63fa3d0-1b30-4889-9f35-a0a1dca9a844
+
+	measure 'Wijnen met omzet' = CALCULATE(COUNTROWS(fct_voorraad), fct_voorraad[omzet_12m] > 0)
+		formatString: #,0
+		lineageTag: 0eb99f5d-2ad5-4e83-a462-17aafd8eb9e9
+
+	/// Stuurt zowel de rangschikking als de volgorde van de ranglijst. Valt terug op omzet.
+	measure 'Product sorteerwaarde' =
+			SWITCH(
+			    SELECTEDVALUE('Sortering producten'[Sortering], "Omzet"),
+			    "Flessen",    [Wijn flessen 12m],
+			    "Brutomarge", [Brutomarge],
+			    [Omzet 12m]
+			)
+		lineageTag: 334a3b52-5b1c-4f78-aff8-38018a6ca764
+
+	/// Rangschikt over product_label, de kolom waarop de ranglijst groepeert. Een RANKX over een andere kolom levert rang 1 voor elke rij.
+	measure Productrang =
+			IF(
+			    NOT ISBLANK([Product sorteerwaarde]),
+			    RANKX(ALLSELECTED(fct_voorraad[product_label]), [Product sorteerwaarde], , DESC, DENSE)
+			)
+		formatString: 0
+		lineageTag: f18ce8ff-698e-4df1-a242-4f6bde57065a
+
+	/// Expliciete ISBLANK-guard: BLANK() <= 50 is waar in DAX, waardoor de lege 'unknown member'-rij van dim_product anders in de ranglijst zou verschijnen.
+	measure 'In top N producten' =
+			VAR R = [Productrang]
+			RETURN IF(NOT ISBLANK(R) && R <= SELECTEDVALUE('TopN producten'[Aantal], 50), 1, 0)
+		formatString: 0
+		isHidden
+		lineageTag: 0341ac2b-d00d-4c35-af35-56ccb965cc35
+
+	measure 'Wijnen met omzet label' = FORMAT([Wijnen met omzet], "#,##0", "nl-NL")
+		lineageTag: 89755e05-f8fd-45d4-ae9e-7435a23d53f5
+
+	measure 'Product omzet label' = FORMAT([Omzet 12m], "€ #,##0", "nl-NL")
+		lineageTag: 7d4ca19a-1f73-4a58-9ca8-25b6d6c9cbd4
+
+	measure 'Product marge label' = FORMAT([Brutomarge], "€ #,##0", "nl-NL")
+		lineageTag: 13ec5afd-6aad-42a2-a5c0-23afd2841d22
+
+	measure 'Product marge pct label' = FORMAT([Brutomarge %], "0.0%", "nl-NL")
+		lineageTag: d7d5414c-3c88-4bd3-93dc-0fff7a0e96cb
+
+	measure 'Marge per fles label' = FORMAT([Marge per fles], "€ #,##0.00", "nl-NL")
+		lineageTag: 0d1a539b-b3bd-46df-9279-30f182af02c1
+
+	/// Noemt het venster expliciet: de productmart is rollend 12 maanden, niet kalenderjaar zoals het CEO-dashboard.
+	measure 'Producten kopregel sub' =
+			VAR Eind = [Peildatum]
+			VAR Startdatum = EDATE(Eind, -12) + 1
+			RETURN
+			    "Laatste 12 maanden · " & FORMAT(Startdatum, "d MMM yyyy", "nl-NL") & " t/m " & FORMAT(Eind, "d MMM yyyy", "nl-NL") &
+			    " · " & FORMAT([Wijnen met omzet], "#,##0", "nl-NL") & " wijnen met omzet"
+		lineageTag: 5eb44033-c786-44a8-929b-45ae9d403ee1
+
+	/// Onderregel bij de producentgrafiek. Lege wijnhuis telt niet mee als producent.
+	measure 'Producent aandeel sub' =
+			VAR Benoemd = FILTER(ALL(fct_voorraad), fct_voorraad[omzet_12m] > 0 && NOT ISBLANK(fct_voorraad[wijnhuis]) && fct_voorraad[wijnhuis] <> "")
+			VAR Totaal = CALCULATE([Omzet 12m], ALL(fct_voorraad))
+			VAR PerHuis = SUMMARIZE(Benoemd, fct_voorraad[wijnhuis], "@o", CALCULATE(SUM(fct_voorraad[omzet_12m])))
+			VAR Top15 = SUMX(TOPN(15, PerHuis, [@o], DESC), [@o])
+			VAR Huizen = COUNTROWS(PerHuis)
+			RETURN
+			    "De 15 grootste wijnhuizen zijn samen goed voor " & FORMAT(DIVIDE(Top15, Totaal), "0%", "nl-NL") &
+			    " van de omzet · " & FORMAT(Huizen, "#,##0", "nl-NL") & " wijnhuizen met omzet"
+		lineageTag: 0483c327-e49d-4db8-90f3-3c6a2e9138dc
+
+	/// fct_klant_product heeft geen relatie met dim_product - die is geweigerd wegens ambigue paden via fct_sales. Vandaar een expliciete sleutelvergelijking: CALCULATE op dezelfde tabel snijdt met de klantgroepering van de visual.
+	measure 'Wijn klant flessen' =
+			VAR Pid = SELECTEDVALUE(fct_voorraad[product_id])
+			RETURN IF(NOT ISBLANK(Pid), CALCULATE(SUM(fct_klant_product[flessen_12m]), fct_klant_product[product_id] = Pid))
+		formatString: #,0
+		lineageTag: d40a1764-f9ed-470b-b2ad-aba5ef7a79a3
+
+	measure 'Wijn klant omzet' =
+			VAR Pid = SELECTEDVALUE(fct_voorraad[product_id])
+			RETURN IF(NOT ISBLANK(Pid), CALCULATE(SUM(fct_klant_product[omzet_12m]), fct_klant_product[product_id] = Pid))
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: f352f6e2-25b3-469f-8a69-24529de2d9b9
+
+	measure 'Wijn klant laatste order' =
+			VAR Pid = SELECTEDVALUE(fct_voorraad[product_id])
+			VAR D = IF(NOT ISBLANK(Pid), CALCULATE(MAX(fct_klant_product[laatste_order_datum]), fct_klant_product[product_id] = Pid))
+			RETURN IF(NOT ISBLANK(D), FORMAT(D, "d MMM yyyy", "nl-NL"), "")
+		lineageTag: 0d411632-927e-423a-b886-152be3806c0d
+
+	measure 'Wijn klant status' =
+			VAR Pid = SELECTEDVALUE(fct_voorraad[product_id])
+			RETURN IF(NOT ISBLANK(Pid), CALCULATE(SELECTEDVALUE(fct_klant_product[regelstatus]), fct_klant_product[product_id] = Pid), "")
+		lineageTag: eed5fdc1-7e47-4728-833e-9357b58c962f
+
+	/// Visual-filter voor de klantentabel op Productdetail: zonder relatie tussen fct_klant_product en dim_product zou de tabel elke klant tonen.
+	measure 'Regel hoort bij wijn' =
+			VAR Pid = SELECTEDVALUE(fct_voorraad[product_id])
+			VAR N = IF(NOT ISBLANK(Pid), CALCULATE(COUNTROWS(fct_klant_product), fct_klant_product[product_id] = Pid))
+			RETURN IF(NOT ISBLANK(N) && N > 0, 1, 0)
+		formatString: 0
+		isHidden
+		lineageTag: a39fbbc4-ed9a-4208-a91f-b62561c096fc
+
+	/// Telt de klanten die de tabel eronder toont. Niet [Klanten per wijn]: de mart telt n_klanten net iets anders (77 rijen tegenover 76) en een kop die afwijkt van de lijst eronder levert vragen op. Omzet reconcilieert wel exact tussen beide marts.
+	measure 'Wijn klanten in lijst' =
+			VAR Pid = SELECTEDVALUE(fct_voorraad[product_id])
+			RETURN IF(NOT ISBLANK(Pid), CALCULATE(DISTINCTCOUNT(fct_klant_product[klant_id]), fct_klant_product[product_id] = Pid))
+		formatString: #,0
+		lineageTag: abec7e5c-cdac-4903-998a-c3fd4a87ed1b
+
+	/// Artikelcode, wijnhuis en leverancier onder de productnaam op de detailpagina.
+	measure 'Wijn kopregel sub' =
+			VAR Code = SELECTEDVALUE(fct_voorraad[artikelcode])
+			VAR Huis = SELECTEDVALUE(fct_voorraad[wijnhuis])
+			VAR Lev  = SELECTEDVALUE(fct_voorraad[leverancier])
+			RETURN
+			    TRIM(
+			        IF(NOT ISBLANK(Code), Code, "") &
+			        IF(NOT ISBLANK(Huis), " · " & Huis, "") &
+			        IF(NOT ISBLANK(Lev) && Lev <> Huis, " · " & Lev, "")
+			    )
+		lineageTag: d0ef2be1-b3c7-4cc0-b574-9b686f4fde9b
+
+	/// Lege string i.p.v. BLANK: een cardVisual rendert BLANK als '--'.
+	measure 'Wijn naam' =
+			VAR N = SELECTEDVALUE(fct_voorraad[product_label])
+			RETURN IF(ISBLANK(N), "", N)
+		lineageTag: b0c5100d-2724-413f-97ef-90f0c2dd2da0
+
+	measure 'Wijn gem verkoopprijs label' =
+			VAR V = CALCULATE(AVERAGE(fct_voorraad[gem_verkoopprijs_12m]))
+			RETURN IF(ISBLANK(V), "", FORMAT(V, "€ #,##0.00", "nl-NL"))
+		lineageTag: 67db1590-a565-4c88-9b5d-3c556e49cfea
+
+	measure 'Wijn inkoopprijs label' =
+			VAR V = CALCULATE(AVERAGE(fct_voorraad[inkoopprijs]))
+			RETURN IF(ISBLANK(V), "", FORMAT(V, "€ #,##0.00", "nl-NL"))
+		lineageTag: 4e44b8b3-e7b9-43bb-8dbd-e34d35154c1d
+
+	measure 'Wijn klanten label' = FORMAT([Wijn klanten in lijst], "#,##0", "nl-NL")
+		lineageTag: d2440f97-0f87-481e-9744-f6667ebfaad0
+
+	measure 'Wijn flessen label' = FORMAT([Wijn flessen 12m], "#,##0", "nl-NL")
+		lineageTag: 7a1da905-e6f8-4fa0-8bf0-5f01fed65c02
+
+	/// Rangschikt over wijnhuis, de kolom waarop de producentgrafiek groepeert. Sluit de lege wijnhuis uit: producten zonder wijnhuis vormen geen producent en stonden anders in de top 15.
+	measure 'Wijnhuis rang' =
+			VAR Huis = SELECTEDVALUE(fct_voorraad[wijnhuis])
+			RETURN
+			    IF(
+			        NOT ISBLANK(Huis) && Huis <> "" && [Omzet 12m] > 0,
+			        RANKX(
+			            FILTER(ALLSELECTED(fct_voorraad[wijnhuis]), NOT ISBLANK(fct_voorraad[wijnhuis]) && fct_voorraad[wijnhuis] <> ""),
+			            [Omzet 12m], , DESC, DENSE
+			        )
+			    )
+		formatString: 0
+		lineageTag: ace0d330-502f-465b-a309-860bd5388f1a
+
+	/// Visual-filter voor de producentgrafiek. Een measure-filter en geen handgeschreven TopN-Subquery in de PBIR: die heeft het rapport eerder onopenbaar gemaakt.
+	measure 'Wijnhuis in top 15' =
+			VAR R = [Wijnhuis rang]
+			RETURN IF(NOT ISBLANK(R) && R <= 15, 1, 0)
+		formatString: 0
+		isHidden
+		lineageTag: a86fee39-471f-404a-827c-bd5f9e3eb9f6
+
+	/// Filter voor de wijn-slicer op Productdetail. Zonder dit staat de lege 'unknown member'-rij van dim_product in de lijst en pakt een enkelvoudige selectie die als eerste waarde, waardoor de hele pagina leeg blijft.
+	measure 'Wijn selecteerbaar' =
+			VAR N = SELECTEDVALUE(fct_voorraad[product_label])
+			RETURN IF(NOT ISBLANK(N) && N <> "", 1, 0)
+		formatString: 0
+		isHidden
+		lineageTag: b89c6042-a0cd-42e1-a2ec-13f7b36121e9
+
 	column _
 		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
 		isNameInferred

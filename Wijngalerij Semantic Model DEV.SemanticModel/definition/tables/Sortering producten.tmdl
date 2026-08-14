@@ -1,0 +1,13 @@
+/// Losstaande parameter-tabel die bepaalt waarop de ranglijst rangschikt en sorteert. Geen relatie.
+table 'Sortering producten'
+	lineageTag: 51ea4e9d-29ba-40e2-b019-1584d1f83ab0
+
+	column Sortering
+		lineageTag: d6fe839f-608d-4010-93ff-95d2972f353b
+		isNameInferred
+		sourceColumn: [Sortering]
+
+	partition 'Sortering producten' = calculated
+		mode: import
+		source = DATATABLE("Sortering", STRING, {{"Omzet"},{"Flessen"},{"Brutomarge"}})
+

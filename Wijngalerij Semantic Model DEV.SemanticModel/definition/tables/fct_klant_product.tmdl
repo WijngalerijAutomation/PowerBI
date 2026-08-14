@@ -197,6 +197,19 @@ table fct_klant_product
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	/// Unieke weergavenaam per klant, zoals fct_klant[klant_label]. Nodig omdat 774 klanten 759 namen delen: groeperen op klant_naam voegt klanten samen, waardoor de klantentabel op Productdetail minder rijen toont dan de kop erboven telt.
+	column klant_label =
+			VAR Naam = fct_klant_product[klant_naam]
+			VAR AantalIds =
+			    CALCULATE(
+			        DISTINCTCOUNT(fct_klant_product[klant_id]),
+			        ALLEXCEPT(fct_klant_product, fct_klant_product[klant_naam])
+			    )
+			RETURN IF(AantalIds > 1, Naam & " (" & fct_klant_product[klant_id] & ")", Naam)
+		dataType: string
+		lineageTag: 68443839-8cfa-4a43-8628-e50bb3719cf1
+		summarizeBy: none
+
 	partition fct_klant_product = m
 		mode: import
 		source =

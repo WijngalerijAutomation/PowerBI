@@ -24,6 +24,8 @@ ref table fct_klant_product
 ref table _Metingen
 ref table 'TopN keuze'
 ref table 'CEO kleuren'
+ref table 'TopN producten'
+ref table 'Sortering producten'
 
 ref cultureInfo en-US
 
