@@ -378,18 +378,33 @@ table _Metingen
 	measure 'Signaal regel 1' =
 			VAR G        = [Omzet groei JoJ]
 			VAR NGestopt = COALESCE([Wijnen gestopt], 0)
-			RETURN
+			VAR Gemist   = COALESCE([Omzet gemist], 0)
+			VAR Zin1 =
 			    SWITCH(TRUE(),
 			        NOT ISBLANK(G) && G <= -0.10,
 			            "Omzet daalt " & FORMAT(ABS(G), "0%", "nl-NL") &
-			            " over de laatste zes maanden, tegenover dezelfde zes maanden vorig jaar.",
+			            " tegenover dezelfde zes maanden vorig jaar.",
 			        NOT ISBLANK(G) && G >= 0.10,
 			            "Omzet stijgt " & FORMAT(G, "0%", "nl-NL") &
-			            " over de laatste zes maanden, tegenover dezelfde zes maanden vorig jaar.",
+			            " tegenover dezelfde zes maanden vorig jaar.",
 			        NOT ISBLANK(G),
 			            "Omzet is stabiel tegenover dezelfde zes maanden vorig jaar.",
-			        NGestopt > 0, "",
-			        "Geen bijzonderheden in de cijfers van de laatste twaalf maanden."
+			        ""
+			    )
+			VAR Onderwerp = IF(NGestopt = 1, " wijn gestopt", " wijnen gestopt")
+			VAR Staart =
+			    IF(Gemist > 0,
+			        IF(NGestopt = 1, ", goed voor ", ", samen goed voor ") &
+			        FORMAT(Gemist, "€ #,##0", "nl-NL") & " in de 12 mnd daarvoor.",
+			        ", zonder omzet in de 12 mnd daarvoor."
+			    )
+			VAR Zin2 = IF(NGestopt > 0, FORMAT(NGestopt, "#,##0", "nl-NL") & Onderwerp & Staart, "")
+			RETURN
+			    SWITCH(TRUE(),
+			        Zin1 = "" && Zin2 = "", "Geen bijzonderheden in de cijfers van de laatste twaalf maanden.",
+			        Zin1 = "", Zin2,
+			        Zin2 = "", Zin1,
+			        Zin1 & " " & Zin2
 			    )
 		lineageTag: 24ecc6a4-d112-4e4a-afe1-2ef510eb4d25
 
