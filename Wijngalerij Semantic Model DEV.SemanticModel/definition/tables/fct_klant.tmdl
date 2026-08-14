@@ -540,7 +540,7 @@ table fct_klant
 			VAR HeeftIets = NOT ISBLANK(G) || (NOT ISBLANK(Gestopt) && Gestopt > 0)
 			RETURN
 			    SWITCH(TRUE(),
-			        NOT HeeftIets,                  "#FFFFFF",
+			        NOT HeeftIets,                  "#5C6B66",
 			        NOT ISBLANK(G) && G <= -0.10,   "#A2515F",
 			        "#1B2523"
 			    )

@@ -376,17 +376,21 @@ table _Metingen
 
 	/// Lege string als er geen vergelijkbare basis is: 'Geen vergelijkbare basis' is geen conclusie, en samen met een lege regel 2 verdwijnt de hele banner via signaal_kleur = wit.
 	measure 'Signaal regel 1' =
-			VAR G = [Omzet groei JoJ]
-			RETURN SWITCH(TRUE(),
-			    ISBLANK(G), "",
-			    G <= -0.10,
-			        "Omzet daalt " & FORMAT(ABS(G), "0%", "nl-NL") &
-			        " over de laatste zes maanden, tegenover dezelfde zes maanden vorig jaar.",
-			    G >= 0.10,
-			        "Omzet stijgt " & FORMAT(G, "0%", "nl-NL") &
-			        " over de laatste zes maanden, tegenover dezelfde zes maanden vorig jaar.",
-			    "Omzet is stabiel tegenover dezelfde zes maanden vorig jaar."
-			)
+			VAR G        = [Omzet groei JoJ]
+			VAR NGestopt = COALESCE([Wijnen gestopt], 0)
+			RETURN
+			    SWITCH(TRUE(),
+			        NOT ISBLANK(G) && G <= -0.10,
+			            "Omzet daalt " & FORMAT(ABS(G), "0%", "nl-NL") &
+			            " over de laatste zes maanden, tegenover dezelfde zes maanden vorig jaar.",
+			        NOT ISBLANK(G) && G >= 0.10,
+			            "Omzet stijgt " & FORMAT(G, "0%", "nl-NL") &
+			            " over de laatste zes maanden, tegenover dezelfde zes maanden vorig jaar.",
+			        NOT ISBLANK(G),
+			            "Omzet is stabiel tegenover dezelfde zes maanden vorig jaar.",
+			        NGestopt > 0, "",
+			        "Geen bijzonderheden in de cijfers van de laatste twaalf maanden."
+			    )
 		lineageTag: 24ecc6a4-d112-4e4a-afe1-2ef510eb4d25
 
 	/// Lege string i.p.v. BLANK: een cardVisual rendert BLANK als '--' op de tweede bannerregel.
