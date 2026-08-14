@@ -2,10 +2,10 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "0bbc5a06d3115683fd9e",
   "position": {
-    "x": 39.4,
-    "y": 752,
+    "x": 40,
+    "y": 743.75,
     "z": 33000,
-    "height": 18,
+    "height": 26.25,
     "width": 192.5,
     "tabOrder": 33000
   },
@@ -22,12 +22,11 @@
                     "value": "Actief",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11px",
-                      "color": "#5C6B66"
+                      "fontSize": "11pt",
+                      "color": "#5c6b66"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               }
             ]
           }

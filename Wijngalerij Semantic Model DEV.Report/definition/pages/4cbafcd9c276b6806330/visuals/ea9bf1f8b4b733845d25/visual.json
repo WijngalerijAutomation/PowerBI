@@ -109,14 +109,14 @@
             "autoSizeColumnWidth": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },
             "columnAdjustment": {
               "expr": {
                 "Literal": {
-                  "Value": "'growToFit'"
+                  "Value": "'fixedWidth'"
                 }
               }
             },
@@ -458,13 +458,55 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "605.3333201210614D"
+                  "Value": "820D"
                 }
               }
             }
           },
           "selector": {
             "metadata": "fct_klant_product.product_naam"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "78D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Metingen.Flessen tabel"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "92D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Metingen.Omzet tabel"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "230D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Metingen.Statuslabel"
           }
         }
       ]
