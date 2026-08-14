@@ -12,15 +12,15 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "Filter61bbc9d07427a9185c6d4055",
+        "name": "Filter7450e0b18a5485e518e0c345",
         "field": {
-          "Measure": {
+          "Column": {
             "Expression": {
               "SourceRef": {
-                "Entity": "_Metingen"
+                "Entity": "dim_date"
               }
             },
-            "Property": "In laatste 12 maanden"
+            "Property": "in_venster"
           }
         },
         "type": "Advanced",
@@ -28,8 +28,8 @@
           "Version": 2,
           "From": [
             {
-              "Name": "m",
-              "Entity": "_Metingen",
+              "Name": "d",
+              "Entity": "dim_date",
               "Type": 0
             }
           ],
@@ -39,122 +39,18 @@
                 "Comparison": {
                   "ComparisonKind": 0,
                   "Left": {
-                    "Measure": {
+                    "Column": {
                       "Expression": {
                         "SourceRef": {
-                          "Source": "m"
+                          "Source": "d"
                         }
                       },
-                      "Property": "In laatste 12 maanden"
+                      "Property": "in_venster"
                     }
                   },
                   "Right": {
                     "Literal": {
                       "Value": "1L"
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User"
-      },
-      {
-        "name": "Filter95de33b3aac95736f9a51fc8",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "fct_sales"
-              }
-            },
-            "Property": "product_naam"
-          }
-        },
-        "type": "TopN",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "subquery",
-              "Expression": {
-                "Subquery": {
-                  "Query": {
-                    "Version": 2,
-                    "From": [
-                      {
-                        "Name": "s",
-                        "Entity": "fct_sales",
-                        "Type": 0
-                      }
-                    ],
-                    "Select": [
-                      {
-                        "Column": {
-                          "Column": {
-                            "Expression": {
-                              "SourceRef": {
-                                "Source": "s"
-                              }
-                            },
-                            "Property": "product_naam"
-                          }
-                        },
-                        "Name": "field"
-                      }
-                    ],
-                    "OrderBy": [
-                      {
-                        "Direction": 2,
-                        "Expression": {
-                          "Aggregation": {
-                            "Expression": {
-                              "Column": {
-                                "Expression": {
-                                  "SourceRef": {
-                                    "Source": "s"
-                                  }
-                                },
-                                "Property": "aantal"
-                              }
-                            },
-                            "Function": 0
-                          }
-                        }
-                      }
-                    ],
-                    "Top": 15
-                  }
-                }
-              },
-              "Type": 2
-            },
-            {
-              "Name": "f",
-              "Entity": "fct_sales",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "In": {
-                  "Expressions": [
-                    {
-                      "Column": {
-                        "Expression": {
-                          "SourceRef": {
-                            "Source": "f"
-                          }
-                        },
-                        "Property": "product_naam"
-                      }
-                    }
-                  ],
-                  "Table": {
-                    "SourceRef": {
-                      "Source": "subquery"
                     }
                   }
                 }
@@ -227,24 +123,6 @@
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "_Metingen"
-                  }
-                },
-                "Property": "Flessen per maand"
-              }
-            },
-            "direction": "Descending"
-          }
-        ],
-        "isDefaultSort": true
       }
     },
     "objects": {
