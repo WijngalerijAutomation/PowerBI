@@ -9,59 +9,6 @@
     "width": 1232,
     "tabOrder": 30
   },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "Filterbc691e2e2f385659f2cf3e21",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Metingen"
-              }
-            },
-            "Property": "Zakelijke klant met omzet"
-          }
-        },
-        "type": "Advanced",
-        "filter": {
-          "Version": 2,
-          "From": [
-            {
-              "Name": "m",
-              "Entity": "_Metingen",
-              "Type": 0
-            }
-          ],
-          "Where": [
-            {
-              "Condition": {
-                "Comparison": {
-                  "ComparisonKind": 0,
-                  "Left": {
-                    "Measure": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Source": "m"
-                        }
-                      },
-                      "Property": "Zakelijke klant met omzet"
-                    }
-                  },
-                  "Right": {
-                    "Literal": {
-                      "Value": "1L"
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        },
-        "howCreated": "User"
-      }
-    ]
-  },
   "visual": {
     "visualType": "lineClusteredColumnComboChart",
     "query": {
@@ -81,6 +28,7 @@
               },
               "queryRef": "fct_klant.klant_label",
               "nativeQueryRef": "klant_label",
+              "active": true,
               "displayName": "Klant"
             }
           ]
@@ -92,13 +40,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "_Metingen"
+                      "Entity": "fct_klant"
                     }
                   },
                   "Property": "Klant omzet 12m"
                 }
               },
-              "queryRef": "_Metingen.Klant omzet 12m",
+              "queryRef": "fct_klant.Klant omzet 12m",
               "nativeQueryRef": "Klant omzet 12m",
               "displayName": "Omzet 12 mnd"
             }
@@ -131,7 +79,7 @@
               "Measure": {
                 "Expression": {
                   "SourceRef": {
-                    "Entity": "_Metingen"
+                    "Entity": "fct_klant"
                   }
                 },
                 "Property": "Klant omzet 12m"
@@ -445,5 +393,58 @@
         }
       ]
     }
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "Filterbc691e2e2f385659f2cf3e21",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Metingen"
+              }
+            },
+            "Property": "Zakelijke klant met omzet"
+          }
+        },
+        "type": "Advanced",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "m",
+              "Entity": "_Metingen",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Comparison": {
+                  "ComparisonKind": 0,
+                  "Left": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Source": "m"
+                        }
+                      },
+                      "Property": "Zakelijke klant met omzet"
+                    }
+                  },
+                  "Right": {
+                    "Literal": {
+                      "Value": "1L"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
+      }
+    ]
   }
 }
