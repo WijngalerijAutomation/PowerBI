@@ -1,6 +1,6 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "ea9bf1f8b4b733845d25",
+  "name": "bf987fac95cb7cb52400",
   "position": {
     "x": 24,
     "y": 864,
@@ -108,14 +108,14 @@
             "autoSizeColumnWidth": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },
             "columnAdjustment": {
               "expr": {
                 "Literal": {
-                  "Value": "'fitToContent'"
+                  "Value": "'fixedWidth'"
                 }
               }
             },
@@ -138,13 +138,6 @@
                       "Value": "'#FFFFFF'"
                     }
                   }
-                }
-              }
-            },
-            "defaultColumnWidth": {
-              "expr": {
-                "Literal": {
-                  "Value": "90D"
                 }
               }
             }
@@ -464,7 +457,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "700D"
+                  "Value": "820D"
                 }
               }
             }
@@ -478,7 +471,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "133.71431062660554D"
+                  "Value": "78D"
                 }
               }
             }
@@ -492,7 +485,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "164.857115236985D"
+                  "Value": "92D"
                 }
               }
             }
@@ -506,7 +499,7 @@
             "value": {
               "expr": {
                 "Literal": {
-                  "Value": "218.74500647822913D"
+                  "Value": "230D"
                 }
               }
             }
@@ -596,7 +589,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "Filter197446f9c6f41d512316e991",
+        "name": "Filterec0d1cb0fb4b039c4fbd770b",
         "field": {
           "Column": {
             "Expression": {
@@ -649,7 +642,7 @@
         "howCreated": "User"
       },
       {
-        "name": "Filter97de0e9e08272e537ca9a481",
+        "name": "Filteraa8f7bf8456c48bfe7d71776",
         "field": {
           "Measure": {
             "Expression": {
