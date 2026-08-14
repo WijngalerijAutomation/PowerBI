@@ -236,6 +236,35 @@ table dim_date
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Korte maandlabel voor de as. Sorteert op jaar_maand: 1-op-1 omdat het jaar in het label zit, anders dan maand_naam (8.1 vraagt maand_naam op jaar_maand te sorteren, wat Power BI weigert - september hoort bij twee jaren).
+	column maand_label = FORMAT(dim_date[maand_start], "MMM yy", "nl-NL")
+		dataType: string
+		lineageTag: 311c7b58-f503-45ea-9f00-2b0809cbb84d
+		summarizeBy: none
+		sortByColumn: jaar_maand
+
+	/// Positie binnen het rollende 12-maandsvenster (1 = oudste). Maakt korte maandnamen sorteerbaar in venstervolgorde: 1-op-1 met maand_kort, anders dan jaar_maand.
+	column maand_volgorde = MOD(dim_date[maand_nr] - MONTH([Peildatum]) + 12, 12) + 1
+		dataType: int64
+		lineageTag: ef61c4bc-f8bb-4290-9c6b-6dbdf4b3a4d8
+		summarizeBy: none
+
+	/// Kale maandnaam voor de as, zoals de mockup. Sorteert op maand_volgorde (venstervolgorde), niet op maand_nr (kalendervolgorde) of jaar_maand (niet 1-op-1).
+	column maand_kort = FORMAT(dim_date[maand_start], "MMM", "nl-NL")
+		dataType: string
+		lineageTag: e3653767-db56-46dc-bd5b-3d8e17cd8a04
+		summarizeBy: none
+		sortByColumn: maand_volgorde
+
+	/// Rij-niveau vlag voor het rollende 12-maandsvenster. Nodig omdat [In laatste 12 maanden] een measure is die MIN(dim_date[datum]) gebruikt: op rijniveau van een matrix (product zonder maand) geeft die 2024-01-01 en dus 0, waardoor rijen wegvallen. Een kolomfilter wordt voor het groeperen toegepast en is grain-onafhankelijk.
+	column in_venster =
+			VAR Einddatum  = EOMONTH([Peildatum], -1)
+			VAR Startdatum = EOMONTH([Peildatum], -13)
+			RETURN IF(dim_date[datum] > Startdatum && dim_date[datum] <= Einddatum, 1, 0)
+		dataType: int64
+		lineageTag: 8e577442-4cbe-4e92-bf19-604de837eade
+		summarizeBy: none
+
 	partition dim_date = m
 		mode: import
 		source =

@@ -41,7 +41,9 @@ table fct_klant
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Brutomarge % 12m' = DIVIDE(SUM(fct_klant[brutomarge_12m]), [Omzet 12m])
+	/// Deelde eerder door [Omzet 12m], wat in dit model SUM(fct_voorraad[omzet_12m]) is - de voorraadtabel, niet de klantomzet. Gaf 2,7% i.p.v. 51,1% op Beachclub C. Deelt nu door de klantomzet uit dezelfde tabel.
+	measure 'Brutomarge % 12m' = DIVIDE(SUM(fct_klant[brutomarge_12m]), SUM(fct_klant[omzet_12m]))
+		formatString: 0%
 		lineageTag: 6db1dbb9-7f82-4ea0-986f-eeb5e3ad416d
 
 		changedProperty = IsHidden
@@ -500,6 +502,67 @@ table fct_klant
 		annotation SummarizationSetBy = User
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	/// Hex voor de signaalbanner. Type 6 field-driven kleur vereist een fysieke kolom, geen measure.
+	column signaal_kleur =
+			VAR Basis = fct_klant[omzet_zelfde_6m_vorig_jaar]
+			VAR G = IF(Basis >= 500, DIVIDE(fct_klant[omzet_6m], Basis) - 1)
+			RETURN IF(NOT ISBLANK(G) && G <= -0.10, "#FDECEA", "#F2F5F2")
+		dataType: string
+		lineageTag: 71be25d7-93a3-4330-9e55-fde9df5366b0
+		summarizeBy: none
+
+	column signaal_tekstkleur =
+			VAR Basis = fct_klant[omzet_zelfde_6m_vorig_jaar]
+			VAR G = IF(Basis >= 500, DIVIDE(fct_klant[omzet_6m], Basis) - 1)
+			RETURN IF(NOT ISBLANK(G) && G <= -0.10, "#A2515F", "#1B2523")
+		dataType: string
+		lineageTag: 8ddfbed3-a3aa-48e5-8882-bd6492b8f937
+		summarizeBy: none
+
+	column segment_kleur =
+			SWITCH(fct_klant[klant_segment],
+			    "kern", "#DCEAE7",
+			    "actief", "#DCEAE7",
+			    "nieuw", "#E8EFE4",
+			    "afglijdend", "#FBEBE4",
+			    "#F6E7EA")
+		dataType: string
+		lineageTag: 68f40b07-2adb-4f37-b733-66bb1b92093a
+		summarizeBy: none
+
+	column segment_tekstkleur =
+			SWITCH(fct_klant[klant_segment],
+			    "kern", "#577D79",
+			    "actief", "#577D79",
+			    "nieuw", "#5A7048",
+			    "afglijdend", "#C3715C",
+			    "#A2515F")
+		dataType: string
+		lineageTag: c482eba3-1a87-454d-aa41-6909b34be3f3
+		summarizeBy: none
+
+	/// Subregelkleur tegel A (7). Fysieke kolom omdat Type 6 geen measure accepteert.
+	column groei_kleur =
+			VAR G = [Omzet groei JoJ]
+			RETURN SWITCH(TRUE(),
+			    ISBLANK(G), "#8A9691",
+			    G < 0, "#A2515F",
+			    "#577D79")
+		dataType: string
+		lineageTag: f730101e-0cc1-4230-bcd9-e0ec1967ffa0
+		summarizeBy: none
+
+	/// Subregelkleur tegel D (7).
+	column flessen_kleur =
+			VAR V = [Flessen verschil 12m]
+			RETURN SWITCH(TRUE(),
+			    ISBLANK(V) || V = 0, "#8A9691",
+			    V > 0, "#577D79",
+			    "#A2515F")
+		dataType: string
+		lineageTag: 4827679c-b074-4de0-9f86-530083f2376d
+		summarizeBy: none
 
 	partition fct_klant = m
 		mode: import

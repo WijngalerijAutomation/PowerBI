@@ -131,13 +131,16 @@ table _Metingen
 	measure 'Flessen 12m label' = FORMAT([Flessen 12m rollend], "#,##0", "nl-NL")
 		lineageTag: c5d25d18-d3cf-420b-84dc-fdb3c0b92e41
 
-	measure 'Omzet actief label' = FORMAT([Omzet actief], "€ #,##0", "nl-NL")
+	/// COALESCE: FORMAT(BLANK()) geeft een lege string, waardoor de portfolio-subregel als ' · 0 fl.' rendert.
+	measure 'Omzet actief label' = FORMAT(COALESCE([Omzet actief], 0), "€ #,##0", "nl-NL")
 		lineageTag: ab405e7b-5ad2-40fe-a344-efaf67d4d8ed
 
-	measure 'Omzet gemist label' = FORMAT([Omzet gemist], "€ #,##0", "nl-NL")
+	/// COALESCE: zie Omzet actief label.
+	measure 'Omzet gemist label' = FORMAT(COALESCE([Omzet gemist], 0), "€ #,##0", "nl-NL")
 		lineageTag: 9c7ea55c-060c-4592-838d-a226788151ea
 
-	measure 'Kans eerdere omzet label' = FORMAT([Kans eerdere omzet], "€ #,##0", "nl-NL")
+	/// COALESCE: zie Omzet actief label.
+	measure 'Kans eerdere omzet label' = FORMAT(COALESCE([Kans eerdere omzet], 0), "€ #,##0", "nl-NL")
 		lineageTag: 4d1fdb67-36bb-4a3c-bce7-845ce1cfda1c
 
 	measure 'Gem. orderwaarde 12m label' =
@@ -279,10 +282,10 @@ table _Metingen
 	measure 'Wijnen kans label' = FORMAT(COALESCE([Wijnen kans], 0), "#,##0", "nl-NL") & " wijnen"
 		lineageTag: 8dd60a23-e83d-4819-819a-feecb35ceb07
 
-	/// MIN, niet MAX: MAX laat een halve maand extra door (13 punten i.p.v. 12). Optie 1 uit 8.3 - eindigt op de laatste complete maand.
+	/// MIN, niet MAX. EOMONTH i.p.v. EDATE voor de startgrens: EDATE(-13) valt op 10 juli, waardoor de meting per dag geevalueerd 13 maanden teruggeeft (halve juli 2025). EOMONTH geeft 31 juli en klopt op zowel dag- als maandniveau. Optie 1 uit 8.3.
 	measure 'In laatste 12 maanden' =
 			VAR Einddatum  = [Peildatum]
-			VAR Startdatum = EDATE(Einddatum, -13)
+			VAR Startdatum = EOMONTH(Einddatum, -13)
 			VAR M          = MIN(dim_date[datum])
 			RETURN IF(M > Startdatum && M <= EOMONTH(Einddatum, -1), 1, 0)
 		lineageTag: 41c4ada6-a5ca-4d9f-bf3f-85bfd17578fc
@@ -358,6 +361,106 @@ table _Metingen
 			VAR D = SELECTEDVALUE(fct_klant[laatste_order_datum])
 			RETURN IF(NOT ISBLANK(D), FORMAT(D, "d MMM yyyy", "nl-NL"))
 		lineageTag: 7fec11eb-1872-425e-90ba-17af999c7438
+
+	/// Badge-tekst voor de kopregel (5).
+	measure 'Segment badge' = SELECTEDVALUE(fct_klant[klant_segment])
+		lineageTag: c45e592f-c6c9-45c1-9d65-3df9156a43c2
+
+	/// Zonder de ',-' suffix van [Omzet YTD label], anders leest tegel B anders dan de andere drie.
+	measure 'Omzet YTD tegel label' = FORMAT([Omzet YTD], "€ #,##0", "nl-NL")
+		lineageTag: 912fa3e4-1423-48a0-b5ef-057c865e319c
+
+	/// Eerlijke subregel voor tegel B: er is geen jaardoel in het warehouse (8.4).
+	measure 'YTD periode label' = "1 jan t/m " & FORMAT([Peildatum], "d MMM yyyy", "nl-NL")
+		lineageTag: 73307f61-8e7d-49e5-b8f6-e002f08e9316
+
+	/// Regel 1 van de banner. Gesplitst omdat Desktop UNICHAR(10) als spatie rendert en textWrap/overFlow niet honoreert - zie 6.
+	measure 'Signaal regel 1' =
+			VAR G = [Omzet groei JoJ]
+			RETURN SWITCH(TRUE(),
+			    ISBLANK(G), "Geen vergelijkbare basis in dezelfde periode vorig jaar.",
+			    G <= -0.10,
+			        "Omzet daalt " & FORMAT(ABS(G), "0%", "nl-NL") &
+			        " over de laatste zes maanden, tegenover dezelfde zes maanden vorig jaar.",
+			    G >= 0.10,
+			        "Omzet stijgt " & FORMAT(G, "0%", "nl-NL") &
+			        " over de laatste zes maanden, tegenover dezelfde zes maanden vorig jaar.",
+			    "Omzet is stabiel tegenover dezelfde zes maanden vorig jaar."
+			)
+		lineageTag: 24ecc6a4-d112-4e4a-afe1-2ef510eb4d25
+
+	/// Regel 2 van de banner; blank als er geen gestopte wijnen zijn.
+	measure 'Signaal regel 2' =
+			VAR N = [Wijnen gestopt]
+			VAR Gemist = [Omzet gemist]
+			RETURN IF(N > 0,
+			    FORMAT(N, "#,##0", "nl-NL") & " wijnen gestopt, samen goed voor " &
+			    FORMAT(Gemist, "€ #,##0", "nl-NL") & " omzet in de twaalf maanden daarvoor."
+			)
+		lineageTag: 944c0463-9039-4ee1-bab5-01450ae8fdd3
+
+	/// Alias van [Omzet] puur voor de legenda: Power BI toont de measurenaam (8.2).
+	measure 'Dit jaar' = [Omzet]
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 769791fc-297f-4cfb-81de-f5c285084658
+
+	/// Alias van [Omzet vorig jaar] voor de legenda.
+	measure 'Vorig jaar' = [Omzet vorig jaar]
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 3ed0115a-6712-49a2-b167-af60892f5843
+
+	/// Venster expliciet in de subregel: 8a en 8b tonen geld uit verschillende jaren (9).
+	measure 'Portfolio actief subregel' = [Omzet actief label] & " · " & FORMAT(COALESCE([Flessen actief], 0), "#,##0", "nl-NL") & " fl. — laatste 12 mnd"
+		lineageTag: 243a2775-83bc-469d-aaf7-b55a5f8192ef
+
+	/// Vorige venster, niet het huidige - zie 3.4.
+	measure 'Portfolio gestopt subregel' = [Omzet gemist label] & " · " & FORMAT(COALESCE([Flessen gemist], 0), "#,##0", "nl-NL") & " fl. — vorige 12 mnd"
+		lineageTag: f820ddbe-8a3d-4a95-b42d-d1ee2a06cb7b
+
+	/// 'eerder besteed', niet 'potentieel': er bestaat geen onderbouwde potentieelschatting (3.4).
+	measure 'Portfolio kans subregel' = [Kans eerdere omzet label] & " eerder besteed"
+		lineageTag: 6ef41bb5-2428-4318-99c7-0d736ba95883
+
+	/// Numerieke status voor Type 2 regels in de wijnentabel. Een measure, geen kolomverwijzing: een kolom in de conditie dwingt Power BI die kolom als extra rijniveau toe te voegen.
+	measure Statuscode =
+			SWITCH(SELECTEDVALUE(fct_klant_product[regelstatus], ""),
+			    "actief", 1,
+			    "gestopt", 2,
+			    "kans", 3,
+			    0)
+		formatString: 0
+		isHidden
+		lineageTag: afec4043-0621-46c7-a3ee-44eb2a23ba50
+
+	/// Brutomarge over de laatste 12 maanden, uit de mart.
+	measure 'Brutomarge 12m' = SUM(fct_klant[brutomarge_12m])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 55ab27cd-0880-4277-9c12-1304b28c9c86
+
+	/// Niet [Brutomarge % 12m] gebruiken: die deelt door [Omzet 12m], wat in dit model de fct_voorraad-meting is, niet de klantomzet. Levert 2,7% i.p.v. 51%.
+	measure 'Brutomarge pct 12m' = DIVIDE(SUM(fct_klant[brutomarge_12m]), SUM(fct_klant[omzet_12m]))
+		formatString: 0%
+		lineageTag: 247bb60f-f0a1-469f-a7c3-03a9d990a4e3
+
+	measure 'Brutomarge 12m label' = FORMAT(COALESCE([Brutomarge 12m], 0), "€ #,##0", "nl-NL")
+		lineageTag: 702dc31a-aac2-4a26-9753-cda44ec00106
+
+	measure 'Brutomarge pct label' =
+			VAR P = [Brutomarge pct 12m]
+			RETURN IF(ISBLANK(P), "geen margegegevens",
+			    FORMAT(P, "0%", "nl-NL") & " marge op " & [Omzet 12m rollend label])
+		lineageTag: 3a39e4c1-6c0a-4978-9eca-b4d2fced4a4d
+
+	/// Volume per wijn per maand. is_revenue, niet is_stock_movement: die telt gratis samples mee en de hele pagina is revenue-consistent (3.2).
+	measure 'Flessen per maand' = CALCULATE(SUM(fct_sales[aantal]), fct_sales[is_revenue] = TRUE())
+		formatString: #,0
+		lineageTag: 02f9c147-84f5-4b54-8d56-f5fa605b58dd
+
+	/// Filtert lege regels uit de wijnentabel: kans-wijnen met alleen een prijsafspraak en gestopte wijnen waarvan ook het vorige venster leeg is, tonen 0 flessen en 0 omzet en dragen niets bij. Toetst dezelfde twee measures die de tabel toont, zodat het filter matcht met wat de gebruiker ziet.
+	measure 'Regel heeft data' = IF(COALESCE([Omzet tabel], 0) > 0 || COALESCE([Flessen tabel], 0) > 0, 1, 0)
+		formatString: 0
+		isHidden
+		lineageTag: 93ca1715-9527-4f48-b6d6-c766160cec5f
 
 	column _
 		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
