@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "dfc3124a5670a4d50d87",
   "position": {
-    "x": 24,
-    "y": 384,
+    "x": 24.285714285714288,
+    "y": 375.71428571428572,
     "z": 28000,
-    "height": 300,
-    "width": 1232,
+    "height": 308.57142857142861,
+    "width": 1231.4285714285716,
     "tabOrder": 28000
   },
   "visual": {
@@ -480,48 +480,6 @@
           ]
         },
         "howCreated": "User"
-      },
-      {
-        "name": "deaa9608353f68ce665e",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "dim_date"
-              }
-            },
-            "Property": "maand_label"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "bd0d3c1ead9de98597d0",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Metingen"
-              }
-            },
-            "Property": "Dit jaar"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "a7d4a42c67b287131059",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Metingen"
-              }
-            },
-            "Property": "Vorig jaar"
-          }
-        },
-        "type": "Advanced"
       }
     ]
   }

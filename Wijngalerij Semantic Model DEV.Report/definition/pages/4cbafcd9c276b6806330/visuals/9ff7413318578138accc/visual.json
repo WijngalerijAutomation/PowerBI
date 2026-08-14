@@ -21,14 +21,13 @@
                   {
                     "value": "Wijnportfolio",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontFamily": "Segoe UI Semibold",
                       "fontSize": "16px",
-                      "color": "#1B2523",
-                      "fontWeight": "bold"
+                      "color": "#1b2523"
                     }
                   }
-                ],
-                "horizontalTextAlignment": "left"
+                ]
               }
             ]
           }

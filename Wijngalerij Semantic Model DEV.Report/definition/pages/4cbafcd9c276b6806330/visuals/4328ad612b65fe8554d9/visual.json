@@ -260,23 +260,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "c60b1ef89b8ea6966a30",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Metingen"
-              }
-            },
-            "Property": "Laatste order label"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

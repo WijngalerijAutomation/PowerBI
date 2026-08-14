@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "5c89898bf974e0f4b5aa",
+  "name": "3ff41178d42c08d76e1c",
   "position": {
-    "x": 40,
-    "y": 157.85714285714286,
-    "z": 26000,
-    "height": 24,
-    "width": 1201.2,
-    "tabOrder": 26000
+    "x": 1005.6,
+    "y": 314,
+    "z": 252,
+    "height": 20,
+    "width": 229.4,
+    "tabOrder": 252
   },
   "visual": {
     "visualType": "cardVisual",
@@ -23,11 +23,11 @@
                       "Entity": "_Metingen"
                     }
                   },
-                  "Property": "Signaal regel 1"
+                  "Property": "Brutomarge pct label"
                 }
               },
-              "queryRef": "_Metingen.Signaal regel 1",
-              "nativeQueryRef": "Signaal regel 1"
+              "queryRef": "_Metingen.Brutomarge pct label",
+              "nativeQueryRef": "Brutomarge pct label"
             }
           ]
         }
@@ -40,14 +40,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "textWrap": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
+                  "Value": "11D"
                 }
               }
             },
@@ -62,18 +55,8 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Aggregation": {
-                      "Expression": {
-                        "Column": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Entity": "fct_klant"
-                            }
-                          },
-                          "Property": "signaal_tekstkleur"
-                        }
-                      },
-                      "Function": 3
+                    "Literal": {
+                      "Value": "'#5C6B66'"
                     }
                   }
                 }
@@ -108,43 +91,6 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
-                }
-              }
-            }
-          },
-          "selector": {
-            "id": "default"
-          }
-        }
-      ],
-      "fillCustom": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "fillColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Aggregation": {
-                      "Expression": {
-                        "Column": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Entity": "fct_klant"
-                            }
-                          },
-                          "Property": "signaal_kleur"
-                        }
-                      },
-                      "Function": 3
-                    }
-                  }
                 }
               }
             }
@@ -221,13 +167,6 @@
                   "Value": "0L"
                 }
               }
-            },
-            "backgroundShow": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
             }
           },
           "selector": {
@@ -253,6 +192,19 @@
       ]
     },
     "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "border": [
         {
           "properties": {

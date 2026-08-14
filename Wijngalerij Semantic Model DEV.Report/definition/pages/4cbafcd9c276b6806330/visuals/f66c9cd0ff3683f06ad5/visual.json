@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "6e2319543f9e9969bdf0",
+  "name": "f66c9cd0ff3683f06ad5",
   "position": {
-    "x": 281.4,
+    "x": 1005.6,
     "y": 241.25,
-    "z": 17000,
+    "z": 250,
     "height": 26.25,
     "width": 229.4,
-    "tabOrder": 17000
+    "tabOrder": 250
   },
   "visual": {
     "visualType": "textbox",
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Omzet YTD",
+                    "value": "Brutomarge 12 mnd",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "12pt",

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "e3fa0ab0edfe3ce6060e",
   "position": {
-    "x": 352.2,
+    "x": 281.4,
     "y": 314,
     "z": 19000,
     "height": 20,
-    "width": 269.5,
+    "width": 229.4,
     "tabOrder": 19000
   },
   "visual": {
@@ -253,23 +253,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "3b90c89cac1bbb7aa46e",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Metingen"
-              }
-            },
-            "Property": "YTD periode label"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

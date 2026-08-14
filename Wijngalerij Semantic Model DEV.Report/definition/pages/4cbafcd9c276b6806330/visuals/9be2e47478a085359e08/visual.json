@@ -33,6 +33,17 @@
           "selector": {
             "id": "default"
           }
+        },
+        {
+          "properties": {
+            "roundEdge": {
+              "expr": {
+                "Literal": {
+                  "Value": "14L"
+                }
+              }
+            }
+          }
         }
       ],
       "fill": [

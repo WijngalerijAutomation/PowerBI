@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "2934749b85cec50b7d23",
   "position": {
-    "x": 39.4,
+    "x": 40,
     "y": 270,
     "z": 15000,
     "height": 40,
-    "width": 269.5,
+    "width": 229.4,
     "tabOrder": 15000
   },
   "visual": {
@@ -260,23 +260,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "f22cd9ad46dbc40ca9fd",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Metingen"
-              }
-            },
-            "Property": "Omzet 12m rollend label"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

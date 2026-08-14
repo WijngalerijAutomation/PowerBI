@@ -253,23 +253,5 @@
         }
       ]
     }
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "43679899029f7476ce74",
-        "field": {
-          "Measure": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "_Metingen"
-              }
-            },
-            "Property": "Laatste order datum label"
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }

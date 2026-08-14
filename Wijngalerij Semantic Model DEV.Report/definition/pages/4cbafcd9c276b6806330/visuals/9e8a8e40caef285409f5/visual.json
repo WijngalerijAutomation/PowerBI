@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "5c89898bf974e0f4b5aa",
+  "name": "9e8a8e40caef285409f5",
   "position": {
-    "x": 40,
-    "y": 157.85714285714286,
-    "z": 26000,
-    "height": 24,
-    "width": 1201.2,
-    "tabOrder": 26000
+    "x": 1005.6,
+    "y": 270,
+    "z": 251,
+    "height": 40,
+    "width": 229.4,
+    "tabOrder": 251
   },
   "visual": {
     "visualType": "cardVisual",
@@ -23,11 +23,11 @@
                       "Entity": "_Metingen"
                     }
                   },
-                  "Property": "Signaal regel 1"
+                  "Property": "Brutomarge 12m label"
                 }
               },
-              "queryRef": "_Metingen.Signaal regel 1",
-              "nativeQueryRef": "Signaal regel 1"
+              "queryRef": "_Metingen.Brutomarge 12m label",
+              "nativeQueryRef": "Brutomarge 12m label"
             }
           ]
         }
@@ -40,14 +40,7 @@
             "fontSize": {
               "expr": {
                 "Literal": {
-                  "Value": "13D"
-                }
-              }
-            },
-            "textWrap": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
+                  "Value": "26D"
                 }
               }
             },
@@ -62,20 +55,17 @@
               "solid": {
                 "color": {
                   "expr": {
-                    "Aggregation": {
-                      "Expression": {
-                        "Column": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Entity": "fct_klant"
-                            }
-                          },
-                          "Property": "signaal_tekstkleur"
-                        }
-                      },
-                      "Function": 3
+                    "Literal": {
+                      "Value": "'#1B2523'"
                     }
                   }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
                 }
               }
             }
@@ -108,43 +98,6 @@
               "expr": {
                 "Literal": {
                   "Value": "false"
-                }
-              }
-            }
-          },
-          "selector": {
-            "id": "default"
-          }
-        }
-      ],
-      "fillCustom": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "fillColor": {
-              "solid": {
-                "color": {
-                  "expr": {
-                    "Aggregation": {
-                      "Expression": {
-                        "Column": {
-                          "Expression": {
-                            "SourceRef": {
-                              "Entity": "fct_klant"
-                            }
-                          },
-                          "Property": "signaal_kleur"
-                        }
-                      },
-                      "Function": 3
-                    }
-                  }
                 }
               }
             }
@@ -221,13 +174,6 @@
                   "Value": "0L"
                 }
               }
-            },
-            "backgroundShow": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
             }
           },
           "selector": {
@@ -253,6 +199,19 @@
       ]
     },
     "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "border": [
         {
           "properties": {
