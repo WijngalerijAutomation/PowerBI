@@ -34,7 +34,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "Filter1230fa104bbf443c0e907f41",
+        "name": "Filter2a602c0688dc050b5940cca8",
         "field": {
           "Column": {
             "Expression": {
@@ -47,6 +47,60 @@
         },
         "type": "Categorical",
         "howCreated": "Drillthrough"
+      },
+      {
+        "name": "Filter2c7a31db12bbeaaf13c45f7b",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fct_voorraad"
+              }
+            },
+            "Property": "is_wijn"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "t",
+              "Entity": "fct_voorraad",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "t"
+                          }
+                        },
+                        "Property": "is_wijn"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "1L"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
       }
     ]
   },
@@ -55,8 +109,8 @@
     "type": "Drillthrough",
     "parameters": [
       {
-        "name": "Param_Filter1230fa104bbf443c0e907f41",
-        "boundFilter": "Filter1230fa104bbf443c0e907f41",
+        "name": "Param_Filter2a602c0688dc050b5940cca8",
+        "boundFilter": "Filter2a602c0688dc050b5940cca8",
         "fieldExpr": {
           "Column": {
             "Expression": {
