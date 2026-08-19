@@ -26,7 +26,9 @@ table fct_voorraad
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	/// VERBORGEN 2026-08-19 - geeft een geloofwaardig maar FOUT getal. Deelt de ruwe voorraad door de vraag zonder gereserveerd of in_bestelling, dus negeert zowel voorraad die al vergeven is als voorraad die al onderweg is, in tegengestelde richtingen. Zie de kop van fct_voorraad_db: aan het getal zelf is niets te zien. Voor de repoint las dit 0 en was het zichtbaar kapot; nu leest het ~23,4 weken en lijkt het te kloppen. Niet zichtbaar maken tot effectieve voorraad bestaat - dat vraagt gevalideerde gereserveerd en in_bestelling aan de dbt-kant.
 	measure 'Dekking weken' = DIVIDE([Voorraad flessen], [Vraag per week])
+		isHidden
 		lineageTag: 17cf8434-5d54-4e38-9f94-8aa6b66de819
 
 		changedProperty = IsHidden
@@ -70,7 +72,9 @@ table fct_voorraad
 
 		changedProperty = IsHidden
 
+	/// VERBORGEN 2026-08-19 - toont [Dekking weken], dat een geloofwaardig maar fout getal geeft. Samen verbergen: dit is de versie die je op een pagina zou slepen.
 	measure 'Dekking label' = FORMAT([Dekking weken], "0.0", "nl-NL") & " weken"
+		isHidden
 		lineageTag: ea9bedce-ca27-41ce-9842-17bdb0f8f322
 
 		changedProperty = IsHidden
