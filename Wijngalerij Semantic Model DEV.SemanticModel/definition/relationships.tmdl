@@ -28,3 +28,7 @@ relationship AutoDetected_6b2406e1-1c67-40e6-8102-998ef698d91c
 	fromColumn: fct_klant_product.klant_id
 	toColumn: dim_customer.klant_id
 
+relationship fct_voorraad_mutaties_dim_date
+	fromColumn: fct_voorraad_mutaties.datum
+	toColumn: dim_date.datum
+

@@ -1207,6 +1207,92 @@ table _Metingen
 			        "")
 		lineageTag: 538cabae-e1af-4bf6-b83e-6157126baa26
 
+	/// Netto voorraadbeweging in de periode: bijboekingen minus afboekingen. Niet de voorraadstand - daarvoor is [Voorraad op datum].
+	measure Voorraadmutatie = SUM(fct_voorraad_mutaties[aantal])
+		formatString: #,0
+		lineageTag: 56827491-88a9-4d26-86db-b654c596486e
+
+	/// Voorraadstand op de laatste datum in de context, als cumulatieve som van alle mutaties tot en met die datum. BLANK voor 2025-02: het mutatieboek heeft geen beginvoorraad, dus daarvoor loopt de reeks negatief (82 van de 83 producten negatief in 2024-10). De telling van 2025-01 zet retroactief de basislijn. REMOVEFILTERS(dim_date) is nodig omdat de reeks cumulatief is: zonder dat telt hij alleen de mutaties binnen de maand van de visual.
+	measure 'Voorraad op datum' =
+			VAR Grens = DATE(2025, 2, 1)
+			VAR Eind = MAX(dim_date[datum])
+			RETURN
+			    IF(
+			        Eind >= Grens,
+			        CALCULATE(
+			            SUM(fct_voorraad_mutaties[aantal]),
+			            REMOVEFILTERS(dim_date),
+			            dim_date[datum] <= Eind
+			        )
+			    )
+		formatString: #,0
+		lineageTag: 79cd52b9-ee26-439d-99c7-7a1ef73757a4
+
+	/// Nederlandse weergave van [Voorraad op datum]. Modelcultuur is en-US, dus zonder expliciete nl-NL FORMAT rendert 112.197 als 112,197.
+	measure 'Voorraad op datum label' =
+			VAR V = [Voorraad op datum]
+			RETURN IF(NOT ISBLANK(V), FORMAT(V, "#,##0", "nl-NL") & " flessen")
+		lineageTag: 07b2979e-31b1-4588-a6e9-3c1046e2ce07
+
+	/// BENADERING. Voorraadstand per product op de datum, maal de HUIDIGE inkoopprijs uit fct_voorraad - historische kostprijs bestaat niet in het model (zie Known gaps). Een prijswijziging herschrijft dus met terugwerkende kracht de hele reeks. Bruikbaar voor de vorm van de curve, niet als financiele waardering per verleden datum. Negatieve voorraden tellen niet mee (IF Stuks > 0). LET OP de prijs-opzoeking gebruikt REMOVEFILTERS() ZONDER argument, dus over het hele model. REMOVEFILTERS(fct_voorraad) is niet genoeg: een datumfilter loopt via dim_date -> fct_sales -> dim_product -> fct_voorraad, en die laatste twee stappen zijn bidirectioneel. fct_voorraad wordt dan gefilterd op producten die op die dag verkocht zijn, waardoor Prijs voor de rest BLANK wordt en de meting 125.838 gaf in plaats van 470.844 - geloofwaardig en fout.
+	measure 'Voorraadwaarde op datum' =
+			VAR Grens = DATE(2025, 2, 1)
+			VAR Eind = MAX(dim_date[datum])
+			VAR Producten = ALL(fct_voorraad_mutaties[product_id])
+			RETURN
+			    IF(
+			        Eind >= Grens,
+			        SUMX(
+			            Producten,
+			            VAR Pid = fct_voorraad_mutaties[product_id]
+			            VAR Stuks =
+			                CALCULATE(
+			                    SUM(fct_voorraad_mutaties[aantal]),
+			                    REMOVEFILTERS(dim_date),
+			                    dim_date[datum] <= Eind
+			                )
+			            VAR Prijs =
+			                CALCULATE(
+			                    MAX(fct_voorraad[inkoopprijs]),
+			                    REMOVEFILTERS(),
+			                    fct_voorraad[product_id] = Pid
+			                )
+			            RETURN IF(Stuks > 0, Stuks * Prijs)
+			        )
+			    )
+		formatString: #,0
+		lineageTag: 46ad12b4-4c6b-4598-8c9f-9f073b5730ac
+
+	/// Nederlandse weergave van [Voorraadwaarde op datum].
+	measure 'Voorraadwaarde op datum label' =
+			VAR W = [Voorraadwaarde op datum]
+			RETURN IF(NOT ISBLANK(W), "€ " & FORMAT(W, "#,##0", "nl-NL"))
+		lineageTag: ee5c78e7-e44a-4595-b55c-17f68f552d4f
+
+	/// Aantal producten met een cumulatieve voorraad van 0 of lager op de datum - de basis voor 'hoe vaak stond dit uit voorraad'. LET OP: telt ook de residuele ruis mee, 3-32 producten per maand met een negatieve loopstand doordat het mutatieboek geen beginvoorraad heeft. Een echte nul en een administratieve min zijn hier niet te onderscheiden. ALL() en niet VALUES(): zie [Voorraadwaarde op datum]. De ISBLANK-guard sluit producten uit die op die datum nog geen enkele mutatie hadden - die stonden niet uit voorraad, ze bestonden nog niet.
+	measure 'Producten uit voorraad' =
+			VAR Grens = DATE(2025, 2, 1)
+			VAR Eind = MAX(dim_date[datum])
+			VAR Producten = ALL(fct_voorraad_mutaties[product_id])
+			RETURN
+			    IF(
+			        Eind >= Grens,
+			        COUNTROWS(
+			            FILTER(
+			                Producten,
+			                VAR Stuks =
+			                    CALCULATE(
+			                        SUM(fct_voorraad_mutaties[aantal]),
+			                        REMOVEFILTERS(dim_date),
+			                        dim_date[datum] <= Eind
+			                    )
+			                RETURN NOT ISBLANK(Stuks) && Stuks <= 0
+			            )
+			        )
+			    )
+		formatString: #,0
+		lineageTag: ec44bac4-0812-438d-bfba-1cd8cd416d45
+
 	column _
 		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
 		isNameInferred

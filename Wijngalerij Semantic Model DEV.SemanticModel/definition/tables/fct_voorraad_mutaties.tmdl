@@ -1,0 +1,81 @@
+/// Mutatieboek uit de ERP-database: één rij per voorraadbeweging, geen momentopname. Cumulatief optellen reconstrueert de voorraad op elke datum. LET OP: het boek heeft geen beginvoorraad - voor 2025-02 loopt de cumulatieve reeks negatief (in 2024-10 is 82 van de 83 producten negatief). Begin voorraadhistorie op 2025-02; de telling van 2025-01 zet retroactief de basislijn. Leest marts.fct_voorraad_mutaties en niet het staging-model: bi_readonly heeft alleen rechten op marts.
+table fct_voorraad_mutaties
+	lineageTag: 5ccdbb59-70d4-47fe-b6bb-4304d7925d12
+
+	column voorraad_id
+		dataType: int64
+		isHidden
+		lineageTag: df3bb72e-42f7-4b93-bc47-1d37e3d9c7fd
+		summarizeBy: none
+		sourceColumn: voorraad_id
+
+	column product_id
+		dataType: string
+		lineageTag: 93365f0f-5c09-4359-8dce-e739d1a12f9f
+		summarizeBy: none
+		sourceColumn: product_id
+
+	column datum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 28715064-0a59-4171-9070-793397b80fb7
+		summarizeBy: none
+		sourceColumn: datum
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column aantal
+		dataType: int64
+		formatString: 0
+		lineageTag: 7eee2095-6a4b-4e2c-b5c4-45aee3fbf857
+		summarizeBy: sum
+		sourceColumn: aantal
+
+	column mutatiecode
+		dataType: string
+		lineageTag: caf54bf9-3937-4948-911f-45251f8ae556
+		summarizeBy: none
+		sourceColumn: mutatiecode
+
+	column mutatie_omschrijving
+		dataType: string
+		lineageTag: e5f904ce-1f6e-4b72-9d5f-e93a7344b8b4
+		summarizeBy: none
+		sourceColumn: mutatie_omschrijving
+
+	column toelichting
+		dataType: string
+		lineageTag: b37655ad-2600-44bd-990c-6e133752087c
+		summarizeBy: none
+		sourceColumn: toelichting
+
+	/// Verkooporder die de beweging veroorzaakte, of leeg. De ERP zet hier 0 in plaats van NULL; de mart zet dat om naar echte NULLs, dus IS NOT NULL werkt hier wél zoals verwacht.
+	column order_id
+		dataType: int64
+		isHidden
+		lineageTag: 35228115-35a0-4f5d-a8f1-cf233b58c6f8
+		summarizeBy: none
+		sourceColumn: order_id
+
+	/// Inkooporder die de beweging veroorzaakte, of leeg. Zelfde nullen-correctie als order_id.
+	column inkoop_id
+		dataType: int64
+		isHidden
+		lineageTag: 4a84cd27-553d-4666-a301-a5aeb37a4414
+		summarizeBy: none
+		sourceColumn: inkoop_id
+
+	partition fct_voorraad_mutaties = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("ep-soft-salad-agt3f5p2.c-2.eu-central-1.aws.neon.tech:5432", "neondb"),
+				  #"Navigation 1" = Source{[Schema = "marts", Item = "fct_voorraad_mutaties"]}[Data],
+				  #"Removed Columns" = Table.SelectColumns(#"Navigation 1", {"voorraad_id", "product_id", "datum", "aantal", "mutatiecode", "mutatie_omschrijving", "toelichting", "order_id", "inkoop_id"}),
+				  // product_id naar tekst om dezelfde reden als elders: dim_product staat nog
+				  // op de scraper-mart met string product_id. datum naar date, want
+				  // dim_date[datum] heeft geen tijdcomponent en zou anders nooit matchen.
+				  #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns", {{"product_id", type text}, {"datum", type date}})
+				in
+				  #"Changed Type"
+
