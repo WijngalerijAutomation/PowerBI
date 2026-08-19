@@ -1,3 +1,10 @@
-﻿.pbi/localSettings.json
-.pbi/cache.abf
+# Power BI local state — machine-specific, rewritten on every open, save and
+# refresh. The `**/` prefix matters: a pattern containing a slash is anchored
+# to the repo root, and these files live under each .Report / .SemanticModel
+# folder, so the un-prefixed form never matched them.
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Desktop binaries. The .pbip projects are the source of truth; the web copies
+# are downloads from the service.
 *.pbix
