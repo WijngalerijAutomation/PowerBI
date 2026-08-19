@@ -88,11 +88,30 @@ sets** of dbt marts. The dbt project itself lives in a separate repo on the Mac 
 - **DB-sourced marts** (`_db` suffix) — direct read-only MariaDB connection to the ERP's
   actual database. Refreshes hourly 07:00–19:00. Real types, real FKs.
 
+**Two Neon branches, and the model reads only one.** `dev` and `prod` are Neon *branches*,
+not schemas, on different endpoints:
+
+| Target | Endpoint | Who reads it |
+|---|---|---|
+| `prod` / `main` | `ep-soft-salad-agt3f5p2` | **the semantic model**, via `bi_readonly` (read replica) |
+| `dev` | `ep-silent-fire-agbo418j` | dbt experimentation only |
+
+Both targets run the **same deployed dbt code**, so any dev/prod difference is in the
+source data, not the SQL. A fix verified on `dev` is *not* live for the reports until the
+data lands on `main`. Query either with
+`flyctl ssh console -a wijngalerij-pipeline -C "python scripts/dbt_env.py --target dev show --inline '<sql>'"`
+(see `SETUP_flyctl_windows.md`); `--target prod` is not in the allowlist by default.
+
 **Repointed to `_db`:** `dim_customer`, `dim_date`, `fct_sales`, `fct_klant`,
 `fct_klant_product`.
-**Still on the scraper marts:** `dim_product`, `fct_voorraad` — because the DB source has
-no stock quantities at all. Do not repoint these without resolving that first; every
-stock and cover visual depends on them.
+**Still on the scraper marts:** `dim_product`, `fct_voorraad`.
+
+The old reason — "the DB source has no stock quantities at all" — is **no longer true**
+(verified 2026-08-19 against prod). `fct_voorraad_db` exists, is built on both Neon
+branches, and carries real stock: 753 products, 112.197 flessen, € 468.236, snapshot
+same-day, zero nulls. Its `voorraad` was validated upstream by summing the mutation
+ledger against the scraper's known-good figure — 714 of 736 products matching exactly,
+the remaining 22 being rows where the scraper itself is NULL.
 
 Because the two halves disagree on `product_id`'s type (`_db` has real `bigint`, the
 scraper marts have strings), `fct_sales` and `fct_klant_product` carry a **transitional
@@ -130,23 +149,82 @@ and the growth hex columns, `dim_date[in_venster]`, `[jaar_offset]`.
 
 ## Voorraad
 
-A new stock table is being built on the DB side. The **old** `fct_voorraad` snapshot
-(2026-08-10, 739 products) is partly broken and should not be trusted for headline
-figures:
+**The broken figures below are a `prod`-only problem, and nothing currently renders from
+them.** Verified 2026-08-19 by querying both Neon branches directly.
 
-- `voorraad` and `voorraadwaarde` are **0 on every row**.
-- `gereserveerd` sums to 116.726 and so does `voorraadwaarde_erp`, with identical maxima
-  (3851) — a euro value landed in a bottle-count column.
-- `effectieve_voorraad` is −115.929, which is that error propagating.
-- `schapvoorraad` is the only credible bottle count: 24.035 over 329 products.
+`fct_voorraad` on **prod** (`ep-soft-salad`, the `main` read replica the semantic model
+actually reads) is still broken exactly as first found — 742 products, `voorraad` and
+`voorraadwaarde` **0 on every row**, `gereserveerd` 113.663 (a euro value in a
+bottle-count column), `effectieve_voorraad` −113.023, `schapvoorraad` 24.251 the only
+credible bottle count.
 
-It is a **single snapshot**, so *stock value over time* and *out-of-stock during the last
-12 months* cannot be built from it at all — they need a periodic (product × week/month)
-grain. Worth carrying into the new table: `laatste_verkoop`,
-`maanden_sinds_laatste_verkoop`, `niet_verkocht_bucket`, `slow_mover_categorie`,
-`wijnhuis` (109 producers), `in_bestelling`, `inkoopprijs`, `lead_time_days`.
-`in_bestelling` has no order or delivery date, so open inkoopwaarde can be totalled but
-not aged.
+The same mart on **dev** (`ep-silent-fire`) is healthy: `voorraad` 119.998,
+`voorraadwaarde` € 497.326,63, `gereserveerd` 92, `effectieve_voorraad` +132.860. Both
+targets run the **same deployed dbt code**, so the difference is in the *source data*,
+not the SQL — dev has had good stock data loaded, prod has not. The scraper's stock-page
+parsing has returned NULL for `voorraad` on every run since ~2026-08-11, warning-only in
+dlt, never surfaced. Still live. Fix belongs on the dbt/ingestion side.
+
+Caution: on dev, `schapvoorraad` and `voorraad` are identical to the bottle (119.998
+both). Two distinct columns agreeing exactly looks more like a fallback than a
+coincidence — confirm before trusting either.
+
+### Nothing consumes the stock columns yet
+
+Checked across all three reports and `_Metingen`. `fct_voorraad` is currently used purely
+as a **product-level sales and margin table**:
+
+- **Visuals** use only `product_label`, `is_wijn`, `wijnhuis`, and the three
+  `*_groei_kleur` columns.
+- **Measures** use `wijnhuis`, `product_id`, `product_label`, `omzet_12m`,
+  `omzet_vorige_12m`, `n_klanten`, `leverancier`, `klanten_vorige_12m`,
+  `klanten_nu_zakelijk`, `inkoopprijs`, `gem_verkoopprijs_12m`, `flessen_vorige_12m`,
+  `flessen_52w`, `artikelcode`.
+
+No `voorraad`, `voorraadwaarde`, `gereserveerd`, `dekking_weken` anywhere. The earlier
+warning that "every stock and cover visual depends on them" was forward-looking — those
+visuals do not exist yet.
+
+### Repointing `fct_voorraad` to `_db`
+
+Of the 51 source columns the model imports, `fct_voorraad_db` lacks 10 — `dekking_weken`,
+`effectieve_voorraad`, `gereserveerd`, `in_bestelling`, `schapvoorraad`,
+`slow_mover_categorie`, `slow_mover_reden`, `verwachte_uitverkoopdatum`, `voorraadstatus`,
+`voorraadwaarde_erp`. **All 10 are unused.** Every source column that *is* consumed exists
+in `_db`; the `*_vorige_12m`, `*_kleur`, `is_wijn` and `product_label` columns are DAX
+calculated columns added in PBI and survive a repoint.
+
+So the repoint is viable with no report breakage. Resolve first:
+
+1. **`product_id` type.** `_db` is real `bigint`, the scraper marts are strings. The
+   DAX-level `fct_klant_product` / `fct_voorraad` equality silently matches nothing
+   across that divide — this is the trap that has already cost time. Real work, not a
+   flip of a source.
+2. **`dim_product` is still scraper-sourced**, and `fct_voorraad` carries its blank
+   unknown-member row into slicers. 742 -> 753 products changes that surface.
+3. Repointing routes *around* the live scraper bug rather than fixing it. Fine for the
+   reports, but the pipeline defect stays.
+
+`_db` still omits `gereserveerd`, `in_bestelling`, `effectieve_voorraad`, `dekking_weken`,
+`voorraadstatus` and `verwachte_uitverkoopdatum` **by design** — validating them needs a
+live scraper snapshot of the same moment, which the parsing bug prevents. So cover and
+stock status cannot come from `_db` yet either.
+
+### Stock over time is now buildable
+
+`stg_voorraad_mutaties_db` is a **mutation ledger** — one row per movement, not a
+snapshot: 46.600 mutations, 733 products, **2024-10-28 -> 2026-08-19 13:59** (live,
+hourly), 30.693 in the last 12 months, 6 mutation types. Sales start 2024-10-02, so it
+covers effectively the whole history and a cumulative sum reconstructs stock at any date.
+
+This closes the earlier "single snapshot, so *stock value over time* and *out-of-stock
+during the last 12 months* cannot be built at all" gap — they need a periodic
+(product x week/month) grain, and the ledger supplies it.
+
+Worth carrying into any new table: `laatste_verkoop`, `maanden_sinds_laatste_verkoop`,
+`niet_verkocht_bucket`, `slow_mover_categorie`, `wijnhuis` (109 producers),
+`in_bestelling`, `inkoopprijs`, `lead_time_days`. `in_bestelling` has no order or
+delivery date, so open inkoopwaarde can be totalled but not aged.
 
 ## Traps that have already cost time
 
@@ -261,3 +339,7 @@ model** with whatever is on disk at that moment. Publish from a known-good state
 - **`Prognose omzet jaar`** and its ~6 dependent measures put a revenue forecast on the CEO
   dashboard with no forecast-versus-actual tracking behind it. Flagged, not yet decided.
 - Two stray measures named `Measure` / `Measure 2` on `fct_klant` — trivial cleanup.
+- **The scraper's stock-page parsing has returned NULL for `voorraad` since ~2026-08-11**
+  — warning-only in dlt, never surfaced, still live on prod. It is why prod's
+  `fct_voorraad` reads 0 while dev's does not. Fix belongs on the dbt/ingestion side; see
+  **Voorraad** above.
