@@ -257,12 +257,17 @@ Still worth watching:
 live scraper snapshot of the same moment, which the parsing bug prevents. So cover and
 stock status cannot come from `_db` yet either.
 
-### Stock over time is now buildable
+### Stock over time is buildable — from 2025-02
 
 `stg_voorraad_mutaties_db` is a **mutation ledger** — one row per movement, not a
 snapshot: 46.600 mutations, 733 products, **2024-10-28 -> 2026-08-19 13:59** (live,
-hourly), 30.693 in the last 12 months, 6 mutation types. Sales start 2024-10-02, so it
-covers effectively the whole history and a cumulative sum reconstructs stock at any date.
+hourly), 30.693 in the last 12 months, 6 mutation types. A cumulative sum reconstructs
+stock at any date, and the method is verified: the series ends at 113.069 against
+`fct_voorraad_db`'s 113.063.
+
+**But the ledger has no opening balance, so anything before 2025-02 is unusable** — see
+"The ledger has no opening balance" below. Sales start 2024-10-02 and the ledger 2024-10-28,
+but stock existed before both and was never booked.
 
 This closes the earlier "single snapshot, so *stock value over time* and *out-of-stock
 during the last 12 months* cannot be built at all" gap — they need a periodic
@@ -297,32 +302,65 @@ running-total measure over `dim_date` — no periodic (product x week) mart need
 
 Everything in the right column needs `gereserveerd` and `in_bestelling`, which **neither**
 source currently supplies validated. No measure can rescue that; it is upstream work.
-Take `gereserveerd`, `in_bestelling` and the identity of `CO` (below) to the dbt side as
-one bundle — same class of problem, same gated column.
+Take `gereserveerd` and `in_bestelling` to the dbt side — they are the same class of
+problem and gate the same column. (`CO` is resolved: see below.)
 
-#### Two landmines in the ledger
+#### Landmines in the ledger
 
 - **`inkoop_id` and `order_id` are zero-filled, not null.** `inkoop_id` has 45.059 zeros
   against 1.541 real references; `order_id` 6.530 zeros against 40.070 real. The staging
   model's comment ("at most one is set per row") reads as NULL-able. **`IS NOT NULL`
   matches every row** and will look like it works. Use `> 0`.
-- **The largest net contributor to stock is an unlabeled code.** Mutation types and their
-  net effect:
+- **`CO` is `Correctie`, and it hides a missing opening balance (resolved 2026-08-19).**
+  Mutation types and their net effect:
 
   | code | label | rows | sum(aantal) |
   |---|---|---|---|
   | `AF` | Afboeking | 30.445 | −554.781 |
   | `BI` | Bij boeken | 7.933 | +556.025 |
-  | `CO` | **`???`** | 4.840 | **+114.137** |
+  | `CO` | Correctie (ERP title is literally `???`, ascii 63 — not NULL) | 4.840 | **+114.137** |
   | `IV` | Intern verbruik | 3.372 | −2.816 |
   | `BV` | Begin voorraad | 9 | +505 |
   | `VN` | Vernietiging | 1 | −1 |
 
-  `AF` and `BI` roughly cancel; **`CO` is essentially what creates the entire standing
-  stock of ~113k flessen.** Its title in the ERP is literally three question marks (ascii
-  63), not a NULL. Plausibly "Correctie". **Do not ship a stock-over-time chart before
-  someone identifies what `CO` is** — if it is a periodic recount, the history between
-  recounts means something quite different.
+  `AF` and `BI` roughly cancel, so `CO` is what creates the entire standing stock. Its
+  `toelichting` shows ordinary corrections — `nieuwe telling`, `Telling AGP`, `Breuk`,
+  `Vintage correctie`, `Jaartal aanpassing` — **but 90% of the volume is two backfills
+  with a blank `toelichting`:** 2024-11 (325 rows, +40.969) and 2025-01 (674 rows,
+  +60.178), together 102.719 of 114.137. Those are opening stocktakes, not periodic
+  recounts.
+
+##### The ledger has no opening balance — start stock history at 2025-02
+
+`Begin voorraad` is 9 rows and +505 flessen, nowhere near an opening position, so the
+cumulative series **goes negative**, which is physically impossible:
+
+| month | total stock | products negative |
+|---|---|---|
+| 2024-10 | **−3.663** | **82 of 83** |
+| 2024-11 | 22.389 | 89 |
+| 2024-12 | **−1.080** | 114 (−18.397 flessen) |
+| 2025-01 | 51.874 | **7** |
+| 2025-02 onward | climbs steadily | 3–32 |
+| 2026-08 | **113.069** | 2 |
+
+Stock existed before the ledger starts (2024-10-28); it was never booked. The 2025-01
+stocktake is what retroactively establishes a credible baseline.
+
+1. **Stock-over-time is unusable before 2025-02.** Earlier windows show stock appearing
+   from nothing and dipping below zero. Treat 2025-01 as a baseline reset, not a data point.
+2. **The method is sound.** The cumulative series ends at 113.069 against
+   `fct_voorraad_db`'s 113.063 — a 6-flessen gap. Running-sum-of-mutations reconstructs
+   stock correctly.
+3. **A residual floor remains:** 3–32 products carry negative running stock every month
+   even after the reset. A stock-over-time visual must handle that rather than render
+   negative bottles.
+
+Also structural: `Shopify`, `Vivino`, `Getvino`, `Web`, `Abo` and `Wijnabonnementen` appear
+as `CO` `toelichting` values — those channels are booked as **stock corrections rather than
+orders**, so that demand is invisible to `fct_sales` but visible as stock decrements. Small
+(~1.700 flessen against 113.000), so not material to headline figures, but channel demand
+and stock movement will not reconcile.
 
 ## Traps that have already cost time
 
@@ -452,8 +490,12 @@ model** with whatever is on disk at that moment. Publish from a known-good state
   — warning-only in dlt, never surfaced, still live on prod. It is why prod's
   `fct_voorraad` reads 0 while dev's does not. Fix belongs on the dbt/ingestion side; see
   **Voorraad** above.
-- **`gereserveerd`, `in_bestelling` and the identity of mutatiecode `CO`** are one
-  dbt-side bundle. They gate cover, stock status, sell-out date, effective stock and open
-  inkoopwaarde — the entire right-hand column of the Voorraad scope table. Neither mart
-  supplies the first two validated; `CO` (+114.137, the bulk of standing stock) has no
-  label in the ERP at all. See **Voorraad** above.
+- **`gereserveerd` and `in_bestelling`** are a dbt-side bundle. They gate cover, stock
+  status, sell-out date, effective stock and open inkoopwaarde — the entire right-hand
+  column of the Voorraad scope table. Neither mart supplies them validated. See
+  **Voorraad** above.
+- **The mutation ledger has no opening balance.** Cumulative stock goes negative before
+  2025-02 (82 of 83 products negative in 2024-10), and 3–32 products still carry negative
+  running stock every month after. Stock history must start at 2025-02. `CO` itself is
+  resolved — it is `Correctie`, with two unlabelled 2024-11 / 2025-01 backfills making up
+  90% of its volume.
