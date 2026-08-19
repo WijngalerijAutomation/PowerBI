@@ -593,10 +593,12 @@ table fct_klant
 		lineageTag: 4827679c-b074-4de0-9f86-530083f2376d
 		summarizeBy: none
 
-	/// Unieke weergavenaam: 774 klanten delen 759 namen, 14 namen komen 2-3x voor. Groeperen op klant_naam voegt die klanten samen en laat SELECTEDVALUE leeglopen. Voegt het klant_id toe bij dubbele namen.
+	/// Unieke weergavenaam: 774 klanten delen 759 namen, 14 namen komen 2-3x voor. Groeperen op klant_naam voegt die klanten samen en laat SELECTEDVALUE leeglopen. Voegt het klant_id toe bij dubbele namen. Bewust GEEN CALCULATE: dat geeft contexttransitie, waarna het rijfilter via de bidirectionele relatie fct_klant-dim_customer naar de andere feittabellen loopt. Zelfde reden als fct_klant_product[klant_label]; die combinatie liet de refresh falen met 'A cyclic reference was encountered during evaluation'.
 	column klant_label =
-			VAR Voorkomens = CALCULATE(COUNTROWS(fct_klant), ALLEXCEPT(fct_klant, fct_klant[klant_naam]))
-			RETURN IF(Voorkomens > 1, fct_klant[klant_naam] & " (" & fct_klant[klant_id] & ")", fct_klant[klant_naam])
+			VAR Naam = fct_klant[klant_naam]
+			VAR Voorkomens =
+			    COUNTROWS(FILTER(ALL(fct_klant), fct_klant[klant_naam] = Naam))
+			RETURN IF(Voorkomens > 1, Naam & " (" & fct_klant[klant_id] & ")", Naam)
 		dataType: string
 		lineageTag: 1a8934ee-6f75-4cbe-ac93-7d45a5b8d465
 		summarizeBy: none
