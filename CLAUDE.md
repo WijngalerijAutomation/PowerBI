@@ -88,6 +88,19 @@ sets** of dbt marts. The dbt project itself lives in a separate repo on the Mac 
 - **DB-sourced marts** (`_db` suffix) — direct read-only MariaDB connection to the ERP's
   actual database. Refreshes hourly 07:00–19:00. Real types, real FKs.
 
+**The model can only read `marts`.** `bi_readonly` has USAGE and SELECT on `marts` and
+`predictions` — **not on `staging`, `raw`, or anything else**. Pointing a table at
+`staging.<model>` fails at refresh with **"The key didn't match any rows in the table"**,
+which is what a missing schema grant looks like from M's side and reads like a typo. Note
+`dbt` runs as `transformer`, so *verifying a table exists via dbt proves nothing about
+whether the model can read it* — that mistake cost a full build-and-revert cycle here.
+Anything the report needs must be a **mart**. That boundary is deliberate: marts is the
+published contract, staging is internal and free to change shape.
+
+New marts are readable automatically — `sql/01_roles_and_schemas.sql` carries
+`ALTER DEFAULT PRIVILEGES FOR ROLE transformer IN SCHEMA marts GRANT SELECT ON TABLES TO
+analyst_readonly, bi_readonly`, so no manual grant is needed after adding one.
+
 **Two Neon branches, and the model reads only one.** `dev` and `prod` are Neon *branches*,
 not schemas, on different endpoints:
 
@@ -133,10 +146,13 @@ service can never consume more than 8 of them.
 
 ## Model shape
 
-7 source tables (`dim_customer`, `dim_date`, `dim_product`, `fct_sales`, `fct_voorraad`,
-`fct_klant`, `fct_klant_product`), `_Metingen` (measure home, no data, ~180 measures), and
-four disconnected parameter/helper tables: `TopN keuze`, `TopN producten`,
-`Sortering producten`, `CEO kleuren`. Auto date/time is **off**.
+8 source tables (`dim_customer`, `dim_date`, `dim_product`, `fct_sales`, `fct_voorraad`,
+`fct_klant`, `fct_klant_product`, `fct_voorraad_mutaties`), `_Metingen` (measure home, no
+data, ~188 measures), and four disconnected parameter/helper tables: `TopN keuze`,
+`TopN producten`, `Sortering producten`, `CEO kleuren`. Auto date/time is **off**.
+
+Note `_Metingen` is not the only measure home — `fct_voorraad` carries 19 of its own,
+`fct_klant` 17, `fct_sales` 7, `dim_date` 1. See the trap on this below.
 
 Peildatum is `dim_date[snapshot_datum]` via `[Peildatum]` — never `TODAY()`.
 
@@ -148,6 +164,22 @@ Added label/flag columns: `fct_klant[klant_label]`, `fct_klant_product[klant_lab
 and the growth hex columns, `dim_date[in_venster]`, `[jaar_offset]`.
 
 ## Voorraad
+
+**Where to pick up (as of 2026-08-19).** The model layer is done and verified; the report
+layer has not started.
+
+- ✅ `fct_voorraad` repointed to `_db` — real stock, marts agreeing to the cent
+- ✅ `fct_voorraad_mutaties` in the model, six stock-over-time measures verified against
+  the warehouse month for month
+- ✅ `Dekking weken` / `Dekking label` hidden — they read plausible and wrong
+- ⬜ **Next: build the Voorraad report pages.** No visual uses any of this yet.
+- ⬜ Blocked upstream: `gereserveerd` + `in_bestelling` (gate cover, stock status,
+  sell-out date, effective stock, open inkoopwaarde)
+- ⬜ Also live: the scraper's stock parsing has returned NULL since ~2026-08-11
+
+Two things to know before placing a visual: **start any stock history at 2025-02** (the
+measures already return BLANK before it), and `Voorraadwaarde op datum` is an
+approximation at today's cost price.
 
 **The broken figures below are a `prod`-only problem, and nothing currently renders from
 them.** Verified 2026-08-19 by querying both Neon branches directly.
@@ -278,6 +310,43 @@ Worth carrying into any new table: `laatste_verkoop`, `maanden_sinds_laatste_ver
 `in_bestelling`, `inkoopprijs`, `lead_time_days`. `in_bestelling` has no order or
 delivery date, so open inkoopwaarde can be totalled but not aged.
 
+#### Built and verified (2026-08-19)
+
+`fct_voorraad_mutaties` is in the model, reading **`marts.fct_voorraad_mutaties`** (a mart,
+because the model cannot read `staging` — see the grant note above), with a
+**single-direction** relationship to `dim_date[datum]`. `datum` is cast to `date` in M:
+the ledger carries timestamps and `dim_date[datum]` does not, so an uncast join matches
+nothing, silently. There is deliberately **no relationship to `dim_product`** — it would
+loop via `fct_sales` → `dim_date` and Power BI rejects it as ambiguous, exactly as it did
+for `fct_klant_product`. Match on `product_id` in DAX instead.
+
+Six measures in `_Metingen`:
+
+| measure | notes |
+|---|---|
+| `Voorraadmutatie` | net movement in the period, not a stand |
+| `Voorraad op datum` | running stock — the core measure |
+| `Voorraad op datum label` | Dutch formatting |
+| `Voorraadwaarde op datum` | **approximation** — current cost price, see below |
+| `Voorraadwaarde op datum label` | Dutch formatting |
+| `Producten uit voorraad` | products at 0 or below |
+
+Verified against the warehouse month for month: 45.943 at 2025-02, 66.501 at 2025-04,
+102.721 at 2025-07, 81.063 at 2025-10, and BLANK before 2025-02.
+
+**The 2025-02 floor is a `BLANK` guard inside each measure, not a report filter** — so it
+cannot be forgotten by whoever builds the visual. Do not "fix" a blank early period by
+removing it.
+
+**`Voorraadwaarde op datum` values historical stock at today's purchase price**, because
+historic cost does not exist in the model (a Known gap). A price change retroactively
+rewrites the whole series. Sound for the *shape* of the curve, not as a valuation of a
+past date. The fix is upstream, not in DAX.
+
+`order_id` and `inkoop_id` are imported and usable: the mart converts the ERP's zero-fill
+to real NULLs, so unlike the raw ledger, `IS NOT NULL` behaves. 40.132 order references,
+1.541 purchase references.
+
 ### Building the Voorraad report — scope, and what is blocked
 
 **Decision (2026-08-19): build fresh measures over the mutation ledger; do not preserve
@@ -292,13 +361,17 @@ row per product at one moment, so stock-over-time is impossible from it at any e
 At 46.600 rows the ledger is small enough to import as a fact table and answer with a
 running-total measure over `dim_date` — no periodic (product x week) mart needed.
 
-| Buildable now (`_db` + ledger) | Blocked on dbt-side work |
+| Measures exist (`_db` + ledger) | Blocked on dbt-side work |
 |---|---|
-| stock on hand, stock value (validated) | cover / `dekking_weken` |
-| stock value over time | `voorraadstatus` |
-| out-of-stock history | `verwachte_uitverkoopdatum` |
-| slow movers, dead stock, `niet_verkocht_bucket` | effective stock |
-| demand, margin, rankings, wijnhuis / leverancier | open inkoopwaarde (`in_bestelling`) |
+| stock on hand, stock value ✅ built | cover / `dekking_weken` |
+| stock value over time ✅ built | `voorraadstatus` |
+| out-of-stock history ✅ built | `verwachte_uitverkoopdatum` |
+| slow movers, dead stock, `niet_verkocht_bucket` — columns exist, no visuals yet | effective stock |
+| demand, margin, rankings, wijnhuis / leverancier — measures exist | open inkoopwaarde (`in_bestelling`) |
+
+**The left column is measures, not visuals.** Nothing has been placed on a page yet — the
+Voorraad report itself is still to be built. See "Built and verified" above for what the
+measures are.
 
 Everything in the right column needs `gereserveerd` and `in_bestelling`, which **neither**
 source currently supplies validated. No measure can rescue that; it is upstream work.
@@ -414,6 +487,20 @@ and stock movement will not reconcile.
 - **Definitions must match on both sides of a comparison.** A growth chip once read 133%
   because it compared the mart's all-customer `n_klanten` against a previous count that
   only included customers with revenue.
+- **`REMOVEFILTERS(t)` does not stop cross-filtering that arrives *through* `t`.** It
+  clears filters *on* that table only. A date filter reaches `fct_voorraad` by travelling
+  `dim_date` → `fct_sales` → `dim_product` ⇄ `fct_voorraad`, and those last two hops are
+  **bidirectional**, so `REMOVEFILTERS(fct_voorraad)` leaves it filtered anyway. This cost
+  an hour on `[Voorraadwaarde op datum]`: a per-product price lookup came back BLANK for
+  every product not sold on the date in context, and the measure returned € 125.838
+  instead of € 470.844. No error, a plausible number, nothing visible in the DAX text.
+  **For a lookup that must ignore all context, use `REMOVEFILTERS()` with no argument**,
+  then filter to the one key. Four of the seven relationships are bidirectional; assume
+  any filter can reach any table until proven otherwise.
+- **A measure can be correct standalone and wrong in a visual.** The same measure returned
+  the right total evaluated naked and the wrong one inside a date filter — which is how
+  every visual evaluates it. Verify measures **wrapped in the filter context they will
+  actually meet** (`CALCULATE([M], dim_date[jaar_maand] = "2026-08")`), not just bare.
 - **`_Metingen` is not the only measure home.** `fct_voorraad` alone carries 19 measures of
   its own. Grepping `_Metingen.tmdl` to decide whether something is used will miss them and
   produce a confident wrong answer — it did exactly that here, concluding "nothing consumes
