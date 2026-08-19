@@ -103,21 +103,21 @@ data lands on `main`. Query either with
 (see `SETUP_flyctl_windows.md`); `--target prod` is not in the allowlist by default.
 
 **Repointed to `_db`:** `dim_customer`, `dim_date`, `fct_sales`, `fct_klant`,
-`fct_klant_product`.
-**Still on the scraper marts:** `dim_product`, `fct_voorraad`.
+`fct_klant_product`, `fct_voorraad` (repointed 2026-08-19).
+**Still on the scraper marts:** `dim_product` — the last one.
 
-The old reason — "the DB source has no stock quantities at all" — is **no longer true**
-(verified 2026-08-19 against prod). `fct_voorraad_db` exists, is built on both Neon
-branches, and carries real stock: 753 products, 112.197 flessen, € 468.236, snapshot
-same-day, zero nulls. Its `voorraad` was validated upstream by summing the mutation
-ledger against the scraper's known-good figure — 714 of 736 products matching exactly,
-the remaining 22 being rows where the scraper itself is NULL.
+`fct_voorraad_db` carries real stock (753 products, 112.197 flessen, € 468.236, same-day
+snapshot, zero nulls); its `voorraad` was validated upstream against the scraper's
+known-good figure, 714 of 736 products matching exactly, the other 22 being rows where the
+scraper itself is NULL. The old reason for holding back — "the DB source has no stock
+quantities at all" — had stopped being true.
 
-Because the two halves disagree on `product_id`'s type (`_db` has real `bigint`, the
-scraper marts have strings), `fct_sales` and `fct_klant_product` carry a **transitional
-M cast** of `product_id` to text. Without it the `fct_sales → dim_product` relationship
-and the DAX-level `fct_klant_product` / `fct_voorraad` equality silently match nothing.
-Both are commented as removable once the other two tables move over.
+Because `dim_product` is still scraper-sourced, `fct_sales`, `fct_klant_product` **and now
+`fct_voorraad`** each carry a **transitional M cast** of `product_id` to text (`_db` has
+real `bigint`, the scraper marts have strings). Without it the `→ dim_product`
+relationships and the DAX-level `fct_klant_product` / `fct_voorraad` equality silently
+match nothing. All three are commented as removable once `dim_product` moves over — that
+is now the single remaining blocker to deleting every cast.
 
 **66 sales lines (~€ 17,9k) have no matching product** after the repoint. Eleven of the
 twelve product_ids are missing from `dim_product_db` too, so this is a referential gap at
@@ -187,13 +187,20 @@ So the table currently *renders* purely as a product-level sales and margin tabl
 Voorraad scaffolding already exists in measure form. The earlier warning that "every stock
 and cover visual depends on them" was forward-looking — those visuals do not exist yet.
 
-**`Dekking weken` is a landmine after the repoint.** It is
+**`Dekking weken` and `Dekking label` are hidden (2026-08-19).** `Dekking weken` is
 `DIVIDE([Voorraad flessen], [Vraag per week])` — raw stock, no `gereserveerd`, no
 `in_bestelling`. `fct_voorraad_db`'s own header warns that cover on raw stock "would
 silently ignore both stock already spoken for and stock already inbound, in opposite
-directions, and nobody could tell by looking at the number." Today it reads 0 and is
-obviously broken; after the repoint it reads something **plausible and wrong**. Rewrite or
-hide it before it reaches a page.
+directions, and nobody could tell by looking at the number." Before the repoint it read 0
+and was *visibly* broken; after it reads **~23,4 weken — plausible and wrong**, which is
+worse. Both are now `isHidden` with a Dutch description explaining why.
+
+`Dekking label` is hidden **with** it deliberately: it is `FORMAT([Dekking weken], …)`,
+the display form of the same wrong number and the one you would actually drag onto a page.
+Hiding only the base measure would leave the trap armed.
+
+Do not unhide either until effective stock exists — that needs validated `gereserveerd`
+and `in_bestelling` from the dbt side.
 
 ### Repointing `fct_voorraad` to `_db`
 
@@ -349,8 +356,14 @@ one bundle — same class of problem, same gated column.
   rejects it as an ambiguous path to `dim_date` via `fct_sales`. Match on `product_id`
   explicitly instead.
 - **The marts' 12-month window is not `dim_date[in_venster]`.** `fct_voorraad` and
-  `fct_klant_product` agree to the cent (€ 1.661.153,48); `fct_sales` over `in_venster`
-  gives € 1.741.250. Never compare a mart figure against a fct_sales window.
+  `fct_klant_product` agree to the cent — **€ 1.746.527,60** as of 2026-08-19, both now
+  `_db`-sourced from the same hourly load. `fct_sales` over `in_venster` gives a different
+  figure. Never compare a mart figure against a fct_sales window.
+  **This agreement is a live invariant, and it has silently broken before:** when
+  `fct_klant_product` moved to `_db` and `fct_voorraad` did not, the pair drifted
+  € 82.516 apart (1.661.153,48 vs 1.743.669,10) and nothing flagged it. Repointing
+  `fct_voorraad` restored it. If the two ever disagree again, one of them has been
+  repointed or refreshed without the other — check that before trusting either.
 - **`Start` and `Id` are reserved DAX keywords** — `VAR Start = …` does not compile.
 - **`RANKX` must rank over the same column the visual groups by**, or every row gets rank 1.
 - **Measure-based visual filters are grain-sensitive.** Prefer a flag *column*, which
