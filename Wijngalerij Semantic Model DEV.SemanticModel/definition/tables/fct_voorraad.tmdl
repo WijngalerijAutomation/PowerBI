@@ -167,7 +167,7 @@ table fct_voorraad
 		annotation SummarizationSetBy = Automatic
 
 	column voorraad
-		dataType: int64
+		dataType: double
 		formatString: 0
 		lineageTag: b6d0314c-4e5d-4904-8af6-6323994d2e75
 		summarizeBy: sum
@@ -286,7 +286,7 @@ table fct_voorraad
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	column gemiddeld_per_week_erp
-		dataType: int64
+		dataType: double
 		formatString: 0
 		lineageTag: ed0ddf9b-7da6-4619-9d10-d77d7f3e25a7
 		summarizeBy: sum
@@ -681,9 +681,15 @@ table fct_voorraad
 		source =
 				let
 				  Source = PostgreSQL.Database("ep-soft-salad-agt3f5p2.c-2.eu-central-1.aws.neon.tech:5432", "neondb"),
-				  #"Navigation 1" = Source{[Schema = "marts", Item = "fct_voorraad"]}[Data]
+				  #"Navigation 1" = Source{[Schema = "marts", Item = "fct_voorraad_db"]}[Data],
+				  // product_id arrives as Int64 from fct_voorraad_db; cast to text so the
+				  // relationship to dim_product still resolves and so the DAX equality with
+				  // fct_klant_product[product_id] still matches — both sides are then text.
+				  // dim_product stays on the scraper-sourced mart (string product_id).
+				  // Remove this step when dim_product also moves to the _db source.
+				  #"Changed Type" = Table.TransformColumnTypes(#"Navigation 1", {{"product_id", type text}})
 				in
-				  #"Navigation 1"
+				  #"Changed Type"
 
 	changedProperty = IsHidden
 
