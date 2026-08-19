@@ -177,66 +177,12 @@ table fct_voorraad
 
 		annotation SummarizationSetBy = Automatic
 
-	column gereserveerd
-		dataType: int64
-		formatString: 0
-		lineageTag: e70e2e74-e4bd-462e-bfb4-aa7213e21ef3
-		summarizeBy: sum
-		sourceColumn: gereserveerd
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-	column in_bestelling
-		dataType: int64
-		formatString: 0
-		lineageTag: b57eff93-e645-41b5-8c91-a69103c2d23e
-		summarizeBy: sum
-		sourceColumn: in_bestelling
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-	column effectieve_voorraad
-		dataType: int64
-		formatString: 0
-		lineageTag: fe02842d-5022-4b28-a41f-4b329d89318c
-		summarizeBy: sum
-		sourceColumn: effectieve_voorraad
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
 	column kritische_voorraad
 		dataType: int64
 		formatString: 0
 		lineageTag: 28abb434-df01-4a53-8abc-b528a253844a
 		summarizeBy: sum
 		sourceColumn: kritische_voorraad
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-	column schapvoorraad
-		dataType: int64
-		formatString: 0
-		lineageTag: dfbfa3a4-126f-4c70-a05d-8e00662e5828
-		summarizeBy: sum
-		sourceColumn: schapvoorraad
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-	column voorraadstatus
-		dataType: string
-		lineageTag: 2c025cb4-ce9b-43a5-b884-2dcd13479dfa
-		summarizeBy: none
-		sourceColumn: voorraadstatus
 
 		changedProperty = IsHidden
 
@@ -278,18 +224,6 @@ table fct_voorraad
 		annotation SummarizationSetBy = Automatic
 
 		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
-
-	column voorraadwaarde_erp
-		dataType: double
-		lineageTag: ecbc3eaa-67dd-41aa-9a00-31fb748e8ad4
-		summarizeBy: sum
-		sourceColumn: voorraadwaarde_erp
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	column marge_pct_lijst
 		dataType: double
@@ -361,31 +295,6 @@ table fct_voorraad
 		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
-
-	column dekking_weken
-		dataType: double
-		lineageTag: 284bd9b5-41da-407f-99a9-2eca659fab2c
-		summarizeBy: sum
-		sourceColumn: dekking_weken
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	column verwachte_uitverkoopdatum
-		dataType: dateTime
-		formatString: Long Date
-		lineageTag: e2a1243b-615d-4a10-97fe-8a8a3dd7b796
-		summarizeBy: none
-		sourceColumn: verwachte_uitverkoopdatum
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
-		annotation UnderlyingDateTimeDataType = Date
 
 	column lead_time_days
 		dataType: int64
@@ -584,16 +493,6 @@ table fct_voorraad
 
 		annotation SummarizationSetBy = Automatic
 
-	column slow_mover_reden
-		dataType: string
-		lineageTag: 5831523f-575e-416c-a1b2-0c6251b798c0
-		summarizeBy: none
-		sourceColumn: slow_mover_reden
-
-		changedProperty = IsHidden
-
-		annotation SummarizationSetBy = Automatic
-
 	column is_collectiepost
 		dataType: boolean
 		formatString: """TRUE"";""TRUE"";""FALSE"""
@@ -663,14 +562,6 @@ table fct_voorraad
 		sourceColumn: korting_vs_lijst_pct
 
 		annotation SummarizationSetBy = User
-
-	column slow_mover_categorie
-		dataType: string
-		lineageTag: 0bc2fc51-24a6-4921-8067-f27ca1306fd9
-		summarizeBy: none
-		sourceColumn: slow_mover_categorie
-
-		annotation SummarizationSetBy = Automatic
 
 	/// Unieke weergavenaam: product_naam is niet uniek (737 namen voor 740 producten). Voegt de artikelcode toe waar namen botsen, net als fct_klant[klant_label].
 	column product_label =
