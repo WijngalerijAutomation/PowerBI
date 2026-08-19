@@ -226,6 +226,57 @@ Worth carrying into any new table: `laatste_verkoop`, `maanden_sinds_laatste_ver
 `in_bestelling`, `inkoopprijs`, `lead_time_days`. `in_bestelling` has no order or
 delivery date, so open inkoopwaarde can be totalled but not aged.
 
+### Building the Voorraad report — scope, and what is blocked
+
+**Decision (2026-08-19): build fresh measures over the mutation ledger; do not preserve
+the 10 unused columns.** They are not dormant assets — on prod they are corrupt.
+`dekking_weken`, `voorraadstatus`, `verwachte_uitverkoopdatum`, `effectieve_voorraad`,
+`slow_mover_reden` and `slow_mover_categorie` are all derived from effective stock, which
+on prod is **−113.023**; `gereserveerd` is a euro value in a bottle column. Preserving
+them means not repointing at all.
+
+The ledger also does something the snapshot fundamentally cannot: `fct_voorraad` is one
+row per product at one moment, so stock-over-time is impossible from it at any effort.
+At 46.600 rows the ledger is small enough to import as a fact table and answer with a
+running-total measure over `dim_date` — no periodic (product x week) mart needed.
+
+| Buildable now (`_db` + ledger) | Blocked on dbt-side work |
+|---|---|
+| stock on hand, stock value (validated) | cover / `dekking_weken` |
+| stock value over time | `voorraadstatus` |
+| out-of-stock history | `verwachte_uitverkoopdatum` |
+| slow movers, dead stock, `niet_verkocht_bucket` | effective stock |
+| demand, margin, rankings, wijnhuis / leverancier | open inkoopwaarde (`in_bestelling`) |
+
+Everything in the right column needs `gereserveerd` and `in_bestelling`, which **neither**
+source currently supplies validated. No measure can rescue that; it is upstream work.
+Take `gereserveerd`, `in_bestelling` and the identity of `CO` (below) to the dbt side as
+one bundle — same class of problem, same gated column.
+
+#### Two landmines in the ledger
+
+- **`inkoop_id` and `order_id` are zero-filled, not null.** `inkoop_id` has 45.059 zeros
+  against 1.541 real references; `order_id` 6.530 zeros against 40.070 real. The staging
+  model's comment ("at most one is set per row") reads as NULL-able. **`IS NOT NULL`
+  matches every row** and will look like it works. Use `> 0`.
+- **The largest net contributor to stock is an unlabeled code.** Mutation types and their
+  net effect:
+
+  | code | label | rows | sum(aantal) |
+  |---|---|---|---|
+  | `AF` | Afboeking | 30.445 | −554.781 |
+  | `BI` | Bij boeken | 7.933 | +556.025 |
+  | `CO` | **`???`** | 4.840 | **+114.137** |
+  | `IV` | Intern verbruik | 3.372 | −2.816 |
+  | `BV` | Begin voorraad | 9 | +505 |
+  | `VN` | Vernietiging | 1 | −1 |
+
+  `AF` and `BI` roughly cancel; **`CO` is essentially what creates the entire standing
+  stock of ~113k flessen.** Its title in the ERP is literally three question marks (ascii
+  63), not a NULL. Plausibly "Correctie". **Do not ship a stock-over-time chart before
+  someone identifies what `CO` is** — if it is a periodic recount, the history between
+  recounts means something quite different.
+
 ## Traps that have already cost time
 
 ### DAX and the model
@@ -343,3 +394,8 @@ model** with whatever is on disk at that moment. Publish from a known-good state
   — warning-only in dlt, never surfaced, still live on prod. It is why prod's
   `fct_voorraad` reads 0 while dev's does not. Fix belongs on the dbt/ingestion side; see
   **Voorraad** above.
+- **`gereserveerd`, `in_bestelling` and the identity of mutatiecode `CO`** are one
+  dbt-side bundle. They gate cover, stock status, sell-out date, effective stock and open
+  inkoopwaarde — the entire right-hand column of the Voorraad scope table. Neither mart
+  supplies the first two validated; `CO` (+114.137, the bulk of standing stock) has no
+  label in the ERP at all. See **Voorraad** above.
