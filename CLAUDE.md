@@ -169,40 +169,80 @@ Caution: on dev, `schapvoorraad` and `voorraad` are identical to the bottle (119
 both). Two distinct columns agreeing exactly looks more like a fallback than a
 coincidence — confirm before trusting either.
 
-### Nothing consumes the stock columns yet
+### Nothing *renders* from the stock columns yet — but measures do read them
 
-Checked across all three reports and `_Metingen`. `fct_voorraad` is currently used purely
-as a **product-level sales and margin table**:
+**`_Metingen` is not the only measure home.** `fct_voorraad` carries **19 measures of its
+own**, and grepping `_Metingen.tmdl` alone misses every one of them. Use
+`DISCOVER_CALC_DEPENDENCY`, not grep, before concluding anything is unused — that is what
+caught this.
 
-- **Visuals** use only `product_label`, `is_wijn`, `wijnhuis`, and the three
-  `*_groei_kleur` columns.
-- **Measures** use `wijnhuis`, `product_id`, `product_label`, `omzet_12m`,
-  `omzet_vorige_12m`, `n_klanten`, `leverancier`, `klanten_vorige_12m`,
-  `klanten_nu_zakelijk`, `inkoopprijs`, `gem_verkoopprijs_12m`, `flessen_vorige_12m`,
-  `flessen_52w`, `artikelcode`.
+- **No visual uses a stock column or a stock measure.** Visuals reference only
+  `product_label`, `is_wijn`, `wijnhuis` and the three `*_groei_kleur` columns.
+- **Five measures on `fct_voorraad` do read the broken columns:**
+  `Totale voorraadwaarde` = `SUM(fct_voorraad[voorraadwaarde])`, `Voorraad flessen` =
+  `SUM(fct_voorraad[voorraad])`, plus `Voorraadwaarde label`, `Dekking weken` and
+  `Dekking label` built on those. On prod they all return 0.
 
-No `voorraad`, `voorraadwaarde`, `gereserveerd`, `dekking_weken` anywhere. The earlier
-warning that "every stock and cover visual depends on them" was forward-looking — those
-visuals do not exist yet.
+So the table currently *renders* purely as a product-level sales and margin table, but the
+Voorraad scaffolding already exists in measure form. The earlier warning that "every stock
+and cover visual depends on them" was forward-looking — those visuals do not exist yet.
+
+**`Dekking weken` is a landmine after the repoint.** It is
+`DIVIDE([Voorraad flessen], [Vraag per week])` — raw stock, no `gereserveerd`, no
+`in_bestelling`. `fct_voorraad_db`'s own header warns that cover on raw stock "would
+silently ignore both stock already spoken for and stock already inbound, in opposite
+directions, and nobody could tell by looking at the number." Today it reads 0 and is
+obviously broken; after the repoint it reads something **plausible and wrong**. Rewrite or
+hide it before it reaches a page.
 
 ### Repointing `fct_voorraad` to `_db`
 
-Of the 51 source columns the model imports, `fct_voorraad_db` lacks 10 — `dekking_weken`,
-`effectieve_voorraad`, `gereserveerd`, `in_bestelling`, `schapvoorraad`,
-`slow_mover_categorie`, `slow_mover_reden`, `verwachte_uitverkoopdatum`, `voorraadstatus`,
-`voorraadwaarde_erp`. **All 10 are unused.** Every source column that *is* consumed exists
-in `_db`; the `*_vorige_12m`, `*_kleur`, `is_wijn` and `product_label` columns are DAX
-calculated columns added in PBI and survive a repoint.
+**Step 1 is done (2026-08-19, committed).** The 10 source columns `fct_voorraad_db` lacks
+— `dekking_weken`, `effectieve_voorraad`, `gereserveerd`, `in_bestelling`,
+`schapvoorraad`, `slow_mover_categorie`, `slow_mover_reden`, `verwachte_uitverkoopdatum`,
+`voorraadstatus`, `voorraadwaarde_erp` — have been deleted. `fct_voorraad` is now 51
+columns (41 source + 10 calculated), all 19 measures intact.
 
-So the repoint is viable with no report breakage. Resolve first:
+**The state is unstable until the partition is repointed.** Deleting a source column from
+a table with an M partition does not stop Desktop re-adding it on refresh — the MCP warns
+about this and suggests `Table.RemoveColumns`. Repointing to `fct_voorraad_db` fixes it
+permanently, because those columns do not exist there. **A refresh before the repoint
+undoes the work.**
 
-1. **`product_id` type.** `_db` is real `bigint`, the scraper marts are strings. The
-   DAX-level `fct_klant_product` / `fct_voorraad` equality silently matches nothing
-   across that divide — this is the trap that has already cost time. Real work, not a
-   flip of a source.
-2. **`dim_product` is still scraper-sourced**, and `fct_voorraad` carries its blank
-   unknown-member row into slicers. 742 -> 753 products changes that surface.
-3. Repointing routes *around* the live scraper bug rather than fixing it. Fine for the
+Remaining step: point the partition at `fct_voorraad_db` and add the same cast `fct_sales`
+already carries:
+
+```
+#"Changed Type" = Table.TransformColumnTypes(#"Navigation 1", {{"product_id", type text}})
+```
+
+**`product_id` typing is not the obstacle it looked like.** Measured on the warehouse:
+
+| Test | Result |
+|---|---|
+| `fct_voorraad_db::text` -> `dim_product` | **736 of 736** |
+| current scraper match | 736 — identical |
+| `product_id` unique / null | **753 of 753 unique, 0 nulls** — one-side cardinality holds |
+| DAX equality vs `fct_klant_product` | **653 today -> 664 of 664 after** |
+
+The repoint *improves* matching: 11 products currently resolve to blank in the five
+`Wijn klant …` measures and would start working, because both sides would then originate
+from the same ERP bigint. Note the warehouse itself refuses `varchar = bigint` outright —
+that error is this mismatch made visible.
+
+Still worth watching:
+
+1. **`dim_product` is still scraper-sourced**, and `fct_voorraad` carries its blank
+   unknown-member row into slicers. 742 -> 753 products changes that surface; 17 `_db`
+   rows have no `dim_product` counterpart.
+2. The relationship is `fct_voorraad` -> `dim_product` with `fromCardinality: one` and
+   **bidirectional** filtering — the fact is the *one* side and the dimension the many,
+   backwards from usual. It works; know it before touching it, given the cycle history.
+3. `omzet_vorige_12m`, `flessen_vorige_12m` and `klanten_vorige_12m` will change for those
+   11 products. They feed the growth chips on Productdetail.
+4. Two column descriptions go stale at 740 -> 753 products: `product_label` cites "737
+   namen voor 740 producten", `is_wijn` references the blank unknown-member row.
+5. Repointing routes *around* the live scraper bug rather than fixing it. Fine for the
    reports, but the pipeline defect stays.
 
 `_db` still omits `gereserveerd`, `in_bestelling`, `effectieve_voorraad`, `dekking_weken`,
@@ -323,6 +363,11 @@ one bundle — same class of problem, same gated column.
 - **Definitions must match on both sides of a comparison.** A growth chip once read 133%
   because it compared the mart's all-customer `n_klanten` against a previous count that
   only included customers with revenue.
+- **`_Metingen` is not the only measure home.** `fct_voorraad` alone carries 19 measures of
+  its own. Grepping `_Metingen.tmdl` to decide whether something is used will miss them and
+  produce a confident wrong answer — it did exactly that here, concluding "nothing consumes
+  the stock columns" when five measures read them. Use `DISCOVER_CALC_DEPENDENCY`, which
+  returns the engine's resolved graph across every table.
 
 ### PBIR authoring
 
