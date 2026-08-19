@@ -2,7 +2,8 @@ table dim_customer
 	lineageTag: c78e03d1-88da-408a-93b1-96a1a50503a8
 
 	column klant_id
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: 7a360b9c-0a44-4bb1-a820-82a927998e2b
 		summarizeBy: none
 		sourceColumn: klant_id
@@ -212,12 +213,73 @@ table dim_customer
 
 		annotation SummarizationSetBy = Automatic
 
-	column detail_compleet
+	column branche_id
+		dataType: int64
+		formatString: 0
+		lineageTag: cfbb06eb-4411-45df-894d-4d2e154d046d
+		summarizeBy: sum
+		sourceColumn: branche_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 500de34d-fd92-43f4-8067-1363ce76019c
+		summarizeBy: sum
+		sourceColumn: segment_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column facturen_bundelen
 		dataType: boolean
 		formatString: """TRUE"";""TRUE"";""FALSE"""
-		lineageTag: f4574ccd-24f1-4a46-bcda-89fbc033e7c5
+		lineageTag: 5080b274-215e-4e17-a39e-6f6e36916392
 		summarizeBy: none
-		sourceColumn: detail_compleet
+		sourceColumn: facturen_bundelen
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_agent
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 618c37d8-8afb-4694-9cbb-3c6806831bde
+		summarizeBy: none
+		sourceColumn: is_agent
+
+		annotation SummarizationSetBy = Automatic
+
+	column accountmanager_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 3f41732d-09ff-4735-9d8b-235f39ad8356
+		summarizeBy: sum
+		sourceColumn: accountmanager_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column debiteurnummer
+		dataType: string
+		lineageTag: aeb796e4-b851-4fe5-a243-b48ef962a3c0
+		summarizeBy: none
+		sourceColumn: debiteurnummer
+
+		annotation SummarizationSetBy = Automatic
+
+	column memo
+		dataType: string
+		lineageTag: 9842a0e3-d798-4379-ba1b-619e94f4ad3b
+		summarizeBy: none
+		sourceColumn: memo
+
+		annotation SummarizationSetBy = Automatic
+
+	column bijgewerkt_op
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 4e8d5c29-7686-4e6c-bb07-aab0bff8554e
+		summarizeBy: none
+		sourceColumn: bijgewerkt_op
 
 		annotation SummarizationSetBy = Automatic
 
@@ -226,9 +288,11 @@ table dim_customer
 		source =
 				let
 				  Source = PostgreSQL.Database("ep-soft-salad-agt3f5p2.c-2.eu-central-1.aws.neon.tech:5432", "neondb"),
-				  #"Navigation 1" = Source{[Schema = "marts", Item = "dim_customer"]}[Data]
+				  #"Navigation 1" = Source{[Schema = "marts", Item = "dim_customer_db"]}[Data]
 				in
 				  #"Navigation 1"
 
-	annotation PBI_ResultType = Table
+	annotation PBI_ResultType = Exception
+
+	annotation PBI_NavigationStepName = Navigation
 

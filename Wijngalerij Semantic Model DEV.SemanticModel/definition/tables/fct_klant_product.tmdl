@@ -2,7 +2,8 @@ table fct_klant_product
 	lineageTag: afcb4515-c3fd-413f-bad3-0ea5ba4a1540
 
 	column klant_id
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: 59db9494-4ca1-441d-90c4-d4e77a0ee435
 		summarizeBy: none
 		sourceColumn: klant_id
@@ -197,13 +198,17 @@ table fct_klant_product
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	/// Unieke weergavenaam per klant, zoals fct_klant[klant_label]. Nodig omdat 774 klanten 759 namen delen: groeperen op klant_naam voegt klanten samen, waardoor de klantentabel op Productdetail minder rijen toont dan de kop erboven telt.
+	/// Unieke weergavenaam per klant, zoals fct_klant[klant_label]. Nodig omdat 774 klanten 759 namen delen: groeperen op klant_naam voegt klanten samen, waardoor de klantentabel op Productdetail minder rijen toont dan de kop erboven telt. Bewust GEEN CALCULATE: dat geeft contexttransitie, waarna het rijfilter via de relatie naar dim_customer en over de bidirectionele relatie dim_customer-fct_klant terugloopt naar fct_klant, waarvan signaal_kleur en flessen_kleur weer ALL(fct_klant_product) lezen. Dat sluit een cyclus en liet de refresh falen met 'A cyclic reference was encountered during evaluation'.
 	column klant_label =
 			VAR Naam = fct_klant_product[klant_naam]
 			VAR AantalIds =
-			    CALCULATE(
-			        DISTINCTCOUNT(fct_klant_product[klant_id]),
-			        ALLEXCEPT(fct_klant_product, fct_klant_product[klant_naam])
+			    COUNTROWS(
+			        DISTINCT(
+			            SELECTCOLUMNS(
+			                FILTER(ALL(fct_klant_product), fct_klant_product[klant_naam] = Naam),
+			                "Kid", fct_klant_product[klant_id]
+			            )
+			        )
 			    )
 			RETURN IF(AantalIds > 1, Naam & " (" & fct_klant_product[klant_id] & ")", Naam)
 		dataType: string
@@ -223,9 +228,19 @@ table fct_klant_product
 		source =
 				let
 				  Source = PostgreSQL.Database("ep-soft-salad-agt3f5p2.c-2.eu-central-1.aws.neon.tech", "neondb"),
-				  #"Navigation 1" = Source{[Schema = "marts", Item = "fct_klant_product"]}[Data]
+				  #"Navigation 1" = Source{[Schema = "marts", Item = "fct_klant_product_db"]}[Data],
+				  // Same transitional cast as fct_sales, and for the same reason even
+				  // though there is no formal relationship here: several _Metingen
+				  // measures (Wijn klant flessen/omzet/status, ...) compare
+				  // fct_klant_product[product_id] against a value read off
+				  // fct_voorraad[product_id] directly. fct_voorraad stays on the
+				  // scraper-sourced mart (string product_id) until its stock-quantity
+				  // gap is resolved. Remove when fct_voorraad also moves to the _db source.
+				  #"Changed Type" = Table.TransformColumnTypes(#"Navigation 1", {{"product_id", type text}})
 				in
-				  #"Navigation 1"
+				  #"Changed Type"
 
 	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
 

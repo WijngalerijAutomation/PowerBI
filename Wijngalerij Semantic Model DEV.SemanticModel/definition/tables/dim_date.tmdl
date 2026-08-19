@@ -276,7 +276,7 @@ table dim_date
 		source =
 				let
 				  Source = PostgreSQL.Database("ep-soft-salad-agt3f5p2.c-2.eu-central-1.aws.neon.tech:5432", "neondb"),
-				  #"Navigation 1" = Source{[Schema = "marts", Item = "dim_date"]}[Data]
+				  #"Navigation 1" = Source{[Schema = "marts", Item = "dim_date_db"]}[Data]
 				in
 				  #"Navigation 1"
 

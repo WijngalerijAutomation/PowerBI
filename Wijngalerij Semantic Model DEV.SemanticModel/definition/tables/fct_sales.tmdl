@@ -39,19 +39,11 @@ table fct_sales
 		annotation SummarizationSetBy = Automatic
 
 	column ordernummer
-		dataType: string
-		lineageTag: 94377121-72a7-43f8-8723-f3dc720b87a3
-		summarizeBy: none
-		sourceColumn: ordernummer
-
-		annotation SummarizationSetBy = Automatic
-
-	column line_idx
 		dataType: int64
 		formatString: 0
-		lineageTag: c367f40d-4bdf-488e-add3-ab39107e57c2
+		lineageTag: 94377121-72a7-43f8-8723-f3dc720b87a3
 		summarizeBy: sum
-		sourceColumn: line_idx
+		sourceColumn: ordernummer
 
 		annotation SummarizationSetBy = Automatic
 
@@ -67,7 +59,8 @@ table fct_sales
 		annotation UnderlyingDateTimeDataType = Date
 
 	column klant_id
-		dataType: string
+		dataType: int64
+		formatString: 0
 		lineageTag: d198e1e6-49f4-433b-9206-5bbe88d7a68e
 		summarizeBy: none
 		sourceColumn: klant_id
@@ -87,22 +80,6 @@ table fct_sales
 		lineageTag: 340e4226-40b8-440a-8f7a-14ee5ace3b09
 		summarizeBy: none
 		sourceColumn: product_naam
-
-		annotation SummarizationSetBy = Automatic
-
-	column magazijn
-		dataType: string
-		lineageTag: 39bb3351-29d6-4e63-819b-3837e36ff13a
-		summarizeBy: none
-		sourceColumn: magazijn
-
-		annotation SummarizationSetBy = Automatic
-
-	column status
-		dataType: string
-		lineageTag: b87b979c-f414-48d8-9e83-d7aa0ca5b4f5
-		summarizeBy: none
-		sourceColumn: status
 
 		annotation SummarizationSetBy = Automatic
 
@@ -134,7 +111,7 @@ table fct_sales
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	column btw_pct
-		dataType: double
+		dataType: int64
 		lineageTag: 5b668f76-0009-4094-8ba0-ed53029aab63
 		summarizeBy: sum
 		sourceColumn: btw_pct
@@ -207,14 +184,95 @@ table fct_sales
 
 		annotation SummarizationSetBy = Automatic
 
+	column regel_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 957d6ef2-e8a4-45f4-b67e-0321ad118418
+		summarizeBy: sum
+		sourceColumn: regel_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column magazijn_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 86e1735f-cdfd-4be0-bf1f-1a4e4c6d863e
+		summarizeBy: sum
+		sourceColumn: magazijn_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_inferred
+		dataType: string
+		lineageTag: 85b1bc29-bd17-4f92-a8e2-d700c455a5d4
+		summarizeBy: none
+		sourceColumn: status_inferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column korting
+		dataType: double
+		lineageTag: e3a660f9-fc72-46fb-9aaa-4483ef1163c4
+		summarizeBy: sum
+		sourceColumn: korting
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column korting_percentage
+		dataType: double
+		lineageTag: a1fd69b3-2e73-4445-ad8d-51fcdf9add35
+		summarizeBy: sum
+		sourceColumn: korting_percentage
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column kostprijs
+		dataType: double
+		lineageTag: b49e911e-7d28-4aff-9e17-e1766a5f18e4
+		summarizeBy: sum
+		sourceColumn: kostprijs
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column regel_totaal_bruto
+		dataType: double
+		lineageTag: 5c015805-ff1d-4566-9d07-31c70a324ae0
+		summarizeBy: sum
+		sourceColumn: regel_totaal_bruto
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column is_sample
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 470e6684-9e4f-4d19-878e-16acf6506424
+		summarizeBy: none
+		sourceColumn: is_sample
+
+		annotation SummarizationSetBy = Automatic
+
 	partition fct_sales = m
 		mode: import
 		source =
 				let
 				  Source = PostgreSQL.Database("ep-soft-salad-agt3f5p2.c-2.eu-central-1.aws.neon.tech:5432", "neondb"),
-				  #"Navigation 1" = Source{[Schema = "marts", Item = "fct_sales"]}[Data]
+				  #"Navigation 1" = Source{[Schema = "marts", Item = "fct_sales_db"]}[Data],
+				  // product_id arrives as Int64 from fct_sales_db; cast to text so the
+				  // relationship to dim_product still resolves — dim_product stays on
+				  // the scraper-sourced mart (string product_id) until the stock-quantity
+				  // gap in dim_product_db/fct_voorraad_db is resolved. Remove this step
+				  // when dim_product also moves to the _db source.
+				  #"Changed Type" = Table.TransformColumnTypes(#"Navigation 1", {{"product_id", type text}})
 				in
-				  #"Navigation 1"
+				  #"Changed Type"
 
 	annotation PBI_ResultType = Table
 
