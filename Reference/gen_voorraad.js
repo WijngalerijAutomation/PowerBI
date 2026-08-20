@@ -195,7 +195,8 @@ visuals.push(textbox(id(), { x: 24, y: 74, w: 700, h: 50 }, [run('Voorraad & wer
 const kopregel = subCard(id(), { x: 24, y: 126, w: 905, h: 22 }, '_Metingen', 'Voorraad kopregel sub', 3000);
 kopregel.visual.objects.value[0].properties.fontSize = lit('12D');
 visuals.push(kopregel);
-visuals.push(textbox(id(), { x: 948, y: 56, w: 308, h: 18 }, [run('PEILDATUM', topEyebrowStyle)], 4000));
+// positie uit Desktop gevouwen (2026-08-20): rechter rand gelijk, linker rand naar rechts
+visuals.push(textbox(id(), { x: 993, y: 56, w: 263, h: 18 }, [run('PEILDATUM', topEyebrowStyle)], 4000));
 visuals.push(card(id(), { x: 948, y: 74, w: 308, h: 35 }, '_Metingen', 'Peildatum label', 5000, { fontSize: 16, align: 'right' }));
 
 // -- KPI-rij --
@@ -368,7 +369,8 @@ const page = {
 const w = (rel, obj) => {
   const p = path.join(RPT, rel);
   fs.mkdirSync(path.dirname(p), { recursive: true });
-  fs.writeFileSync(p, JSON.stringify(obj, null, 2) + '\n', { encoding: 'utf8' });
+  // geen slotnewline: Desktop serialiseert zonder, en elke save churnt anders
+  fs.writeFileSync(p, JSON.stringify(obj, null, 2), { encoding: 'utf8' });
 };
 
 w('.platform', {
@@ -407,6 +409,6 @@ fs.writeFileSync(path.join(ROOT, 'Wijngalerij Voorraad DEV.pbip'), JSON.stringif
   version: '1.0',
   artifacts: [{ report: { path: 'Wijngalerij Voorraad DEV.Report' } }],
   settings: { enableAutoRecovery: true }
-}, null, 2) + '\n', { encoding: 'utf8' });
+}, null, 2), { encoding: 'utf8' });
 
 console.log(`written: ${visuals.length} visuals, page ${PAGE_ID}`);

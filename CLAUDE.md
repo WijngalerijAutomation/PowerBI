@@ -183,11 +183,15 @@ layer has not started.
   against the ERP's own stock page — gereserveerd exact (48/48), in_bestelling counts
   sent POs only (drafts deliberately excluded; the page counts them inconsistently).
   Landed on prod via the hourly pipeline.
-- ⬜ **Next on the PBI side:** refresh pulls the new columns into `fct_voorraad`
-  automatically (the partition has no SelectColumns step). Then: unhide and rewrite
-  `Dekking weken` on effective stock, fill the Open inkoopwaarde reserved block on the
-  Voorraad page, and consider voorraadstatus visuals. Check the column list after the
-  first refresh before binding anything.
+- ✅ **The effective-stock family is in the PBI model (2026-08-20).** `fct_voorraad` has
+  58 source columns now: the seven new ones (`gereserveerd`, `in_bestelling`,
+  `effectieve_voorraad`, `dekking_weken`, `voorraadstatus`, `verwachte_uitverkoopdatum`,
+  `open_inkoopwaarde`) were defined **explicitly via MCP** — see the refresh-cycle trap
+  below for why that path and not Desktop's auto-detect. `Dekking weken` /
+  `Dekking label` are visible again, rewritten on effective stock (25,8 weken).
+- ⬜ **Next on the PBI side:** fill the Open inkoopwaarde reserved block on the Voorraad
+  page (€ 41.005 is in `fct_voorraad[open_inkoopwaarde]`), and consider voorraadstatus
+  visuals (161 niet leverbaar / status tiers exist as a column).
 - ⬜ Ask the ERP developer what the stock page's draft-counting rule is (in_bestelling
   residual: 1.572 flessen on 2026-08-20).
 
@@ -233,20 +237,15 @@ So the table currently *renders* purely as a product-level sales and margin tabl
 Voorraad scaffolding already exists in measure form. The earlier warning that "every stock
 and cover visual depends on them" was forward-looking — those visuals do not exist yet.
 
-**`Dekking weken` and `Dekking label` are hidden (2026-08-19).** `Dekking weken` is
-`DIVIDE([Voorraad flessen], [Vraag per week])` — raw stock, no `gereserveerd`, no
-`in_bestelling`. `fct_voorraad_db`'s own header warns that cover on raw stock "would
-silently ignore both stock already spoken for and stock already inbound, in opposite
-directions, and nobody could tell by looking at the number." Before the repoint it read 0
-and was *visibly* broken; after it reads **~23,4 weken — plausible and wrong**, which is
-worse. Both are now `isHidden` with a Dutch description explaining why.
-
-`Dekking label` is hidden **with** it deliberately: it is `FORMAT([Dekking weken], …)`,
-the display form of the same wrong number and the one you would actually drag onto a page.
-Hiding only the base measure would leave the trap armed.
-
-Do not unhide either until effective stock exists — that needs validated `gereserveerd`
-and `in_bestelling` from the dbt side.
+**`Dekking weken` and `Dekking label` are visible again (2026-08-20), rewritten on
+effective stock.** They were hidden on 2026-08-19 because the old definition divided RAW
+stock by demand — no `gereserveerd`, no `in_bestelling` — which read ~23,4 weken,
+plausible and wrong. Now that validated effective stock exists in the mart,
+`Dekking weken` is `DIVIDE(SUM(fct_voorraad[effectieve_voorraad]), [Vraag per week])`
+(25,8 weken at first read). Note it deliberately differs from the Voorraad page's
+"Dagen voorraad" KPI: that one is a *working-capital* metric (physical stock over
+52-week demand, 158 dagen ≈ 22,7 weken); dekking is *operational cover* (effective
+stock over 12-week demand). Both say so in their descriptions — don't "reconcile" them.
 
 ### Repointing `fct_voorraad` to `_db`
 
@@ -501,6 +500,17 @@ and stock movement will not reconcile.
 - **Definitions must match on both sides of a comparison.** A growth chip once read 133%
   because it compared the mart's all-customer `n_klanten` against a previous count that
   only included customers with revenue.
+- **Desktop's UI refresh throws "A cyclic reference" when schema auto-detect adds new
+  source columns — define them via MCP first.** When a mart the model reads gains columns
+  (fct_voorraad_db grew seven on 2026-08-20), Desktop's refresh path does an ALTER plus a
+  full recalc in one transaction, and that ordering surfaces a *latent* whole-table loop
+  between `fct_klant`'s kleur-columns (which read `fct_klant_product` and `fct_sales`)
+  and the other calc columns — reported against `fct_sales` and `fct_klant`, which are
+  **victims, not causes**, and have no calc columns of their own at all. The same refresh
+  via XMLA (single table or all tables in one transaction) succeeds, because no schema
+  change is involved. The fix: create the new column definitions explicitly with the MCP
+  (`column_operations Create` with `sourceColumn`), refresh, done — Desktop's auto-detect
+  then finds nothing to alter and its refresh works again. Verified clean afterwards.
 - **`REMOVEFILTERS(t)` does not stop cross-filtering that arrives *through* `t`.** It
   clears filters *on* that table only. A date filter reaches `fct_voorraad` by travelling
   `dim_date` → `fct_sales` → `dim_product` ⇄ `fct_voorraad`, and those last two hops are

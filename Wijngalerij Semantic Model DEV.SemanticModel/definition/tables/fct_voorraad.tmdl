@@ -26,9 +26,9 @@ table fct_voorraad
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	/// VERBORGEN 2026-08-19 - geeft een geloofwaardig maar FOUT getal. Deelt de ruwe voorraad door de vraag zonder gereserveerd of in_bestelling, dus negeert zowel voorraad die al vergeven is als voorraad die al onderweg is, in tegengestelde richtingen. Zie de kop van fct_voorraad_db: aan het getal zelf is niets te zien. Voor de repoint las dit 0 en was het zichtbaar kapot; nu leest het ~23,4 weken en lijkt het te kloppen. Niet zichtbaar maken tot effectieve voorraad bestaat - dat vraagt gevalideerde gereserveerd en in_bestelling aan de dbt-kant.
-	measure 'Dekking weken' = DIVIDE([Voorraad flessen], [Vraag per week])
-		isHidden
+	/// Weken dekking op EFFECTIEVE voorraad: (voorraad + in_bestelling - gereserveerd) / vraag per week. ZICHTBAAR sinds 2026-08-20: effectieve voorraad bestaat nu gevalideerd in de mart, afgeleid uit de ERP-orders en -inkoop. De oude definitie op ruwe voorraad negeerde gereserveerde en inkomende flessen in tegengestelde richtingen en was daarom verborgen - zie de mart-header van fct_voorraad_db voor de validatie.
+	measure 'Dekking weken' = DIVIDE(SUM(fct_voorraad[effectieve_voorraad]), [Vraag per week])
+		formatString: 0.0
 		lineageTag: 17cf8434-5d54-4e38-9f94-8aa6b66de819
 
 		changedProperty = IsHidden
@@ -72,9 +72,8 @@ table fct_voorraad
 
 		changedProperty = IsHidden
 
-	/// VERBORGEN 2026-08-19 - toont [Dekking weken], dat een geloofwaardig maar fout getal geeft. Samen verbergen: dit is de versie die je op een pagina zou slepen.
+	/// Nederlandse weergave van [Dekking weken]. Zichtbaar sinds 2026-08-20, samen met de basismeting - die rekent nu op effectieve voorraad.
 	measure 'Dekking label' = FORMAT([Dekking weken], "0.0", "nl-NL") & " weken"
-		isHidden
 		lineageTag: ea9bedce-ca27-41ce-9842-17bdb0f8f322
 
 		changedProperty = IsHidden
@@ -679,6 +678,62 @@ table fct_voorraad
 		dataType: int64
 		lineageTag: b48156e1-d710-4171-814f-f4261deac488
 		summarizeBy: sum
+
+	/// Flessen op open verkooporders (status Nieuw - verwerken / Backorder). Afgeleid uit de ERP-database en exact gevalideerd tegen de voorraadpagina (48/48 producten). Klaargezette orders reserveren NIET - die voorraad is al afgeboekt.
+	column gereserveerd
+		dataType: double
+		formatString: 0
+		lineageTag: 531b4ba2-50b2-42e0-8174-f06210498ec8
+		summarizeBy: sum
+		sourceColumn: gereserveerd
+
+	/// Flessen op verzonden, open inkooporders. Telt bewust alleen verzonden orders (d_send gezet) - concepten zijn een voornemen, geen inkomende voorraad. Wijkt daarmee bewust af van de ERP-pagina, die concepten inconsistent meetelt.
+	column in_bestelling
+		dataType: double
+		formatString: 0
+		lineageTag: e0c398c7-f8b6-4f32-b9b8-74e085bd50b6
+		summarizeBy: sum
+		sourceColumn: in_bestelling
+
+	/// voorraad + in_bestelling - gereserveerd: wat er werkelijk te beloven valt. De basis voor dekking en voorraadstatus.
+	column effectieve_voorraad
+		dataType: double
+		formatString: 0
+		lineageTag: c5dc3084-7e11-43fb-aa44-bcb4cdbcd30d
+		summarizeBy: sum
+		sourceColumn: effectieve_voorraad
+
+	/// Weken dekking op EFFECTIEVE voorraad (effectieve_voorraad / gem_per_week_12w). NULL waar de vraag niet positief is - nul en oneindig liegen allebei bij sorteren.
+	column dekking_weken
+		dataType: double
+		formatString: 0.0
+		lineageTag: 8c93ceb2-5b56-42a5-a6fa-e7144c5ed909
+		summarizeBy: none
+		sourceColumn: dekking_weken
+
+	/// Niet leverbaar / Onder kritisch / Let op / OK, op effectieve voorraad tegen kritische_voorraad - dezelfde drempels als de ERP-voorraadpagina.
+	column voorraadstatus
+		dataType: string
+		lineageTag: 86d96412-ad3f-4acc-bcd3-9de8e5109938
+		summarizeBy: none
+		sourceColumn: voorraadstatus
+
+	/// Peildatum + dekking in dagen, alleen binnen de uitverkoop-horizon.
+	column verwachte_uitverkoopdatum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 71916342-d3e6-43df-97a6-137347db9b9f
+		summarizeBy: none
+		sourceColumn: verwachte_uitverkoopdatum
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	/// Openstaande inkoopwaarde in euro's, uit inkoop_regel.prijs op verzonden open orders. Het oude scraper-veld was een flessenaantal zonder euro; dit is echte inkoopwaarde en via stg_inkoop_db ook naar besteldatum te verouderen.
+	column open_inkoopwaarde
+		dataType: double
+		lineageTag: 1ceee35c-4bcf-482c-b740-2f347c4141dc
+		summarizeBy: sum
+		sourceColumn: open_inkoopwaarde
 
 	partition fct_voorraad = m
 		mode: import
