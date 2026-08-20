@@ -246,6 +246,22 @@ layer has not started.
   het niveau/groei-probleem van de 27,9% YoY staat nog open. Resultaten in
   `predictions.fct_forecast_backtest`; draaien = ephemeral
   `pip install pandas numpy` op de Fly-machine (bewust niet in het image).
+- ✅ **Groei-experiment gedraaid en beslist (2026-08-20, 10 peildatums, prod).**
+  Drie gedempte niveau-correcties op de masked rate: YoY-portfolio (zelfde 12
+  kalenderweken een jaar terug — seizoen valt weg), YoY-per-wijnsoort
+  (credibility-gewogen) en walk-forward-herijking (gepoolde
+  werkelijk/voorspeld-ratio van uitgerijpte stappen). Uitslag: ze **fixen de
+  bias volledig** (−14,1 → −6,5 op de eerlijke evaluatie; all-rows −2,1) maar
+  maken de volume-gewogen MAE ~7,5% SLECHTER (270–273 vs 251,9). Derde
+  mislukking van een multiplicatieve niveaucorrectie, nu met de best
+  denkbare meting — **conclusie: de onderschatting is compositioneel** (het
+  bedrijf groeit door nieuwe/gepushte wijnen, niet doordat elke wijn ~28%
+  meer verkoopt), dus géén scalaire vermenigvuldiger kan winnen. De
+  vermenigvuldiger-route is definitief dicht; het bias-residu hoort in de
+  beslislaag (veiligheidsmarge bij bestellen) of in per-wijn-signalen
+  (nieuwe-listing-detectie), niet in de voorspelling. Er shipt niets; de
+  winsorised rate blijft. Factoren gedroegen zich als ontworpen (cold start
+  1,00 op stap 1–3; daarna 1,08–1,18; stap 4 tegen de 1,4-clip).
 - ⬜ **Volgende forecasting-stap: seizoensindex per wijnsoort in dbt**, als input voor
   de bestelhoeveelheid — het naamgebaseerde precedent (scripts/backtest_forecast.py)
   bewees dat categorie-seizoen per-wijn-seizoen verslaat en kan nu op grondwaarheid
