@@ -116,7 +116,7 @@
               },
               "queryRef": "_Metingen.Voorraad tabel",
               "nativeQueryRef": "Voorraad tabel",
-              "displayName": "Flessen nu"
+              "displayName": "Flessen"
             },
             {
               "field": {
@@ -131,7 +131,7 @@
               },
               "queryRef": "_Metingen.Voorraadwaarde tabel",
               "nativeQueryRef": "Voorraadwaarde tabel",
-              "displayName": "Waarde nu"
+              "displayName": "Waarde"
             }
           ]
         }
@@ -169,7 +169,7 @@
             "columnAdjustment": {
               "expr": {
                 "Literal": {
-                  "Value": "'fitToContent'"
+                  "Value": "'growToFit'"
                 }
               }
             },

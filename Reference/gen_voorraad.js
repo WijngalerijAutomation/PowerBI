@@ -144,7 +144,10 @@ const cmp = (kind, prop, rightLit) => src => ({
 });
 
 // ---------- pivotTable ----------
-function pivot(id, pos, z, valuesProjections, filters, sortProp) {
+// widths: [{metadata, w}] — expliciete kolombreedtes (Klantdetail-encoding).
+// Nodig omdat één extreem lange wijnnaam de Wijn-kolom anders zo breed duwt
+// dat zelfs growToFit de Waarde-kolom uit beeld drukt.
+function pivot(id, pos, z, valuesProjections, filters, sortProp, widths) {
   return {
     $schema: SCHEMA_VC, name: id,
     position: { x: pos.x, y: pos.y, z, height: pos.h, width: pos.w, tabOrder: z },
@@ -163,11 +166,15 @@ function pivot(id, pos, z, valuesProjections, filters, sortProp) {
       },
       objects: {
         columnHeaders: [{ properties: {
-          autoSizeColumnWidth: lit('true'), columnAdjustment: lit("'fitToContent'"),
+          autoSizeColumnWidth: lit('true'), columnAdjustment: lit("'growToFit'"),
           fontColor: col(SEC), backColor: col('#FFFFFF'), defaultColumnWidth: lit('90D') } }],
         values: [{ properties: { fontColor: col(INK), backColorPrimary: col('#FFFFFF'), backColorSecondary: col('#FFFFFF') } }],
         grid: [{ properties: { gridVertical: lit('false'), gridHorizontalColor: col(HAIR) } }],
-        subTotals: [{ properties: { rowSubtotals: lit('false'), columnSubtotals: lit('false') } }]
+        subTotals: [{ properties: { rowSubtotals: lit('false'), columnSubtotals: lit('false') } }],
+        ...(widths ? { columnWidth: widths.map(cw => ({
+          properties: { value: lit(cw.w + 'D') },
+          selector: { metadata: cw.metadata }
+        })) } : {})
       },
       visualContainerObjects: {
         stylePreset: [{ properties: { name: lit("'None'") } }],
@@ -184,12 +191,12 @@ const id = () => vid(n++);
 
 // -- kop --
 visuals.push(textbox(id(), { x: 24, y: 56, w: 193, h: 18 }, [run('VOORRAAD', topEyebrowStyle)], 1000));
-visuals.push(textbox(id(), { x: 24, y: 74, w: 700, h: 44 }, [run('Voorraad & werkkapitaal', { fontWeight: 'bold', fontFamily: 'Segoe UI', fontSize: '28pt', color: INK })], 2000));
-const kopregel = subCard(id(), { x: 24, y: 122, w: 905, h: 22 }, '_Metingen', 'Voorraad kopregel sub', 3000);
+visuals.push(textbox(id(), { x: 24, y: 74, w: 700, h: 50 }, [run('Voorraad & werkkapitaal', { fontWeight: 'bold', fontFamily: 'Segoe UI', fontSize: '28pt', color: INK })], 2000));
+const kopregel = subCard(id(), { x: 24, y: 126, w: 905, h: 22 }, '_Metingen', 'Voorraad kopregel sub', 3000);
 kopregel.visual.objects.value[0].properties.fontSize = lit('12D');
 visuals.push(kopregel);
 visuals.push(textbox(id(), { x: 948, y: 56, w: 308, h: 18 }, [run('PEILDATUM', topEyebrowStyle)], 4000));
-visuals.push(card(id(), { x: 948, y: 74, w: 308, h: 35 }, '_Metingen', 'Peildatum label', 5000, { fontSize: 20, align: 'right' }));
+visuals.push(card(id(), { x: 948, y: 74, w: 308, h: 35 }, '_Metingen', 'Peildatum label', 5000, { fontSize: 16, align: 'right' }));
 
 // -- KPI-rij --
 const kpiX = [40, 282, 523, 764, 1006], KW = 229;
@@ -208,7 +215,7 @@ kpis.forEach((k, i) => {
 });
 // gereserveerd blok: open inkoopwaarde heeft nog geen bron (in_bestelling niet gevalideerd)
 visuals.push(textbox(id(), { x: kpiX[4], y: EY, w: KW, h: 19 }, [run('Open inkoopwaarde', eyebrowStyle)], 18000));
-visuals.push(textbox(id(), { x: kpiX[4], y: VY, w: KW, h: 42 }, [run('—', { fontWeight: 'bold', fontFamily: 'Segoe UI', fontSize: '26pt', color: EYE })], 19000));
+visuals.push(textbox(id(), { x: kpiX[4], y: VY, w: KW, h: 40 }, [run('—', { fontWeight: 'bold', fontFamily: 'Segoe UI', fontSize: '20pt', color: EYE })], 19000));
 visuals.push(textbox(id(), { x: kpiX[4], y: SY, w: KW, h: 34 }, [run('geen bron — in_bestelling wacht op validatie', { fontFamily: 'Segoe UI', fontSize: '11px', color: SEC })], 20000));
 
 // -- scheidingslijn + grafiek --
@@ -284,10 +291,12 @@ visuals.push(textbox(id(), { x: 656, y: 658, w: 560, h: 26 }, [run('Uitverkocht 
 visuals.push(pivot(id(), { x: 656, y: 692, w: 600, h: 380 }, 27000,
   [
     measure('_Metingen', 'Uitverkocht status tabel', 'Status'),
-    measure('_Metingen', 'Voorraad tabel', 'Flessen nu'),
-    measure('_Metingen', 'Voorraadwaarde tabel', 'Waarde nu')
+    measure('_Metingen', 'Voorraad tabel', 'Flessen'),
+    measure('_Metingen', 'Voorraadwaarde tabel', 'Waarde')
   ],
   [fMeasureEq1('FilterUitverkocht12m', 'Uitverkocht 12m vlag')],
+  // geen expliciete kolombreedtes: growToFit past hier vanzelf (v2 was goed);
+  // een cap van 110px liet 'weer op voorraad' juist over twee regels breken
   'Voorraadwaarde tabel'));
 
 // -- rij 3: slow movers & dead stock --
@@ -307,6 +316,12 @@ trio.forEach((t, i) => {
 });
 
 // tabellen: top 20 op waarde
+const tableWidths = () => [
+  { metadata: 'fct_voorraad.product_label', w: 305 },
+  { metadata: '_Metingen.Mnd geen verkoop tabel', w: 100 },
+  { metadata: '_Metingen.Voorraad tabel', w: 75 },
+  { metadata: '_Metingen.Voorraadwaarde tabel', w: 90 }
+];
 const tableCols = () => [
   measure('_Metingen', 'Mnd geen verkoop tabel', 'Niet verkocht'),
   measure('_Metingen', 'Voorraad tabel', 'Flessen'),
@@ -318,14 +333,14 @@ visuals.push(pivot(id(), { x: 24, y: 1320, w: 600, h: 330 }, 40000, tableCols(),
     fBucketIn('FilterSlowBucket', ['6-12 mnd']),
     fColumn('FilterSlowVoorraad', 'fct_voorraad', 'voorraad', cmp(1, 'voorraad', '0D')),
     fMeasureEq1('FilterSlowTop20', 'In top 20 voorraad')
-  ], 'Voorraadwaarde tabel'));
+  ], 'Voorraadwaarde tabel', tableWidths()));
 visuals.push(textbox(id(), { x: 656, y: 1290, w: 600, h: 24 }, [run('Dead stock: ≥ 12 mnd of nooit verkocht — top 20 op waarde', tableHeadStyle)], 41000));
 visuals.push(pivot(id(), { x: 656, y: 1320, w: 600, h: 330 }, 42000, tableCols(),
   [
     fBucketIn('FilterDeadBucket', ['12-18 mnd', '18-24 mnd', '> 24 mnd', 'nooit verkocht']),
     fColumn('FilterDeadVoorraad', 'fct_voorraad', 'voorraad', cmp(1, 'voorraad', '0D')),
     fMeasureEq1('FilterDeadTop20', 'In top 20 voorraad')
-  ], 'Voorraadwaarde tabel'));
+  ], 'Voorraadwaarde tabel', tableWidths()));
 visuals.push(textbox(id(), { x: 24, y: 1666, w: 1100, h: 18 },
   [run('Uitverkocht op maandeinde-basis · voorraadhistorie vanaf feb 2025 (het mutatieboek heeft geen beginvoorraad) · slow movers volgens laatste verkoopdatum', caveatStyle)], 43000));
 
