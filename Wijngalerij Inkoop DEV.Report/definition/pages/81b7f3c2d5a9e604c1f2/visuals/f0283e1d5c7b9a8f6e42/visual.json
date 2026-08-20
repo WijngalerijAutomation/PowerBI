@@ -5,7 +5,7 @@
     "x": 24,
     "y": 1400,
     "z": 28000,
-    "height": 32,
+    "height": 44,
     "width": 1232,
     "tabOrder": 28000
   },
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Bestellijst: alleen wijnen mét vraag in de laatste 12 weken en mét leverancier · te laat is een bellijst, geen vonnis · alleen verzonden inkooporders tellen · levertijd met ~ is de 21-dagen standaardaanname · bestelhoeveelheid-advies volgt zodra de minimum-bestelhoeveelheid per leverancier bekend is",
+                    "value": "Bestellijst: alleen wijnen mét vraag in de laatste 12 weken en mét leverancier · te laat is een bellijst, geen vonnis · alleen verzonden inkooporders tellen · levertijd met ~ is de 21-dagen standaardaanname · veelvoud = waargenomen uit de inkoophistorie (? = dun bewijs), geen contractueel minimum",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10px",

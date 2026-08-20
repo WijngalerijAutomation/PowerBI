@@ -5,8 +5,10 @@
 // De pagina beantwoordt "wat moet ik bestellen?" — het spiegelbeeld van de
 // Voorraad-pagina ("waar zit te veel kapitaal"). Structuur volgt de
 // DemandForecasting-POC (welke wijnen, in volgorde van urgentie, per
-// leverancier te consolideren); het hoeveelheid-advies is een bewuste
-// non-goal zolang de minimum-bestelhoeveelheid per leverancier ontbreekt.
+// leverancier te consolideren). Het hoeveelheid-advies is nog niet gebouwd,
+// maar de bouwstenen staan sinds 2026-08-20 in het model:
+// waargenomen_bestelveelvoud (per product, uit de inkoophistorie) en
+// leverancier_min_flessen/_pallets/_bedrag (contractueel, per bestelling).
 //
 // Page-id en visual-ids zijn GEPIND. Eigen reeks (f0NN…) naast Voorraads e0NN.
 const {
@@ -132,8 +134,8 @@ visuals.push(pivot(id(), { x: 24, y: 1034, w: 1232, h: 350 }, 27000,
   null, 'Inkoop dagen open', null,
   [conditionalFontEntry('Inkoop te laat code', [{ code: '1D', color: '#CC3B2F' }], 'Inkoop levering tabel')]));
 
-visuals.push(textbox(id(), { x: 24, y: 1400, w: 1232, h: 32 },
-  [run('Bestellijst: alleen wijnen mét vraag in de laatste 12 weken en mét leverancier · te laat is een bellijst, geen vonnis · alleen verzonden inkooporders tellen · levertijd met ~ is de 21-dagen standaardaanname · bestelhoeveelheid-advies volgt zodra de minimum-bestelhoeveelheid per leverancier bekend is', caveatStyle)], 28000));
+visuals.push(textbox(id(), { x: 24, y: 1400, w: 1232, h: 44 },
+  [run('Bestellijst: alleen wijnen mét vraag in de laatste 12 weken en mét leverancier · te laat is een bellijst, geen vonnis · alleen verzonden inkooporders tellen · levertijd met ~ is de 21-dagen standaardaanname · veelvoud = waargenomen uit de inkoophistorie (? = dun bewijs), geen contractueel minimum', caveatStyle)], 28000));
 
 // ---------- pagina ----------
 const page = pageDef({

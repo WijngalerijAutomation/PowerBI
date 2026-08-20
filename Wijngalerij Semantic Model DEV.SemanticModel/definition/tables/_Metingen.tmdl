@@ -1692,6 +1692,13 @@ table _Metingen
 	measure 'Bestellijst leverancier' = IF(NOT ISBLANK(SELECTEDVALUE(fct_voorraad[product_label])), MAX(fct_voorraad[leverancier]))
 		lineageTag: 8a53a225-5f0c-4367-ac28-958d7650d0e5
 
+	/// Waargenomen bestelveelvoud voor de bestellijst: GCD van de historische inkoopregels van het product. Uitdrukkelijk niet moq (dat ERP-veld is leeg) - dit is waargenomen gedrag, geen contractueel minimum. Een ? markeert dun bewijs: minder dan 3 inkoopregels.
+	measure 'Bestellijst veelvoud' =
+			VAR v = MAX(fct_voorraad[waargenomen_bestelveelvoud])
+			VAR n = MAX(fct_voorraad[n_inkoopregels])
+			RETURN IF(NOT ISBLANK(v), FORMAT(v, "0", "nl-NL") & IF(n < 3, " ?", ""))
+		lineageTag: 8049dac9-5eb1-48e6-b70a-2b24f00ba81e
+
 	column _
 		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
 		isNameInferred

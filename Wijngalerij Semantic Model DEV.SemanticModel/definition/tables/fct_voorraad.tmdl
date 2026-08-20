@@ -758,6 +758,51 @@ table fct_voorraad
 		summarizeBy: none
 		sourceColumn: n_inkoopregels
 
+	/// Kleinste ooit ingekochte hoeveelheid (inkoop_regel, geannuleerde orders uitgesloten). Metgezel van waargenomen_bestelveelvoud.
+	column kleinste_inkoop
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c47da23c-064b-4d76-ae31-6298c567b3f1
+		summarizeBy: none
+		sourceColumn: kleinste_inkoop
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Contractueel minimum aantal flessen per bestelling bij deze leverancier (ERP-leverancierspagina). Geldt per bestelling, niet per product.
+	column leverancier_min_flessen
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9f6c6232-c508-4e87-80ba-b6cec4339d9f
+		summarizeBy: none
+		sourceColumn: leverancier_min_flessen
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Contractueel minimum aantal pallets per bestelling bij deze leverancier (ERP-leverancierspagina).
+	column leverancier_min_pallets
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0eac25f6-af59-4f70-b8e0-e3bd659bc04b
+		summarizeBy: none
+		sourceColumn: leverancier_min_pallets
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Contractueel minimum orderbedrag bij deze leverancier (ERP-leverancierspagina); slechts 6 van 95 leveranciers vullen dit.
+	column leverancier_min_bedrag
+		dataType: double
+		isHidden
+		lineageTag: 3ef0dd6c-a70d-42d7-a95b-37a95fa70697
+		summarizeBy: none
+		sourceColumn: leverancier_min_bedrag
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
 	partition fct_voorraad = m
 		mode: import
 		source =

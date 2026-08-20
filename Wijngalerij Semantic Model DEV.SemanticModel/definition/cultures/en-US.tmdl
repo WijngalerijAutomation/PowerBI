@@ -75,19 +75,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "jaar_maand"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Maand": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_klant_product.product_naam": {
 			      "Definition": {
@@ -150,19 +138,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "maand_label"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Maand": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_sales.product_naam": {
 			      "Definition": {
@@ -180,19 +156,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Flessen per maand"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Flessen": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_klant.klant_label": {
 			      "Definition": {
@@ -339,19 +303,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "wijnhuis"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Wijnhuis": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_voorraad.omzet_12m": {
 			      "Definition": {
@@ -360,19 +312,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Omzet 12m"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Omzet": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.productrang": {
 			      "Definition": {
@@ -381,19 +321,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Productrang"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "#": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.wijn_flessen_label": {
 			      "Definition": {
@@ -402,19 +330,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Wijn flessen label"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Flessen": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.product_omzet_label": {
 			      "Definition": {
@@ -423,19 +339,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Product omzet label"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Omzet": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.product_marge_label": {
 			      "Definition": {
@@ -444,19 +348,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Product marge label"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Marge": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.product_marge_pct_label": {
 			      "Definition": {
@@ -465,19 +357,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Product marge pct label"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Marge %": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.marge_per_fles_label": {
 			      "Definition": {
@@ -486,19 +366,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Marge per fles label"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Per fles": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.klanten_per_wijn": {
 			      "Definition": {
@@ -507,19 +375,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Klanten per wijn"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Klanten": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.wijn_klant_omzet": {
 			      "Definition": {
@@ -528,19 +384,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Wijn klant omzet"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Omzet": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.wijn_klant_flessen": {
 			      "Definition": {
@@ -549,19 +393,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Wijn klant flessen"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Flessen": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.wijn_klant_laatste_order": {
 			      "Definition": {
@@ -570,19 +402,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Wijn klant laatste order"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Laatste order": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.wijn_klant_status": {
 			      "Definition": {
@@ -591,19 +411,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Wijn klant status"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Status": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_klant_product.klant_label": {
 			      "Definition": {
@@ -612,19 +420,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "klant_label"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Klant": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.voorraadwaarde_op_datum_wijn": {
 			      "Definition": {
@@ -678,7 +474,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "Inkoop besteld tabel"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Besteld": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    },
 			    "table_metingen.inkoop_dagen_open": {
 			      "Definition": {
@@ -687,7 +495,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "Inkoop dagen open"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Dagen open": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    },
 			    "table_metingen.inkoop_levering_tabel": {
 			      "Definition": {
@@ -696,7 +516,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "Inkoop levering tabel"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Levering": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    },
 			    "table_metingen.inkoop_flessen_tabel": {
 			      "Definition": {
@@ -705,7 +537,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "Inkoop flessen tabel"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Flessen": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    },
 			    "table_metingen.inkoop_waarde_tabel": {
 			      "Definition": {
@@ -714,7 +558,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "Inkoop waarde tabel"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Waarde": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    },
 			    "fct_inkoop_open.inkoop_label": {
 			      "Definition": {
@@ -723,7 +579,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "inkoop_label"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Inkooporder": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    },
 			    "table_metingen.bestellijst_status": {
 			      "Definition": {
@@ -732,7 +600,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "Bestellijst status"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Status": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    },
 			    "table_metingen.effectief_tabel": {
 			      "Definition": {
@@ -741,7 +621,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "Effectief tabel"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Effectief": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    },
 			    "table_metingen.bestellijst_vraag_per_week": {
 			      "Definition": {
@@ -750,7 +642,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "Bestellijst vraag per week"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Vraag/wk": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    },
 			    "table_metingen.dekking_tabel": {
 			      "Definition": {
@@ -768,7 +672,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "Levertijd tabel"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Levertijd": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    },
 			    "table_metingen.bestellijst_leverancier": {
 			      "Definition": {
@@ -777,7 +693,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "Bestellijst leverancier"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Leverancier": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    },
 			    "table_metingen.bestellijst_sortering": {
 			      "Definition": {
@@ -786,7 +714,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "Bestellijst sortering"
 			        }
 			      },
-			      "State": "Generated"
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Dekking (wk)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    },
 			    "fct_sales.wijnsoort": {
 			      "Definition": {
@@ -795,10 +735,19 @@ cultureInfo en-US
 			          "ConceptualProperty": "wijnsoort"
 			        }
 			      },
+			      "State": "Generated"
+			    },
+			    "table_metingen.bestellijst_veelvoud": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Bestellijst veelvoud"
+			        }
+			      },
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Wijnsoort": {
+			          "Veelvoud": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",

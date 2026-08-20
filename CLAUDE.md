@@ -218,9 +218,20 @@ layer has not started.
   de bestelhoeveelheid — het naamgebaseerde precedent (scripts/backtest_forecast.py)
   bewees dat categorie-seizoen per-wijn-seizoen verslaat en kan nu op grondwaarheid
   worden omgezet (`dim_product_db.wijnsoort`).
-- ⬜ Bestelhoeveelheid-advies: `product.moq` BESTAAT in de ERP maar is leeg (0/745) —
-  een invulkwestie voor de eigenaren, geen modelleer-gap. `no_auto_inkoop` (49
-  producten) is een latere bestellijst-verfijning.
+- ✅ **Bestelhoeveelheid-bouwstenen staan in model én mart (2026-08-20).**
+  `waargenomen_bestelveelvoud` = GCD van de historische inkoopregels per product
+  (recursieve vouw in `fct_voorraad_db`, geannuleerde orders uitgesloten; 0
+  delingsschendingen op 1.786 regels), plus `kleinste_inkoop` en `n_inkoopregels`
+  als bewijsbasis. **Uitdrukkelijk niet "moq" genoemd**: dat ERP-veld bestaat maar
+  is leeg (0/743) — dit is waargenomen gedrag, geen contractueel minimum, en bij
+  `n_inkoopregels < 3` (351 van 524) is het bewijs dun. In de bestellijst als
+  kolom "Veelvoud" (meting `Bestellijst veelvoud`, `?` bij dun bewijs). Daarnaast
+  de **contractuele leveranciersminimums** van de ERP-leverancierspagina:
+  `leverancier_min_flessen` (59/95), `_pallets` (48), `_bedrag` (6) — al die tijd
+  al in `raw.wijnhuis`, nu via `dim_product_db` → `fct_voorraad_db` en als hidden
+  kolommen in het model. Het advies zelf ("bestel N") is nog niet gebouwd;
+  eigenaren kunnen `product.moq` alsnog vullen. `no_auto_inkoop` (49 producten)
+  blijft een latere bestellijst-verfijning.
 - ⬜ Ask the ERP developer what the stock page's draft-counting rule is (in_bestelling
   residual: 1.572 flessen on 2026-08-20).
 
@@ -554,6 +565,12 @@ and stock movement will not reconcile.
   the right total evaluated naked and the wrong one inside a date filter — which is how
   every visual evaluates it. Verify measures **wrapped in the filter context they will
   actually meet** (`CALCULATE([M], dim_date[jaar_maand] = "2026-08")`), not just bare.
+- **Never rebuild a source mart while an XMLA refresh reads it.** A `dbt build` of
+  `fct_voorraad_db` on prod dropped the table under a running `RefreshWithXMLA` of
+  `fct_voorraad`; the refresh never returned, Desktop wedged so hard that even a
+  metadata export blocked, and a force-quit left a zombie AS engine (empty window
+  title in `ListLocalInstances`) eating VM RAM — kill that pid. Order is: refresh
+  finished → then rebuild, or rebuild → then refresh. Never both in flight.
 - **`_Metingen` is not the only measure home.** `fct_voorraad` alone carries 19 measures of
   its own. Grepping `_Metingen.tmdl` to decide whether something is used will miss them and
   produce a confident wrong answer — it did exactly that here, concluding "nothing consumes
