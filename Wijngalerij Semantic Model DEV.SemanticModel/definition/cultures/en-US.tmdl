@@ -75,19 +75,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "jaar_maand"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Maand": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_klant_product.product_naam": {
 			      "Definition": {
@@ -315,19 +303,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "wijnhuis"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Wijnhuis": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "fct_voorraad.omzet_12m": {
 			      "Definition": {
@@ -453,19 +429,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Voorraadwaarde op datum wijn"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Voorraadwaarde": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.voorraadwaarde_tabel": {
 			      "Definition": {
@@ -474,29 +438,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Voorraadwaarde tabel"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Voorraadwaarde": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        },
-			        {
-			          "Waarde": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.uitverkocht_status_tabel": {
 			      "Definition": {
@@ -505,19 +447,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Uitverkocht status tabel"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Status": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.voorraad_tabel": {
 			      "Definition": {
@@ -526,19 +456,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Voorraad tabel"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Flessen": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.mnd_geen_verkoop_tabel": {
 			      "Definition": {
@@ -547,19 +465,7 @@ cultureInfo en-US
 			          "ConceptualProperty": "Mnd geen verkoop tabel"
 			        }
 			      },
-			      "State": "Generated",
-			      "Terms": [
-			        {
-			          "Niet verkocht": {
-			            "State": "Suggested",
-			            "Source": {
-			              "Type": "External",
-			              "Agent": "PowerBI.VisualColumnRename"
-			            },
-			            "Weight": 0.9
-			          }
-			        }
-			      ]
+			      "State": "Generated"
 			    },
 			    "table_metingen.inkoop_besteld_tabel": {
 			      "Definition": {
@@ -677,6 +583,141 @@ cultureInfo en-US
 			      "Terms": [
 			        {
 			          "Inkooporder": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_metingen.bestellijst_status": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Bestellijst status"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Status": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_metingen.effectief_tabel": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Effectief tabel"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Effectief": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_metingen.bestellijst_vraag_per_week": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Bestellijst vraag per week"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Vraag/wk": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_metingen.dekking_tabel": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Dekking tabel"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "table_metingen.levertijd_tabel": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Levertijd tabel"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Levertijd": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_metingen.bestellijst_leverancier": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Bestellijst leverancier"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Leverancier": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_metingen.bestellijst_sortering": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Bestellijst sortering"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Dekking (wk)": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",

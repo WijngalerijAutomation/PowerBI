@@ -1684,10 +1684,9 @@ table _Metingen
 			    IF(Def = TRUE(), "~", "") & FORMAT(L, "0") & " dgn")
 		lineageTag: ca1c0219-77b4-44fe-8314-70573a73c14e
 
-	/// Sorteert de bestellijst op urgentie: dekking oplopend, ongedefinieerde dekking (-1) bovenaan.
+	/// Dekking in weken, numeriek - de urgentiekolom EN de sortering van de bestellijst (oplopend: krapste dekking bovenaan). Zichtbaar geprojecteerd als 'Dekking (wk)': een pivotTable sorteert alleen op geprojecteerde velden, een niet-geprojecteerde sortDefinition valt stil terug op alfabetisch. COALESCE -1 zet een ongedefinieerde dekking bovenaan.
 	measure 'Bestellijst sortering' = COALESCE(MAX(fct_voorraad[dekking_weken]), -1)
 		formatString: 0.0
-		isHidden
 		lineageTag: 7d1b692c-41df-4c0a-a156-f1d5c93e1859
 
 	measure 'Bestellijst leverancier' = IF(NOT ISBLANK(SELECTEDVALUE(fct_voorraad[product_label])), MAX(fct_voorraad[leverancier]))
