@@ -104,6 +104,13 @@ fly ssh console -a wijngalerij-pipeline -C "python scripts/dbt_env.py --target d
 Narrow to specific models with `--select model_name+` (the `+` pulls in
 downstream dependents too — useful, since most marts chain off each other).
 
+**TRAP: `fly ssh console` runs the DEPLOYED IMAGE, not your working tree.** Edit
+a dbt model locally, run it on the box without deploying, and dbt silently builds
+the OLD version — it even reports success. The tell: a new model is simply absent
+from the selection ("1 of 1" where you expected 2), and in the deploy output the
+`COPY dbt/` layer says CACHED when nothing shipped. Sequence is always: commit →
+`fly deploy` → build. This cost a phantom-successful build on 2026-08-20.
+
 Same against `prod` once verified on `dev`:
 ```
 fly ssh console -a wijngalerij-pipeline -C "python scripts/dbt_env.py --target prod build"
