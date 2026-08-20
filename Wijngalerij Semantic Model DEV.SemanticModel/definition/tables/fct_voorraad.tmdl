@@ -735,6 +735,13 @@ table fct_voorraad
 		summarizeBy: sum
 		sourceColumn: open_inkoopwaarde
 
+	/// Zelfde wijnsoort-label als op fct_sales, voor product- en bestellijst-doorsnijdingen.
+	column wijnsoort
+		dataType: string
+		lineageTag: 1ee21999-0aa7-4bf6-bf07-bc4dc0452d41
+		summarizeBy: none
+		sourceColumn: wijnsoort
+
 	partition fct_voorraad = m
 		mode: import
 		source =

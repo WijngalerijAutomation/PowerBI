@@ -176,7 +176,6 @@ function pivot(id, pos, z, rowsProjections, valuesProjections, filters, sortProp
   return {
     $schema: SCHEMA_VC, name: id,
     position: { x: pos.x, y: pos.y, z, height: pos.h, width: pos.w, tabOrder: z },
-    ...(filters ? { filterConfig: { filters } } : {}),
     visual: {
       visualType: 'pivotTable',
       query: {
@@ -208,7 +207,10 @@ function pivot(id, pos, z, rowsProjections, valuesProjections, filters, sortProp
         stylePreset: [{ properties: { name: lit("'None'") } }],
         ...vcoPlain()
       }
-    }
+    },
+    // filterConfig NA visual: Desktop-canonieke sleutelvolgorde, anders
+    // herschrijft elke Desktop-save het bestand alleen om te herordenen
+    ...(filters ? { filterConfig: { filters } } : {})
   };
 }
 

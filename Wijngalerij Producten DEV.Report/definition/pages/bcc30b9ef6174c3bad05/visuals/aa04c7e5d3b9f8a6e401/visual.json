@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "e0434f2a9b8c7d6e5f31",
+  "name": "aa04c7e5d3b9f8a6e401",
   "position": {
-    "x": 24,
-    "y": 1666,
-    "z": 43000,
+    "x": 40,
+    "y": 1802,
+    "z": 27000,
     "height": 18,
-    "width": 1200,
-    "tabOrder": 43000
+    "width": 1216,
+    "tabOrder": 27000
   },
   "visual": {
     "visualType": "textbox",
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Uitverkocht op maandeinde-basis · voorraadhistorie vanaf feb 2025 (het mutatieboek heeft geen beginvoorraad) · slow movers volgens laatste verkoopdatum · open inkoopwaarde telt alleen verzonden inkooporders",
+                    "value": "Wijnsoort uit de ERP-classificaties (kleur/type/streek) · voorrang: champagne > alcoholvrij > mousserend > dessert > kleur · verkoopdata vanaf okt 2024",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10px",

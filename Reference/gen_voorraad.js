@@ -67,10 +67,6 @@ visuals.push(hairline(id(), { x: 24, y: 292, w: 1232 }, 21000));
 const chart = {
   $schema: SCHEMA_VC, name: id(),
   position: { x: 24, y: 310, z: 22000, height: 308, width: 1232, tabOrder: 22000 },
-  filterConfig: { filters: [
-    fColumn('FilterVoorraadDatumVanaf', 'dim_date', 'datum', cmp(2, 'datum', "datetime'2025-02-01T00:00:00'")),
-    fColumn('FilterVoorraadSnapshot', 'dim_date', 'is_in_snapshot', cmp(0, 'is_in_snapshot', 'true'))
-  ] },
   visual: {
     visualType: 'lineChart',
     query: {
@@ -99,6 +95,11 @@ const chart = {
     }
   }
 };
+// filterConfig NA visual (Desktop-canonieke volgorde)
+chart.filterConfig = { filters: [
+  fColumn('FilterVoorraadDatumVanaf', 'dim_date', 'datum', cmp(2, 'datum', "datetime'2025-02-01T00:00:00'")),
+  fColumn('FilterVoorraadSnapshot', 'dim_date', 'is_in_snapshot', cmp(0, 'is_in_snapshot', 'true'))
+] };
 visuals.push(chart);
 visuals.push(textbox(id(), { x: 24, y: 622, w: 800, h: 18 }, [run('Waardering tegen de huidige inkoopprijs — historische kostprijs bestaat niet in het model.', caveatStyle)], 23000));
 
@@ -107,7 +108,6 @@ visuals.push(textbox(id(), { x: 24, y: 658, w: 500, h: 26 }, [run('Voorraadwaard
 const bar = {
   $schema: SCHEMA_VC, name: id(),
   position: { x: 24, y: 692, z: 25000, height: 380, width: 600, tabOrder: 25000 },
-  filterConfig: { filters: [fMeasureEq1('FilterVoorraadTop15Wijnhuis', 'Wijnhuis in top 15 voorraad')] },
   visual: {
     visualType: 'barChart',
     query: {
@@ -130,6 +130,7 @@ const bar = {
     visualContainerObjects: { ...vcoPlain(), title: [{ properties: { show: lit('false') } }] }
   }
 };
+bar.filterConfig = { filters: [fMeasureEq1('FilterVoorraadTop15Wijnhuis', 'Wijnhuis in top 15 voorraad')] };
 visuals.push(bar);
 visuals.push(textbox(id(), { x: 656, y: 658, w: 560, h: 26 }, [run('Uitverkocht in de afgelopen 12 maanden', sectionStyle)], 26000));
 visuals.push(pivot(id(), { x: 656, y: 692, w: 600, h: 380 }, 27000, wijnRow(),

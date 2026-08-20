@@ -207,8 +207,20 @@ layer has not started.
   `docs/powerbi_inkoop_bestellen.md`. Dienstregels (Relatiekorting, Wijnproeverij)
   glippen door `is_wijn` heen — bestellijst en KPI's sluiten ze identiek uit via
   is_collectiepost + niet-lege leverancier.
-- ⬜ Bestelhoeveelheid-advies: wacht op minimum-bestelhoeveelheid per leverancier
-  (bekende gap, default 6) en hoort upstream in dbt — zie de DemandForecasting-POC.
+- ✅ **Verkoopcurves per wijnsoort (2026-08-20)** — sectie op Producten algemeen. De
+  ERP-portaalclassificaties (kleur/type/streek) stroomden al raw → dim_product_db als
+  arrays; nieuw is de afgeleide scalar `wijnsoort` (voorrang champagne > alcoholvrij >
+  mousserend > dessert > kleur, accepted_values-getest), gedenormaliseerd op fct_sales
+  en fct_voorraad. 98% van de verkochte flessen geclassificeerd; het seizoen is
+  textbook (rosé ~9× zwaai winter↔zomer, rood het spiegelbeeld) en herhaalt over beide
+  jaargangen. Serie-kleuren via scopeId-selectors (wijn-intuïtief) — dat werkt.
+- ⬜ **Volgende forecasting-stap: seizoensindex per wijnsoort in dbt**, als input voor
+  de bestelhoeveelheid — het naamgebaseerde precedent (scripts/backtest_forecast.py)
+  bewees dat categorie-seizoen per-wijn-seizoen verslaat en kan nu op grondwaarheid
+  worden omgezet (`dim_product_db.wijnsoort`).
+- ⬜ Bestelhoeveelheid-advies: `product.moq` BESTAAT in de ERP maar is leeg (0/745) —
+  een invulkwestie voor de eigenaren, geen modelleer-gap. `no_auto_inkoop` (49
+  producten) is een latere bestellijst-verfijning.
 - ⬜ Ask the ERP developer what the stock page's draft-counting rule is (in_bestelling
   residual: 1.572 flessen on 2026-08-20).
 

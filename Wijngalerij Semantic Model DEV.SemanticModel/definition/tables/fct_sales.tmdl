@@ -259,6 +259,13 @@ table fct_sales
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Eén label per wijn (Champagne/Mousserend/Wit/Rood/Rosé/...), afgeleid uit de ERP-portaalclassificaties in dim_product_db en gedenormaliseerd op het fact - grain-safe als Series voor de verkoopcurves, zonder de bidirectionele paden. 'Overig' waar de regel geen classificatie heeft, zodat de lijnen altijd optellen tot het maandtotaal.
+	column wijnsoort
+		dataType: string
+		lineageTag: d1b0584a-18d8-40cf-9c94-e455464542de
+		summarizeBy: none
+		sourceColumn: wijnsoort
+
 	partition fct_sales = m
 		mode: import
 		source =

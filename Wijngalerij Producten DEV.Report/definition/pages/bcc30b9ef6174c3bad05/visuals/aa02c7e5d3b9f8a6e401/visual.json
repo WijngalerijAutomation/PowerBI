@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "e0454f2a9b8c7d6e5f31",
+  "name": "aa02c7e5d3b9f8a6e401",
   "position": {
-    "x": 24,
-    "y": 1700,
-    "z": 45000,
+    "x": 40,
+    "y": 1420,
+    "z": 25000,
     "height": 26,
     "width": 600,
-    "tabOrder": 45000
+    "tabOrder": 25000
   },
   "visual": {
     "visualType": "textbox",
@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Openstaande inkooporders",
+                    "value": "Verkoop per wijnsoort",
                     "textStyle": {
                       "fontWeight": "bold",
                       "fontFamily": "Segoe UI Semibold",
