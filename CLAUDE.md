@@ -589,10 +589,15 @@ model** with whatever is on disk at that moment. Publish from a known-good state
 - **`Prognose omzet jaar`** and its ~6 dependent measures put a revenue forecast on the CEO
   dashboard with no forecast-versus-actual tracking behind it. Flagged, not yet decided.
 - Two stray measures named `Measure` / `Measure 2` on `fct_klant` — trivial cleanup.
-- **The scraper's stock-page parsing has returned NULL for `voorraad` since ~2026-08-11**
-  — warning-only in dlt, never surfaced, still live on prod. It is why prod's
-  `fct_voorraad` reads 0 while dev's does not. Fix belongs on the dbt/ingestion side; see
-  **Voorraad** above.
+- **The scraper's stock-page bug is FIXED (2026-08-20).** Root cause: the ERP inserted a
+  "Safety stock" column in voorraad.php on ~2026-08-11 and the positional parser read
+  one-column-shifted garbage for nine silent days — the euro-formatted Inkoopprijs slid
+  into the voorraad cell and never parsed as int. The parser now resolves columns by
+  header name and **raises** on a missing header (second reshuffle of this page; the next
+  one fails loudly). Verified on dev: gereserveerd 334, in_bestelling 13.116 flessen,
+  all 70 dbt checks green. Prod heals with the next scheduled scraper run. Note the PBI
+  model no longer reads scraper stock (fct_voorraad is `_db`-sourced), so this matters for
+  the gereserveerd/in_bestelling validation, not for any visual.
 - **`gereserveerd` and `in_bestelling`** are a dbt-side bundle. They gate cover, stock
   status, sell-out date, effective stock and open inkoopwaarde — the entire right-hand
   column of the Voorraad scope table. Neither mart supplies them validated. See
