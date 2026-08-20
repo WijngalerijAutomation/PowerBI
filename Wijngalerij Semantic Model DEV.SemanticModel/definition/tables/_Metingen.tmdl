@@ -1565,6 +1565,134 @@ table _Metingen
 		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
 		lineageTag: 36865898-d7bd-42a7-a840-5f1c5651d967
 
+	/// Subregel voor de kopregel van het Inkoop-rapport.
+	measure 'Inkoop kopregel sub' = "Bestellen en inkoop · peildatum " & FORMAT([Peildatum], "d MMM yyyy", "nl-NL")
+		lineageTag: bd1d9e6b-aa15-46b4-8e26-60ecf90822ee
+
+	measure 'Open orders sub' =
+			VAR N = COUNTROWS(fct_inkoop_open)
+			RETURN IF(NOT ISBLANK(N), FORMAT(N, "#,##0", "nl-NL") & " open inkooporders")
+		lineageTag: d26f4ce1-9fbf-4537-89cc-5b381e0c79ec
+
+	measure 'Flessen in bestelling label' = FORMAT(COALESCE(SUM(fct_voorraad[in_bestelling]), 0), "#,##0", "nl-NL")
+		lineageTag: 7fa71795-cc43-41d9-98ee-8ed25d420295
+
+	measure 'Leveranciers in bestelling sub' =
+			VAR N = DISTINCTCOUNT(fct_inkoop_open[leverancier])
+			RETURN IF(NOT ISBLANK(N), "bij " & FORMAT(N, "#,##0", "nl-NL") & " leveranciers")
+		lineageTag: 62d1f4e9-9bca-490e-9ee2-9c718473105a
+
+	/// Open inkooporders met een leverdatum voor de peildatum. VAR eerst: een filterpredicaat mag geen meting aanroepen.
+	measure 'Inkoop te laat n' =
+			VAR P = [Peildatum]
+			RETURN COUNTROWS(FILTER(fct_inkoop_open,
+			    NOT ISBLANK(fct_inkoop_open[leverdatum]) && fct_inkoop_open[leverdatum] < P))
+		formatString: #,0
+		lineageTag: 0ca75dc2-93fc-4890-924e-148567a18f50
+
+	measure 'Inkoop te laat waarde' =
+			VAR P = [Peildatum]
+			RETURN SUMX(FILTER(fct_inkoop_open,
+			    NOT ISBLANK(fct_inkoop_open[leverdatum]) && fct_inkoop_open[leverdatum] < P),
+			    fct_inkoop_open[open_waarde])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 1cf29e70-0b66-4d12-b8e9-9b57a32c744b
+
+	measure 'Inkoop te laat label' =
+			VAR N = [Inkoop te laat n]
+			RETURN IF(NOT ISBLANK(N), IF(N = 0, "geen", FORMAT(N, "#,##0", "nl-NL") & " orders"))
+		lineageTag: 9ad72a8b-2a77-4d57-a038-7532fe5a3de8
+
+	/// De urgentie zit in de tekst, niet in kaartkleur: conditionele opmaak werkt niet op cardVisual (gedocumenteerde val) en er is geen hex-kolom voor dit cijfer.
+	measure 'Inkoop te laat sub' =
+			IF(COALESCE([Inkoop te laat n], 0) = 0, "alles op schema",
+			    "€ " & FORMAT([Inkoop te laat waarde], "#,##0", "nl-NL") & " onderweg te laat")
+		lineageTag: d41a3dd6-4831-450e-9b80-f2be8061eeb4
+
+	/// Wijnen onder de kritische drempel MÉT vraag en MÉT leverancier. Zelfde afbakening als de bestellijst-tabel - definities moeten aan beide kanten gelijk zijn. is_collectiepost en de leverancier-eis sluiten dienstregels uit (Relatiekorting, Wijnabonnement, Wijnproeverij) die wel door is_wijn glippen maar niet besteld kunnen worden.
+	measure 'Bestellen nu n' =
+			COUNTROWS(FILTER(fct_voorraad,
+			    fct_voorraad[is_wijn] = 1
+			    && NOT fct_voorraad[is_collectiepost]
+			    && fct_voorraad[leverancier] <> ""
+			    && fct_voorraad[voorraadstatus] = "Onder kritisch"
+			    && fct_voorraad[flessen_12w] > 0))
+		formatString: #,0
+		lineageTag: 6fb6ba04-d2dc-497e-8692-03e9323e133d
+
+	measure 'Bestellen nu label' = FORMAT(COALESCE([Bestellen nu n], 0), "#,##0", "nl-NL") & " wijnen"
+		lineageTag: af3b76e6-6577-4473-8b1f-78047f1f35ea
+
+	measure 'Bestellen nu sub' =
+			VAR V = SUMX(FILTER(fct_voorraad,
+			    fct_voorraad[is_wijn] = 1
+			    && NOT fct_voorraad[is_collectiepost]
+			    && fct_voorraad[leverancier] <> ""
+			    && fct_voorraad[voorraadstatus] = "Onder kritisch"
+			    && fct_voorraad[flessen_12w] > 0),
+			    fct_voorraad[gem_per_week_12w])
+			RETURN IF(NOT ISBLANK(V), "samen " & FORMAT(V, "#,##0", "nl-NL") & " flessen/week vraag")
+		lineageTag: 95da4659-0ec7-4123-b6df-732d2ca14e7a
+
+	/// Niet-leverbare, bestelbare wijnen MÉT vraag - hier wordt nu omzet gemist. Zelfde afbakening als de bestellijst-tabel. Het vraagfilter houdt de ~141 bewust niet herbestelde jaargangen buiten het cijfer; de collectiepost/leverancier-eis houdt dienstregels als Relatiekorting en Wijnproeverij eruit.
+	measure 'Uitverkocht met vraag n' =
+			COUNTROWS(FILTER(fct_voorraad,
+			    fct_voorraad[is_wijn] = 1
+			    && NOT fct_voorraad[is_collectiepost]
+			    && fct_voorraad[leverancier] <> ""
+			    && fct_voorraad[voorraadstatus] = "Niet leverbaar"
+			    && fct_voorraad[flessen_12w] > 0))
+		formatString: #,0
+		lineageTag: e52e2964-4726-439c-b1ee-66614f6e30de
+
+	measure 'Uitverkocht met vraag label' = FORMAT(COALESCE([Uitverkocht met vraag n], 0), "#,##0", "nl-NL") & " wijnen"
+		lineageTag: 0307fbbd-37a7-4811-9f16-c2a69ad79791
+
+	measure 'Bestellijst status' = IF(NOT ISBLANK(SELECTEDVALUE(fct_voorraad[product_label])), MAX(fct_voorraad[voorraadstatus]))
+		lineageTag: 40c6cabc-61dc-4879-893c-968c1487828b
+
+	/// 1 = rood (Niet leverbaar / Onder kritisch) voor de conditionele tekstkleur in de bestellijst. Let op blijft inkt-kleurig: het palet heeft geen oranje en de statustekst zegt het al.
+	measure 'Bestellijst statuscode' =
+			SWITCH(MAX(fct_voorraad[voorraadstatus]),
+			    "Niet leverbaar", 1,
+			    "Onder kritisch", 1,
+			    0)
+		formatString: 0
+		isHidden
+		lineageTag: f56fb70a-36f0-4b8c-a0a1-aafd8330d049
+
+	measure 'Effectief tabel' = SUM(fct_voorraad[effectieve_voorraad])
+		formatString: #,0
+		lineageTag: ee8dbeb8-2dc6-4fd3-8ade-75e8063ae729
+
+	measure 'Bestellijst vraag per week' = SUM(fct_voorraad[gem_per_week_12w])
+		formatString: 0.0
+		lineageTag: c57c3827-5056-48c4-bf95-0da2093ca976
+
+	/// Dekking in weken als tekst voor de bestellijst; — waar de dekking ongedefinieerd is.
+	measure 'Dekking tabel' =
+			VAR D = MAX(fct_voorraad[dekking_weken])
+			RETURN IF(NOT ISBLANK(SELECTEDVALUE(fct_voorraad[product_label])),
+			    IF(ISBLANK(D), "—", FORMAT(D, "0.0", "nl-NL")))
+		lineageTag: 15dc9323-f890-41a3-9582-b82fb580a406
+
+	/// Levertijd van de leverancier; ~ markeert de 21-dagen standaardaanname (geen echte Leverdagen-waarde in de ERP).
+	measure 'Levertijd tabel' =
+			VAR L = MAX(fct_voorraad[lead_time_days])
+			VAR Def = SELECTEDVALUE(fct_voorraad[lead_time_is_default])
+			RETURN IF(NOT ISBLANK(SELECTEDVALUE(fct_voorraad[product_label])) && NOT ISBLANK(L),
+			    IF(Def = TRUE(), "~", "") & FORMAT(L, "0") & " dgn")
+		lineageTag: ca1c0219-77b4-44fe-8314-70573a73c14e
+
+	/// Sorteert de bestellijst op urgentie: dekking oplopend, ongedefinieerde dekking (-1) bovenaan.
+	measure 'Bestellijst sortering' = COALESCE(MAX(fct_voorraad[dekking_weken]), -1)
+		formatString: 0.0
+		isHidden
+		lineageTag: 7d1b692c-41df-4c0a-a156-f1d5c93e1859
+
+	measure 'Bestellijst leverancier' = IF(NOT ISBLANK(SELECTEDVALUE(fct_voorraad[product_label])), MAX(fct_voorraad[leverancier]))
+		lineageTag: 8a53a225-5f0c-4367-ac28-958d7650d0e5
+
 	column _
 		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
 		isNameInferred

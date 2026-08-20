@@ -560,6 +560,132 @@ cultureInfo en-US
 			          }
 			        }
 			      ]
+			    },
+			    "table_metingen.inkoop_besteld_tabel": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Inkoop besteld tabel"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Besteld": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_metingen.inkoop_dagen_open": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Inkoop dagen open"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Dagen open": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_metingen.inkoop_levering_tabel": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Inkoop levering tabel"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Levering": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_metingen.inkoop_flessen_tabel": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Inkoop flessen tabel"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Flessen": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "table_metingen.inkoop_waarde_tabel": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "_Metingen",
+			          "ConceptualProperty": "Inkoop waarde tabel"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Waarde": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fct_inkoop_open.inkoop_label": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fct_inkoop_open",
+			          "ConceptualProperty": "inkoop_label"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Inkooporder": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
 			    }
 			  }
 			}
