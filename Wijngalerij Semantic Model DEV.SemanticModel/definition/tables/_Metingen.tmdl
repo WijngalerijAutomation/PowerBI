@@ -1293,6 +1293,221 @@ table _Metingen
 		formatString: #,0
 		lineageTag: ec44bac4-0812-438d-bfba-1cd8cd416d45
 
+	/// Verkochte flessen per jaar (52 weken) gedeeld door flessen op voorraad - een werkkapitaalmetriek op FYSIEKE voorraad. Bewust niet 'dekking': operationele dekking vraagt effectieve voorraad (gereserveerd, in_bestelling) en die bestaat nog niet gevalideerd; [Dekking weken] blijft daarom verborgen. Voor 'hoe lang zit kapitaal in voorraad' is fysieke voorraad de juiste basis.
+	measure Omloopsnelheid = DIVIDE(SUM(fct_voorraad[flessen_52w]), [Voorraad flessen])
+		formatString: 0.0
+		lineageTag: 128131e9-da0c-42f7-a723-0190fad1d126
+
+	/// Dagen voorraad on hand: 365 gedeeld door de omloopsnelheid. Zelfde werkkapitaal-framing en zelfde caveat als [Omloopsnelheid].
+	measure 'Dagen voorraad' = DIVIDE(365, [Omloopsnelheid])
+		formatString: 0
+		lineageTag: 42c3e810-e9e8-4774-88f0-76615cb48e0f
+
+	measure 'Dagen voorraad label' =
+			VAR D = [Dagen voorraad]
+			RETURN IF(NOT ISBLANK(D), FORMAT(D, "#,##0", "nl-NL") & " dagen")
+		lineageTag: 2c1abf0b-a127-4dfc-80b4-4db769fba47b
+
+	measure 'Omloopsnelheid sub' =
+			VAR O = [Omloopsnelheid]
+			RETURN IF(NOT ISBLANK(O), "omloopsnelheid " & FORMAT(O, "0.0", "nl-NL") & "× per jaar")
+		lineageTag: 1a971ec6-f41d-4061-959c-35ba3bf5d8fb
+
+	/// Wijnen met fysieke voorraad. is_wijn = 1 sluit de dienstregels (Statiegeld, Vrachtkosten, ...) en de lege unknown-member rij uit.
+	measure 'Wijnen op voorraad' = COUNTROWS(FILTER(fct_voorraad, fct_voorraad[voorraad] > 0 && fct_voorraad[is_wijn] = 1))
+		formatString: #,0
+		lineageTag: bb465d83-53d1-480b-8130-c622ee34f4ef
+
+	measure 'Voorraadwaarde kaart sub' =
+			VAR N = [Wijnen op voorraad]
+			RETURN IF(NOT ISBLANK(N), FORMAT(N, "#,##0", "nl-NL") & " wijnen op voorraad")
+		lineageTag: 406063a3-0512-4a45-b051-e3deec18613c
+
+	measure 'Waarde per fles sub' =
+			VAR W = DIVIDE([Totale voorraadwaarde], [Voorraad flessen])
+			RETURN IF(NOT ISBLANK(W), "€ " & FORMAT(W, "0.00", "nl-NL") & " gem. inkoopwaarde per fles")
+		lineageTag: 839d9443-9dbe-453b-b0b7-38d69a31031a
+
+	/// Subregel voor de kopregel van het Voorraad-rapport. Noemt de historiegrens expliciet: het mutatieboek heeft geen beginvoorraad, dus voor feb 2025 bestaat er geen betrouwbare voorraadstand.
+	measure 'Voorraad kopregel sub' = "Werkkapitaal in voorraad · peildatum " & FORMAT([Peildatum], "d MMM yyyy", "nl-NL") & " · voorraadhistorie vanaf feb 2025"
+		lineageTag: 8b52419a-a9b3-4dff-a50e-0060b4a6b694
+
+	/// Voorraadwaarde van wijnen die 6+ maanden niet verkocht zijn en nog voorraad hebben. COALESCE 999: nooit-verkochte wijnen tellen mee als oneindig oud, dezelfde conventie als is_slow_mover in de mart. Geen CALCULATE nodig - SUMX over FILTER respecteert de context zonder transitie.
+	measure 'Trage voorraad 6m' =
+			SUMX(
+			    FILTER(fct_voorraad,
+			        fct_voorraad[voorraad] > 0
+			        && fct_voorraad[is_wijn] = 1
+			        && COALESCE(fct_voorraad[maanden_sinds_laatste_verkoop], 999) >= 6),
+			    fct_voorraad[voorraadwaarde])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 9bd3c524-2f1c-4922-8ccf-0212af05e62a
+
+	measure 'Trage voorraad 9m' =
+			SUMX(
+			    FILTER(fct_voorraad,
+			        fct_voorraad[voorraad] > 0
+			        && fct_voorraad[is_wijn] = 1
+			        && COALESCE(fct_voorraad[maanden_sinds_laatste_verkoop], 999) >= 9),
+			    fct_voorraad[voorraadwaarde])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: cb190140-5ee0-4f07-8b97-1916e5cb2746
+
+	/// Dead stock: voorraadwaarde van wijnen die 12+ maanden niet verkocht zijn, inclusief 32 nooit-verkochte wijnen met voorraad (COALESCE 999).
+	measure 'Dead stock 12m' =
+			SUMX(
+			    FILTER(fct_voorraad,
+			        fct_voorraad[voorraad] > 0
+			        && fct_voorraad[is_wijn] = 1
+			        && COALESCE(fct_voorraad[maanden_sinds_laatste_verkoop], 999) >= 12),
+			    fct_voorraad[voorraadwaarde])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: bf6f9c64-8d69-4296-a99c-4b29e2e752c6
+
+	measure 'Trage voorraad 6m label' = "€ " & FORMAT(COALESCE([Trage voorraad 6m], 0), "#,##0", "nl-NL")
+		lineageTag: dd81dd30-a458-490b-b583-508d46630a7c
+
+	measure 'Trage voorraad 9m label' = "€ " & FORMAT(COALESCE([Trage voorraad 9m], 0), "#,##0", "nl-NL")
+		lineageTag: 05b38706-d90d-49ce-9a5d-6423c7cda226
+
+	measure 'Dead stock 12m label' = "€ " & FORMAT(COALESCE([Dead stock 12m], 0), "#,##0", "nl-NL")
+		lineageTag: d422a3d6-744e-472c-aa7e-94ba0905efa3
+
+	measure 'Trage voorraad 6m sub' =
+			VAR N = COUNTROWS(FILTER(fct_voorraad, fct_voorraad[voorraad] > 0 && fct_voorraad[is_wijn] = 1 && COALESCE(fct_voorraad[maanden_sinds_laatste_verkoop], 999) >= 6))
+			VAR P = DIVIDE([Trage voorraad 6m], [Totale voorraadwaarde])
+			RETURN IF(NOT ISBLANK(N), FORMAT(N, "#,##0", "nl-NL") & " wijnen · " & FORMAT(P, "0.0%", "nl-NL") & " van de voorraadwaarde")
+		lineageTag: f255ac27-8f26-4eed-a8f0-1ba2dc6c2daf
+
+	measure 'Trage voorraad 9m sub' =
+			VAR N = COUNTROWS(FILTER(fct_voorraad, fct_voorraad[voorraad] > 0 && fct_voorraad[is_wijn] = 1 && COALESCE(fct_voorraad[maanden_sinds_laatste_verkoop], 999) >= 9))
+			VAR P = DIVIDE([Trage voorraad 9m], [Totale voorraadwaarde])
+			RETURN IF(NOT ISBLANK(N), FORMAT(N, "#,##0", "nl-NL") & " wijnen · " & FORMAT(P, "0.0%", "nl-NL") & " van de voorraadwaarde")
+		lineageTag: 9b872dd0-1a5b-4189-a137-c3a8f23a5e5b
+
+	measure 'Dead stock 12m sub' =
+			VAR N = COUNTROWS(FILTER(fct_voorraad, fct_voorraad[voorraad] > 0 && fct_voorraad[is_wijn] = 1 && COALESCE(fct_voorraad[maanden_sinds_laatste_verkoop], 999) >= 12))
+			VAR P = DIVIDE([Dead stock 12m], [Totale voorraadwaarde])
+			RETURN IF(NOT ISBLANK(N), FORMAT(N, "#,##0", "nl-NL") & " wijnen · " & FORMAT(P, "0.0%", "nl-NL") & " van de voorraadwaarde")
+		lineageTag: 54ef7986-79b7-4030-938c-23da8ba89b76
+
+	/// 1 als de wijn op enig maandeinde in de laatste 12 maanden een cumulatieve stand van 0 of lager had EN in dezelfde periode ook voorraad had. MAANDEINDE-grein: een uitverkocht-moment midden in een maand dat voor maandeinde is aangevuld, telt niet. De tweede voorwaarde (MaxStand > 0) sluit de 3-32 permanent-negatieve ruisproducten uit - die waren niet uitverkocht, hun beginvoorraad is nooit geboekt. MINX/MAXX negeren BLANK-maanden, dus een wijn die pas kort bestaat telt alleen mee over zijn eigen maanden. REMOVEFILTERS() zonder argument: een datumfilter bereikt fct_voorraad via de bidirectionele paden en zou de opzoeking anders stil filteren.
+	measure 'Uitverkocht 12m vlag' =
+			VAR Pid = SELECTEDVALUE(fct_voorraad[product_id])
+			VAR Peil = [Peildatum]
+			VAR MinStand =
+			    MINX(GENERATESERIES(0, 11),
+			        VAR Grens = EOMONTH(Peil, -[Value])
+			        RETURN CALCULATE(SUM(fct_voorraad_mutaties[aantal]), REMOVEFILTERS(),
+			            fct_voorraad_mutaties[product_id] = Pid,
+			            fct_voorraad_mutaties[datum] <= Grens))
+			VAR MaxStand =
+			    MAXX(GENERATESERIES(0, 11),
+			        VAR Grens = EOMONTH(Peil, -[Value])
+			        RETURN CALCULATE(SUM(fct_voorraad_mutaties[aantal]), REMOVEFILTERS(),
+			            fct_voorraad_mutaties[product_id] = Pid,
+			            fct_voorraad_mutaties[datum] <= Grens))
+			RETURN IF(NOT ISBLANK(Pid) && COALESCE(MinStand, 1) <= 0 && COALESCE(MaxStand, 0) > 0, 1, 0)
+		formatString: 0
+		isHidden
+		lineageTag: 22b7dbbd-8b98-418a-bce1-f8f7f297d703
+
+	/// Aantal wijnen dat in de laatste 12 maanden uitverkocht is geweest, op maandeinde-basis. Respecteert de paginafilter is_wijn = 1 via VALUES.
+	measure 'Producten uitverkocht 12m' = SUMX(VALUES(fct_voorraad[product_id]), [Uitverkocht 12m vlag])
+		formatString: #,0
+		lineageTag: 9aa79774-a002-4e0b-9cb5-a9fd492e995c
+
+	measure 'Uitverkocht 12m label' =
+			VAR N = [Producten uitverkocht 12m]
+			RETURN IF(NOT ISBLANK(N), FORMAT(N, "#,##0", "nl-NL") & " wijnen")
+		lineageTag: 8b0249db-41eb-4a29-90ee-2ed754d711d9
+
+	measure 'Uitverkocht 12m sub' =
+			VAR Terug = SUMX(VALUES(fct_voorraad[product_id]),
+			    IF([Uitverkocht 12m vlag] = 1 && CALCULATE(SUM(fct_voorraad[voorraad])) > 0, 1))
+			RETURN IF(NOT ISBLANK(Terug), "waarvan " & FORMAT(Terug, "#,##0", "nl-NL") & " nu weer op voorraad")
+		lineageTag: 50a93687-322e-41b7-9074-ce0dd8a2a982
+
+	/// Statuskolom voor de uitverkocht-tabel. Alleen zinvol per wijnregel, vandaar de SELECTEDVALUE-guard.
+	measure 'Uitverkocht status tabel' =
+			IF(NOT ISBLANK(SELECTEDVALUE(fct_voorraad[product_id])),
+			    IF(COALESCE(SUM(fct_voorraad[voorraad]), 0) > 0, "weer op voorraad", "nog uitverkocht"))
+		lineageTag: 6993b43b-f698-48a2-a962-e05d07c031d1
+
+	/// Rangschikt over product_label, de kolom waarop de voorraadtabellen groeperen - een RANKX over een andere kolom levert rang 1 voor elke rij. ALLSELECTED zodat de rang binnen het bucketfilter van de tabel telt.
+	measure Voorraadrang = RANKX(ALLSELECTED(fct_voorraad[product_label]), CALCULATE(SUM(fct_voorraad[voorraadwaarde])), , DESC, DENSE)
+		formatString: 0
+		isHidden
+		lineageTag: e1e0240c-1dbf-4193-967b-f075d5b31e1e
+
+	/// Visual-filter voor de top 20-tabellen. Expliciete ISBLANK-guard: BLANK() <= 20 is waar in DAX.
+	measure 'In top 20 voorraad' = IF(NOT ISBLANK(SELECTEDVALUE(fct_voorraad[product_label])) && [Voorraadrang] <= 20, 1, 0)
+		formatString: 0
+		isHidden
+		lineageTag: dc486dde-b80e-4aab-a049-681478ab15c8
+
+	/// Rangschikt producenten op voorraadwaarde. Sluit de lege wijnhuis uit: producten zonder wijnhuis vormen geen producent. Zelfde patroon als [Wijnhuis rang] (die op omzet rangschikt).
+	measure 'Wijnhuis voorraadrang' =
+			VAR W = SELECTEDVALUE(fct_voorraad[wijnhuis])
+			RETURN IF(NOT ISBLANK(W) && W <> "",
+			    RANKX(FILTER(ALL(fct_voorraad[wijnhuis]), NOT ISBLANK(fct_voorraad[wijnhuis]) && fct_voorraad[wijnhuis] <> ""),
+			        CALCULATE(SUM(fct_voorraad[voorraadwaarde])), , DESC, DENSE))
+		formatString: 0
+		isHidden
+		lineageTag: ff3f970b-84a9-471c-b166-4a7cf76fdb30
+
+	/// Visual-filter voor de producentgrafiek. COALESCE 99: BLANK() <= 15 is waar in DAX en zou de lege producent toelaten.
+	measure 'Wijnhuis in top 15 voorraad' = IF(COALESCE([Wijnhuis voorraadrang], 99) <= 15, 1, 0)
+		formatString: 0
+		isHidden
+		lineageTag: 0e1d77cd-5728-4a08-a94a-87f16813be41
+
+	/// Als [Voorraad op datum], maar beperkt tot echte wijnen via TREATAS op is_wijn = 1. Bestaat zodat de grafiek dezelfde scope heeft als de flessen-KPI: de dienstregels (Statiegeld e.d.) tellen samen -1.810 flessen en zouden grafiek en KPI anders zichtbaar laten verschillen. WijnIds wordt met REMOVEFILTERS() opgehaald - het datumfilter van de visual bereikt fct_voorraad via de bidirectionele paden.
+	measure 'Voorraad op datum wijn' =
+			VAR Grens = DATE(2025, 2, 1)
+			VAR Eind = MAX(dim_date[datum])
+			VAR WijnIds = CALCULATETABLE(VALUES(fct_voorraad[product_id]), REMOVEFILTERS(), fct_voorraad[is_wijn] = 1)
+			RETURN
+			    IF(Eind >= Grens,
+			        CALCULATE(SUM(fct_voorraad_mutaties[aantal]), REMOVEFILTERS(),
+			            TREATAS(WijnIds, fct_voorraad_mutaties[product_id]),
+			            fct_voorraad_mutaties[datum] <= Eind))
+		formatString: #,0
+		lineageTag: 579082a3-9440-49e7-a181-d57354b7b893
+
+	/// Als [Voorraadwaarde op datum], maar alleen echte wijnen (is_wijn = 1). Zelfde BENADERING-caveat: waardeert tegen de HUIDIGE inkoopprijs, historische kostprijs bestaat niet in het model. Eigen body en geen wrapper om de basismeting: contexttransitie in de SUMX zou een TREATAS-scope negeren, dus de wijnselectie moet in de iteratielijst zelf zitten.
+	measure 'Voorraadwaarde op datum wijn' =
+			VAR Grens = DATE(2025, 2, 1)
+			VAR Eind = MAX(dim_date[datum])
+			VAR Producten = CALCULATETABLE(VALUES(fct_voorraad[product_id]), REMOVEFILTERS(), fct_voorraad[is_wijn] = 1)
+			RETURN
+			    IF(Eind >= Grens,
+			        SUMX(Producten,
+			            VAR Pid = fct_voorraad[product_id]
+			            VAR Stuks = CALCULATE(SUM(fct_voorraad_mutaties[aantal]), REMOVEFILTERS(),
+			                fct_voorraad_mutaties[product_id] = Pid,
+			                fct_voorraad_mutaties[datum] <= Eind)
+			            VAR Prijs = CALCULATE(MAX(fct_voorraad[inkoopprijs]), REMOVEFILTERS(),
+			                fct_voorraad[product_id] = Pid)
+			            RETURN IF(Stuks > 0, Stuks * Prijs)))
+		formatString: #,0
+		lineageTag: 834af917-b6bf-4619-bb10-cc824b407154
+
+	/// Maanden sinds laatste verkoop als leesbare tekst voor de tabellen; nooit-verkochte wijnen tonen 'nooit verkocht' in plaats van leeg.
+	measure 'Mnd geen verkoop tabel' =
+			VAR M = MAX(fct_voorraad[maanden_sinds_laatste_verkoop])
+			RETURN IF(NOT ISBLANK(SELECTEDVALUE(fct_voorraad[product_label])),
+			    IF(ISBLANK(M), "nooit verkocht", FORMAT(M, "0", "nl-NL") & " mnd"))
+		lineageTag: 4c27e9ef-0a3e-4f95-98cc-10b9e3e8dbae
+
+	measure 'Voorraad tabel' = SUM(fct_voorraad[voorraad])
+		formatString: #,0
+		lineageTag: 49e70f96-7711-4fdd-8c7b-b138fc656a72
+
+	measure 'Voorraadwaarde tabel' = SUM(fct_voorraad[voorraadwaarde])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: b7c1634c-ad18-4af2-b866-7a7293027d83
+
 	column _
 		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
 		isNameInferred
