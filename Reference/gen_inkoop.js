@@ -97,6 +97,9 @@ visuals.push(pivot(id(), { x: 24, y: 392, w: 1232, h: 560 }, 24000,
     // valt stil terug op alfabetisch (eerste render bewees het)
     measure('_Metingen', 'Bestellijst sortering', 'Dekking (wk)'),
     measure('_Metingen', 'Levertijd tabel', 'Levertijd'),
+    // waargenomen bestelveelvoud (GCD van de inkoophistorie — uitdrukkelijk
+    // géén moq: dat ERP-veld is leeg); '?' bij < 3 regels bewijs
+    measure('_Metingen', 'Bestellijst veelvoud', 'Veelvoud'),
     measure('_Metingen', 'Bestellijst leverancier', 'Leverancier')
   ],
   bestellijstFilters,
@@ -108,6 +111,7 @@ visuals.push(pivot(id(), { x: 24, y: 392, w: 1232, h: 560 }, 24000,
     { metadata: '_Metingen.Bestellijst vraag per week', w: 75 },
     { metadata: '_Metingen.Bestellijst sortering', w: 85 },
     { metadata: '_Metingen.Levertijd tabel', w: 85 },
+    { metadata: '_Metingen.Bestellijst veelvoud', w: 80 },
     { metadata: '_Metingen.Bestellijst leverancier', w: 200 }
   ],
   // rood voor Niet leverbaar / Onder kritisch (Let op blijft inkt — de tekst zegt het al)

@@ -742,6 +742,22 @@ table fct_voorraad
 		summarizeBy: none
 		sourceColumn: wijnsoort
 
+	/// GCD van alle historische inkoopregel-hoeveelheden per product. Uitdrukkelijk NIET moq: het ERP-veld bestaat maar is nooit ingevuld; dit is waargenomen gedrag, geen contractueel minimum.
+	column waargenomen_bestelveelvoud
+		dataType: int64
+		isHidden
+		lineageTag: 470b34ed-acec-4a0f-870f-35fcbe61ad5d
+		summarizeBy: none
+		sourceColumn: waargenomen_bestelveelvoud
+
+	/// Aantal historische inkoopregels achter waargenomen_bestelveelvoud; < 3 = dun bewijs.
+	column n_inkoopregels
+		dataType: int64
+		isHidden
+		lineageTag: 492ad7cd-1072-4c0e-aea6-76378569be82
+		summarizeBy: none
+		sourceColumn: n_inkoopregels
+
 	partition fct_voorraad = m
 		mode: import
 		source =

@@ -118,6 +118,21 @@
                       "Entity": "_Metingen"
                     }
                   },
+                  "Property": "Bestellijst veelvoud"
+                }
+              },
+              "queryRef": "_Metingen.Bestellijst veelvoud",
+              "nativeQueryRef": "Bestellijst veelvoud",
+              "displayName": "Veelvoud"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Metingen"
+                    }
+                  },
                   "Property": "Bestellijst leverancier"
                 }
               },
@@ -421,6 +436,20 @@
           },
           "selector": {
             "metadata": "_Metingen.Levertijd tabel"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "80D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Metingen.Bestellijst veelvoud"
           }
         },
         {
