@@ -1,9 +1,9 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
-  "name": "70a6e2d94c1b8f35e7d0",
-  "displayName": "Voorraad",
+  "name": "81b7f3c2d5a9e604c1f2",
+  "displayName": "Bestellen",
   "displayOption": "FitToPage",
-  "height": 1700,
+  "height": 1436,
   "width": 1280,
   "objects": {
     "background": [
@@ -34,7 +34,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "FilterVoorraadIsWijn",
+        "name": "FilterInkoopIsWijn",
         "field": {
           "Column": {
             "Expression": {

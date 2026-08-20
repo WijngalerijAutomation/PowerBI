@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "e0454f2a9b8c7d6e5f31",
+  "name": "f0043e1d5c7b9a8f6e42",
   "position": {
-    "x": 24,
-    "y": 1700,
-    "z": 45000,
-    "height": 26,
-    "width": 600,
-    "tabOrder": 45000
+    "x": 993,
+    "y": 56,
+    "z": 4000,
+    "height": 18,
+    "width": 263,
+    "tabOrder": 4000
   },
   "visual": {
     "visualType": "textbox",
@@ -19,12 +19,12 @@
               {
                 "textRuns": [
                   {
-                    "value": "Openstaande inkooporders",
+                    "value": "PEILDATUM",
                     "textStyle": {
                       "fontWeight": "bold",
-                      "fontFamily": "Segoe UI Semibold",
-                      "fontSize": "16px",
-                      "color": "#1B2523"
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "11px",
+                      "color": "#839182"
                     }
                   }
                 ]

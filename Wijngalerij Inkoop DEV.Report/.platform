@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Wijngalerij Inkoop DEV"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "c8f4b1d2-63e2-4a9f-8b17-d4e8f2a69c31"
+  }
+}

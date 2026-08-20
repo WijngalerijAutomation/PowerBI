@@ -1,7 +1,6 @@
 # Power BI project
 
 One semantic model, several thin reports — one report per business stream.
-Inkoop is still planned.
 
 | Open this | Report folder | Pages |
 |---|---|---|
@@ -9,6 +8,7 @@ Inkoop is still planned.
 | `Wijngalerij CEO DEV.pbip` | `Wijngalerij CEO DEV.Report` | CEO dashboard |
 | `Wijngalerij Producten DEV.pbip` | `Wijngalerij Producten DEV.Report` | Producten algemeen · Productdetail (drillthrough) |
 | `Wijngalerij Voorraad DEV.pbip` | `Wijngalerij Voorraad DEV.Report` | Voorraad (werkkapitaal) |
+| `Wijngalerij Inkoop DEV.pbip` | `Wijngalerij Inkoop DEV.Report` | Bestellen (inkoop) |
 
 Model: `Wijngalerij Semantic Model DEV.SemanticModel`. All reports bind to it by
 **relative** path in `definition.pbir` — keep it relative, never absolute.
@@ -199,8 +199,16 @@ layer has not started.
   NB: a table pointing at a **newly created mart** fails its first XMLA refresh with
   "the key didn't match any rows" — Power Query caches the source navigation per
   session; same error text as the grant boundary, different cause. Desktop reopen fixes it.
-- ⬜ Optional next: voorraadstatus visuals (161 niet leverbaar / status tiers exist as a
-  column in `fct_voorraad`).
+- ✅ **Inkoop-rapport gebouwd (2026-08-20)** — `Wijngalerij Inkoop DEV.pbip`, pagina
+  "Bestellen": KPI-rij, bestellijst op voorraadstatus (mét vraagfilter — zonder dat is
+  "Niet leverbaar" alarmistische ruis: 156 vs 11 echte), leverancier-slicer, en de
+  "Openstaande inkooporders"-tabel die van de Voorraad-pagina hierheen verhuisde.
+  Generators delen `Reference/pbir_lib.js`; spec in Analytics
+  `docs/powerbi_inkoop_bestellen.md`. Dienstregels (Relatiekorting, Wijnproeverij)
+  glippen door `is_wijn` heen — bestellijst en KPI's sluiten ze identiek uit via
+  is_collectiepost + niet-lege leverancier.
+- ⬜ Bestelhoeveelheid-advies: wacht op minimum-bestelhoeveelheid per leverancier
+  (bekende gap, default 6) en hoort upstream in dbt — zie de DemandForecasting-POC.
 - ⬜ Ask the ERP developer what the stock page's draft-counting rule is (in_bestelling
   residual: 1.572 flessen on 2026-08-20).
 

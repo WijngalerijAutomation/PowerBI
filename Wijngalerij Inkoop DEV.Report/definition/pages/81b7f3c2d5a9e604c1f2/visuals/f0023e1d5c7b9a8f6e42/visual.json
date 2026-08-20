@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "e0434f2a9b8c7d6e5f31",
+  "name": "f0023e1d5c7b9a8f6e42",
   "position": {
     "x": 24,
-    "y": 1666,
-    "z": 43000,
-    "height": 18,
-    "width": 1200,
-    "tabOrder": 43000
+    "y": 74,
+    "z": 2000,
+    "height": 50,
+    "width": 700,
+    "tabOrder": 2000
   },
   "visual": {
     "visualType": "textbox",
@@ -19,11 +19,12 @@
               {
                 "textRuns": [
                   {
-                    "value": "Uitverkocht op maandeinde-basis · voorraadhistorie vanaf feb 2025 (het mutatieboek heeft geen beginvoorraad) · slow movers volgens laatste verkoopdatum · open inkoopwaarde telt alleen verzonden inkooporders",
+                    "value": "Inkoop & bestellen",
                     "textStyle": {
+                      "fontWeight": "bold",
                       "fontFamily": "Segoe UI",
-                      "fontSize": "10px",
-                      "color": "#839182"
+                      "fontSize": "28pt",
+                      "color": "#1B2523"
                     }
                   }
                 ]
