@@ -1,0 +1,78 @@
+/// Open, verzonden inkooporders - de verouderingslijst achter Open inkoopwaarde. Eén rij per PO. Bewust GEEN relaties: een kleine losstaande lijst, en de bidirectionele paden in dit model hebben al genoeg gekost. Veroudering (dagen open, te laat) rekent DAX uit tegen [Peildatum]. leverdatum kan een niet-onderhouden plandatum zijn en ontbreekt soms: dit is een bellijst, geen vonnis.
+table fct_inkoop_open
+	lineageTag: 33c7b5ac-c16c-434c-9b57-1af6a4513cfb
+
+	column inkoop_id
+		dataType: int64
+		isHidden
+		lineageTag: 9e128553-d876-401c-9aee-dbddd443e656
+		summarizeBy: none
+		sourceColumn: inkoop_id
+
+	column leverancier
+		dataType: string
+		lineageTag: ca89bbdb-9720-47a4-8f71-09b755ae742d
+		summarizeBy: none
+		sourceColumn: leverancier
+
+	column bestelnummer
+		dataType: string
+		isHidden
+		lineageTag: b6720734-3405-4597-a213-52ad7be8003f
+		summarizeBy: none
+		sourceColumn: bestelnummer
+
+	/// Unieke leesbare rijsleutel: leverancier plus bestelnummer, met #inkoop_id als de ERP geen bestelnummer heeft.
+	column inkoop_label
+		dataType: string
+		lineageTag: 8ad61761-b3d3-41ba-a73a-7eb4c4327a77
+		summarizeBy: none
+		sourceColumn: inkoop_label
+
+	column besteldatum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e2983172-be3b-4e58-a8f6-fda07c0fb444
+		summarizeBy: none
+		sourceColumn: besteldatum
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column leverdatum
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4cea284e-09f8-4126-9589-91d9e555891d
+		summarizeBy: none
+		sourceColumn: leverdatum
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column n_regels
+		dataType: int64
+		isHidden
+		lineageTag: c0936cf4-2a67-4c6e-8ef3-83b6139f6c01
+		summarizeBy: none
+		sourceColumn: n_regels
+
+	column flessen_open
+		dataType: double
+		formatString: #,0
+		lineageTag: 0c167ccd-836e-4d5e-bfbc-0d28e89aed67
+		summarizeBy: sum
+		sourceColumn: flessen_open
+
+	column open_waarde
+		dataType: double
+		lineageTag: 7b0b8c91-13a4-4ad9-8ed2-1858b5f24e87
+		summarizeBy: sum
+		sourceColumn: open_waarde
+
+	partition fct_inkoop_open = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("ep-soft-salad-agt3f5p2.c-2.eu-central-1.aws.neon.tech:5432", "neondb"),
+				  #"Navigation 1" = Source{[Schema = "marts", Item = "fct_inkoop_open"]}[Data]
+				in
+				  #"Navigation 1"
+

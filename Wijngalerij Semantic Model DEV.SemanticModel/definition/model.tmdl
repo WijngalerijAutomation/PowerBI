@@ -8,7 +8,7 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["dim_customer","dim_date","dim_product","fct_sales","fct_voorraad","fct_klant","fct_klant_product","fct_voorraad_mutaties"]
+annotation PBI_QueryOrder = ["dim_customer","dim_date","dim_product","fct_sales","fct_voorraad","fct_klant","fct_klant_product","fct_voorraad_mutaties","fct_inkoop_open"]
 
 annotation __LastRPTime = 134309243835127366
 
@@ -27,6 +27,7 @@ ref table 'CEO kleuren'
 ref table 'TopN producten'
 ref table 'Sortering producten'
 ref table fct_voorraad_mutaties
+ref table fct_inkoop_open
 
 ref cultureInfo en-US
 

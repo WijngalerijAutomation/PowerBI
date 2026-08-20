@@ -1522,6 +1522,49 @@ table _Metingen
 			RETURN IF(NOT ISBLANK(F), FORMAT(F, "#,##0", "nl-NL") & " flessen in bestelling")
 		lineageTag: 29987e1d-c0f1-426b-8be2-58866a35ff48
 
+	/// Dagen sinds besteldatum, tegen de peildatum - niet tegen TODAY(). Kolom en sortering van de inkooptabel (oudste bovenaan).
+	measure 'Inkoop dagen open' =
+			VAR B = MAX(fct_inkoop_open[besteldatum])
+			RETURN IF(NOT ISBLANK(B), INT([Peildatum] - B))
+		formatString: 0
+		lineageTag: 1f7df3ca-8727-4614-810a-c8053c09abb8
+
+	/// Besteldatum voor de inkooptabel; dagen open staat in zijn eigen kolom en stuurt de sortering (oudste bovenaan).
+	measure 'Inkoop besteld tabel' =
+			VAR B = MAX(fct_inkoop_open[besteldatum])
+			RETURN IF(NOT ISBLANK(B), FORMAT(B, "d MMM", "nl-NL"))
+		lineageTag: 5983d6d0-e716-4f1d-9c5b-9764c69a8ae6
+
+	/// 1 als de leverdatum voor de peildatum ligt. Stuurt de rode tekstkleur in de inkooptabel via het Statuscode-patroon.
+	measure 'Inkoop te laat code' =
+			VAR L = MAX(fct_inkoop_open[leverdatum])
+			RETURN IF(NOT ISBLANK(L) && INT([Peildatum] - L) > 0, 1, 0)
+		formatString: 0
+		isHidden
+		lineageTag: f90ba1a4-e029-47b5-866d-721ba78511c8
+
+	/// Leverstatus: te laat (rood via [Inkoop te laat code]), vandaag verwacht, geplande datum, of geen leverdatum. Te laat betekent: leverancier bellen óf de ontvangst is nooit geboekt - dit is een bellijst, geen vonnis.
+	measure 'Inkoop levering tabel' =
+			VAR L = MAX(fct_inkoop_open[leverdatum])
+			VAR HeeftRij = NOT ISBLANK(SELECTEDVALUE(fct_inkoop_open[inkoop_label]))
+			RETURN
+			    IF(HeeftRij,
+			        IF(ISBLANK(L), "geen leverdatum",
+			            VAR D = INT([Peildatum] - L)
+			            RETURN SWITCH(TRUE(),
+			                D > 0, FORMAT(D, "0") & " dgn te laat",
+			                D = 0, "vandaag verwacht",
+			                FORMAT(L, "d MMM", "nl-NL"))))
+		lineageTag: 492f6152-30a2-401a-8848-c4f40bca4f30
+
+	measure 'Inkoop flessen tabel' = SUM(fct_inkoop_open[flessen_open])
+		formatString: #,0
+		lineageTag: 09c8f584-03d6-4d55-b42a-89bdac75b062
+
+	measure 'Inkoop waarde tabel' = SUM(fct_inkoop_open[open_waarde])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 36865898-d7bd-42a7-a840-5f1c5651d967
+
 	column _
 		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
 		isNameInferred

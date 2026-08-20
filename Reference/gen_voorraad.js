@@ -344,8 +344,60 @@ visuals.push(pivot(id(), { x: 656, y: 1320, w: 600, h: 330 }, 42000, tableCols()
     fColumn('FilterDeadVoorraad', 'fct_voorraad', 'voorraad', cmp(1, 'voorraad', '0D')),
     fMeasureEq1('FilterDeadTop20', 'In top 20 voorraad')
   ], 'Voorraadwaarde tabel', tableWidths()));
-visuals.push(textbox(id(), { x: 24, y: 1666, w: 1100, h: 18 },
+visuals.push(textbox(id(), { x: 24, y: 2116, w: 1200, h: 18 },
   [run('Uitverkocht op maandeinde-basis · voorraadhistorie vanaf feb 2025 (het mutatieboek heeft geen beginvoorraad) · slow movers volgens laatste verkoopdatum · open inkoopwaarde telt alleen verzonden inkooporders', caveatStyle)], 43000));
+
+// -- rij 4: openstaande inkooporders (toegevoegd 2026-08-20, ids 44-46 —
+//    NA de caveat gepusht zodat de gepinde ids 1-43 niet verschuiven;
+//    layout is y-gestuurd, de duwvolgorde doet er niet toe) --
+visuals.push(hairline(id(), { x: 24, y: 1680, w: 1232 }, 44000));
+visuals.push(textbox(id(), { x: 24, y: 1700, w: 600, h: 26 }, [run('Openstaande inkooporders', sectionStyle)], 45000));
+const inkoopMeasure = (prop, dn) => measure('_Metingen', prop, dn);
+visuals.push({
+  $schema: SCHEMA_VC, name: id(),
+  position: { x: 24, y: 1734, z: 46000, height: 350, width: 1232, tabOrder: 46000 },
+  visual: {
+    visualType: 'pivotTable',
+    query: {
+      queryState: {
+        Rows: { projections: [column('fct_inkoop_open', 'inkoop_label', { active: true, displayName: 'Inkooporder' })] },
+        Values: { projections: [
+          inkoopMeasure('Inkoop besteld tabel', 'Besteld'),
+          inkoopMeasure('Inkoop dagen open', 'Dagen open'),
+          inkoopMeasure('Inkoop levering tabel', 'Levering'),
+          inkoopMeasure('Inkoop flessen tabel', 'Flessen'),
+          inkoopMeasure('Inkoop waarde tabel', 'Waarde')
+        ] }
+      },
+      sortDefinition: {
+        sort: [{ field: { Measure: { Expression: { SourceRef: { Entity: '_Metingen' } }, Property: 'Inkoop dagen open' } }, direction: 'Descending' }],
+        isDefaultSort: true
+      }
+    },
+    objects: {
+      columnHeaders: [{ properties: {
+        autoSizeColumnWidth: lit('true'), columnAdjustment: lit("'growToFit'"),
+        fontColor: col(SEC), backColor: col('#FFFFFF'), defaultColumnWidth: lit('90D') } }],
+      values: [
+        { properties: { fontColor: col(INK), backColorPrimary: col('#FFFFFF'), backColorSecondary: col('#FFFFFF') } },
+        // te-late leveringen in signaalrood — huispatroon (Statuscode-conditional)
+        { properties: { fontColor: { solid: { color: { expr: { Conditional: { Cases: [
+            { Condition: { Comparison: { ComparisonKind: 0,
+                Left: { Measure: { Expression: { SourceRef: { Entity: '_Metingen' } }, Property: 'Inkoop te laat code' } },
+                Right: { Literal: { Value: '1D' } } } },
+              Value: { Literal: { Value: "'#CC3B2F'" } } }
+          ], DefaultValue: { Literal: { Value: "'#1B2523'" } } } } } } } },
+          selector: { data: [{ dataViewWildcard: { matchingOption: 1 } }], metadata: '_Metingen.Inkoop levering tabel' } }
+      ],
+      grid: [{ properties: { gridVertical: lit('false'), gridHorizontalColor: col(HAIR) } }],
+      subTotals: [{ properties: { rowSubtotals: lit('false'), columnSubtotals: lit('false') } }]
+    },
+    visualContainerObjects: {
+      stylePreset: [{ properties: { name: lit("'None'") } }],
+      ...vcoPlain()
+    }
+  }
+});
 
 // ---------- pagina ----------
 const page = {
@@ -353,7 +405,7 @@ const page = {
   name: PAGE_ID,
   displayName: 'Voorraad',
   displayOption: 'FitToPage',
-  height: 1700,
+  height: 2152,
   width: 1280,
   objects: {
     background: [{ properties: { color: col('#FFFFFF'), transparency: lit('0D') } }]
