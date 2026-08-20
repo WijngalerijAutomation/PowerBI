@@ -228,13 +228,24 @@ layer has not started.
   als streepje via formatString `0.0;"—";0.0`. Bedrijfstotaal 4.444/wk
   winsorised vs 4.795/wk kaal. `gem_per_week_12w`/`_52w` blijven bewust
   gepubliceerd als óngecorrigeerde vergelijking.
-- ⬜ **Backtest-vervolg (stap 2 van het vraag-plan):** `fct_demand_panel`
-  uitbreiden met `wijnsoort` en `beschikbaar` (grootboek-reconstructie,
-  vanaf 2025-02), dan varianten 9/10 (stockout-masked rate; masked ×
-  geshrunkte wijnsoort-index) scoren onder twee evaluaties — alle rijen én
-  alleen-beschikbare-weken, want de targets zelf zijn gecensureerd (de
-  winnaar-bias van −17,4 kan deels artefact zijn). Ship alleen bij winst;
-  dan hoort er forecast-vs-actual-rapportage bij (huisregel).
+- ✅ **Backtest-vervolg gedraaid (2026-08-20, 10 peildatums, prod).** Het
+  grootboek bestond niet toen de oorspronkelijke acht varianten scoorden;
+  `fct_demand_panel` draagt nu `wijnsoort` en `beschikbaar`, en alles is
+  dubbel geëvalueerd (alle rijen; en alleen volledig-beschikbare
+  targetwindows — 23,8% van het panel stond zonder voorraad!). Uitslag: op
+  de eerlijke evaluatie eindigen masked+wijnsoort-seizoen (250,42),
+  masked_wins (251,57) en de geshipte winsorised rate (251,86) binnen 0,6%
+  van elkaar — een gelijkspel, geen winst, en de helft-splitsing is
+  instabiel. **Conclusie: de geshipte winsorised rate blijft staan; er
+  shipt niets nieuws.** Wel twee echte vondsten: (1) de censurerings-
+  hypothese klopt deels — op de eerlijke evaluatie schuiven de masked-
+  varianten naar voren, op de gecensureerde wint de ongemaskte; (2)
+  seizoenscorrectie is met shrinkage + wijnsoort + masking niet langer
+  rampzalig (250 vs 354/375 unshrunk) — hij kost niets meer, maar levert
+  ook niets op. Alle varianten onder-voorspellen nog (bias −8 tot −17):
+  het niveau/groei-probleem van de 27,9% YoY staat nog open. Resultaten in
+  `predictions.fct_forecast_backtest`; draaien = ephemeral
+  `pip install pandas numpy` op de Fly-machine (bewust niet in het image).
 - ⬜ **Volgende forecasting-stap: seizoensindex per wijnsoort in dbt**, als input voor
   de bestelhoeveelheid — het naamgebaseerde precedent (scripts/backtest_forecast.py)
   bewees dat categorie-seizoen per-wijn-seizoen verslaat en kan nu op grondwaarheid
