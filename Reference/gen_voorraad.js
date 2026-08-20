@@ -214,10 +214,12 @@ kpis.forEach((k, i) => {
   visuals.push(card(id(), { x, y: VY, w: KW, h: 40 }, k.val[0], k.val[1], z + 1000));
   visuals.push(subCard(id(), { x, y: SY, w: KW, h: 20 }, k.sub[0], k.sub[1], z + 2000));
 });
-// gereserveerd blok: open inkoopwaarde heeft nog geen bron (in_bestelling niet gevalideerd)
+// open inkoopwaarde: live sinds 2026-08-20 — afgeleid uit verzonden open
+// inkooporders in de ERP-database (was een gereserveerd blok zonder bron).
+// Zelfde volgordeposities als de oude textboxen, dus dezelfde gepinde ids.
 visuals.push(textbox(id(), { x: kpiX[4], y: EY, w: KW, h: 19 }, [run('Open inkoopwaarde', eyebrowStyle)], 18000));
-visuals.push(textbox(id(), { x: kpiX[4], y: VY, w: KW, h: 40 }, [run('—', { fontWeight: 'bold', fontFamily: 'Segoe UI', fontSize: '20pt', color: EYE })], 19000));
-visuals.push(textbox(id(), { x: kpiX[4], y: SY, w: KW, h: 34 }, [run('geen bron — in_bestelling wacht op validatie', { fontFamily: 'Segoe UI', fontSize: '11px', color: SEC })], 20000));
+visuals.push(card(id(), { x: kpiX[4], y: VY, w: KW, h: 40 }, '_Metingen', 'Open inkoopwaarde label', 19000));
+visuals.push(subCard(id(), { x: kpiX[4], y: SY, w: KW, h: 20 }, '_Metingen', 'Open inkoopwaarde sub', 20000));
 
 // -- scheidingslijn + grafiek --
 visuals.push(hairline(id(), { x: 24, y: 292, w: 1232 }, 21000));
@@ -343,7 +345,7 @@ visuals.push(pivot(id(), { x: 656, y: 1320, w: 600, h: 330 }, 42000, tableCols()
     fMeasureEq1('FilterDeadTop20', 'In top 20 voorraad')
   ], 'Voorraadwaarde tabel', tableWidths()));
 visuals.push(textbox(id(), { x: 24, y: 1666, w: 1100, h: 18 },
-  [run('Uitverkocht op maandeinde-basis · voorraadhistorie vanaf feb 2025 (het mutatieboek heeft geen beginvoorraad) · slow movers volgens laatste verkoopdatum', caveatStyle)], 43000));
+  [run('Uitverkocht op maandeinde-basis · voorraadhistorie vanaf feb 2025 (het mutatieboek heeft geen beginvoorraad) · slow movers volgens laatste verkoopdatum · open inkoopwaarde telt alleen verzonden inkooporders', caveatStyle)], 43000));
 
 // ---------- pagina ----------
 const page = {

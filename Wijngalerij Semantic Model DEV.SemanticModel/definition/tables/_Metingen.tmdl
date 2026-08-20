@@ -1508,6 +1508,20 @@ table _Metingen
 		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
 		lineageTag: b7c1634c-ad18-4af2-b866-7a7293027d83
 
+	/// Openstaande inkoopwaarde: verzonden, open inkooporders tegen de regelprijs uit de ERP. Telt bewust geen concepten - een concept is een voornemen, geen verplichting. Via stg_inkoop_db in het warehouse ook naar besteldatum te verouderen.
+	measure 'Open inkoopwaarde' = SUM(fct_voorraad[open_inkoopwaarde])
+		formatString: "€"\ #,0;-"€"\ #,0;"€"\ #,0
+		lineageTag: 4b7b47cf-b103-4a18-a539-89d710869cd7
+
+	/// Nederlandse weergave van [Open inkoopwaarde]. COALESCE: zonder open orders hoort hier € 0, geen lege kaart.
+	measure 'Open inkoopwaarde label' = "€ " & FORMAT(COALESCE([Open inkoopwaarde], 0), "#,##0", "nl-NL")
+		lineageTag: 9c2daa93-f3ec-4e42-b5fb-2ca71a4cbd64
+
+	measure 'Open inkoopwaarde sub' =
+			VAR F = SUM(fct_voorraad[in_bestelling])
+			RETURN IF(NOT ISBLANK(F), FORMAT(F, "#,##0", "nl-NL") & " flessen in bestelling")
+		lineageTag: 29987e1d-c0f1-426b-8be2-58866a35ff48
+
 	column _
 		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
 		isNameInferred

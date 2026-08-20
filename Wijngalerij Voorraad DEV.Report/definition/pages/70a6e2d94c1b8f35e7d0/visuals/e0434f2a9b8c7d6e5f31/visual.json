@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Uitverkocht op maandeinde-basis · voorraadhistorie vanaf feb 2025 (het mutatieboek heeft geen beginvoorraad) · slow movers volgens laatste verkoopdatum",
+                    "value": "Uitverkocht op maandeinde-basis · voorraadhistorie vanaf feb 2025 (het mutatieboek heeft geen beginvoorraad) · slow movers volgens laatste verkoopdatum · open inkoopwaarde telt alleen verzonden inkooporders",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10px",
