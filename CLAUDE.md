@@ -189,9 +189,12 @@ layer has not started.
   `open_inkoopwaarde`) were defined **explicitly via MCP** — see the refresh-cycle trap
   below for why that path and not Desktop's auto-detect. `Dekking weken` /
   `Dekking label` are visible again, rewritten on effective stock (25,8 weken).
-- ⬜ **Next on the PBI side:** fill the Open inkoopwaarde reserved block on the Voorraad
-  page (€ 41.005 is in `fct_voorraad[open_inkoopwaarde]`), and consider voorraadstatus
-  visuals (161 niet leverbaar / status tiers exist as a column).
+- ✅ **Open inkoopwaarde is live on the Voorraad page (2026-08-20)** — the reserved block
+  became the fifth KPI: € 41.005 · 11.544 flessen in bestelling, with the sent-orders-only
+  rule in the page footer.
+- ⬜ Optional next: voorraadstatus visuals (161 niet leverbaar / status tiers exist as a
+  column in `fct_voorraad`), and aged open inkoopwaarde (per besteldatum via
+  `stg_inkoop_db`, needs a small mart).
 - ⬜ Ask the ERP developer what the stock page's draft-counting rule is (in_bestelling
   residual: 1.572 flessen on 2026-08-20).
 
