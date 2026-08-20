@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
-  "name": "f0283e1d5c7b9a8f6e42",
+  "name": "e0454f2a9b8c7d6e5f31",
   "position": {
     "x": 24,
-    "y": 1400,
-    "z": 28000,
-    "height": 32,
-    "width": 1232,
-    "tabOrder": 28000
+    "y": 1700,
+    "z": 45000,
+    "height": 26,
+    "width": 600,
+    "tabOrder": 45000
   },
   "visual": {
     "visualType": "textbox",
@@ -19,11 +19,12 @@
               {
                 "textRuns": [
                   {
-                    "value": "Bestellijst: alleen wijnen mét vraag in de laatste 12 weken en mét leverancier · te laat is een bellijst, geen vonnis · alleen verzonden inkooporders tellen · levertijd met ~ is de 21-dagen standaardaanname · bestelhoeveelheid-advies volgt zodra de minimum-bestelhoeveelheid per leverancier bekend is",
+                    "value": "Openstaande inkooporders",
                     "textStyle": {
-                      "fontFamily": "Segoe UI",
-                      "fontSize": "10px",
-                      "color": "#839182"
+                      "fontWeight": "bold",
+                      "fontFamily": "Segoe UI Semibold",
+                      "fontSize": "16px",
+                      "color": "#1B2523"
                     }
                   }
                 ]

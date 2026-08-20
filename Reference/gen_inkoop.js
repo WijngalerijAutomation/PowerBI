@@ -92,7 +92,10 @@ visuals.push(pivot(id(), { x: 24, y: 392, w: 1232, h: 560 }, 24000,
     measure('_Metingen', 'Bestellijst status', 'Status'),
     measure('_Metingen', 'Effectief tabel', 'Effectief'),
     measure('_Metingen', 'Bestellijst vraag per week', 'Vraag/wk'),
-    measure('_Metingen', 'Dekking tabel', 'Dekking (wk)'),
+    // de numerieke sorteermeting IS de dekking-kolom: een pivotTable sorteert
+    // alleen op geprojecteerde velden — een niet-geprojecteerde sortDefinition
+    // valt stil terug op alfabetisch (eerste render bewees het)
+    measure('_Metingen', 'Bestellijst sortering', 'Dekking (wk)'),
     measure('_Metingen', 'Levertijd tabel', 'Levertijd'),
     measure('_Metingen', 'Bestellijst leverancier', 'Leverancier')
   ],
@@ -103,7 +106,7 @@ visuals.push(pivot(id(), { x: 24, y: 392, w: 1232, h: 560 }, 24000,
     { metadata: '_Metingen.Bestellijst status', w: 105 },
     { metadata: '_Metingen.Effectief tabel', w: 75 },
     { metadata: '_Metingen.Bestellijst vraag per week', w: 75 },
-    { metadata: '_Metingen.Dekking tabel', w: 85 },
+    { metadata: '_Metingen.Bestellijst sortering', w: 85 },
     { metadata: '_Metingen.Levertijd tabel', w: 85 },
     { metadata: '_Metingen.Bestellijst leverancier', w: 200 }
   ],
@@ -125,7 +128,7 @@ visuals.push(pivot(id(), { x: 24, y: 1034, w: 1232, h: 350 }, 27000,
   null, 'Inkoop dagen open', null,
   [conditionalFontEntry('Inkoop te laat code', [{ code: '1D', color: '#CC3B2F' }], 'Inkoop levering tabel')]));
 
-visuals.push(textbox(id(), { x: 24, y: 1400, w: 1200, h: 18 },
+visuals.push(textbox(id(), { x: 24, y: 1400, w: 1232, h: 32 },
   [run('Bestellijst: alleen wijnen mét vraag in de laatste 12 weken en mét leverancier · te laat is een bellijst, geen vonnis · alleen verzonden inkooporders tellen · levertijd met ~ is de 21-dagen standaardaanname · bestelhoeveelheid-advies volgt zodra de minimum-bestelhoeveelheid per leverancier bekend is', caveatStyle)], 28000));
 
 // ---------- pagina ----------

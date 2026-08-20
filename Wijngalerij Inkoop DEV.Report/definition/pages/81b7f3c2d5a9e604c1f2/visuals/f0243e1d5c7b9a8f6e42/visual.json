@@ -337,11 +337,11 @@
                       "Entity": "_Metingen"
                     }
                   },
-                  "Property": "Dekking tabel"
+                  "Property": "Bestellijst sortering"
                 }
               },
-              "queryRef": "_Metingen.Dekking tabel",
-              "nativeQueryRef": "Dekking tabel",
+              "queryRef": "_Metingen.Bestellijst sortering",
+              "nativeQueryRef": "Bestellijst sortering",
               "displayName": "Dekking (wk)"
             },
             {
@@ -655,7 +655,7 @@
             }
           },
           "selector": {
-            "metadata": "_Metingen.Dekking tabel"
+            "metadata": "_Metingen.Bestellijst sortering"
           }
         },
         {
