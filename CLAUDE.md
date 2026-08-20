@@ -192,9 +192,15 @@ layer has not started.
 - ✅ **Open inkoopwaarde is live on the Voorraad page (2026-08-20)** — the reserved block
   became the fifth KPI: € 41.005 · 11.544 flessen in bestelling, with the sent-orders-only
   rule in the page footer.
+- ✅ **Aged open inkoopwaarde is on the page (2026-08-20)** — fourth section
+  "Openstaande inkooporders": `fct_inkoop_open` (mart + disconnected model table), one
+  row per open sent PO, oldest first, te-laat rows in signal red. At first render 4 of
+  12 POs were past their leverdatum. Aging computes against `[Peildatum]`.
+  NB: a table pointing at a **newly created mart** fails its first XMLA refresh with
+  "the key didn't match any rows" — Power Query caches the source navigation per
+  session; same error text as the grant boundary, different cause. Desktop reopen fixes it.
 - ⬜ Optional next: voorraadstatus visuals (161 niet leverbaar / status tiers exist as a
-  column in `fct_voorraad`), and aged open inkoopwaarde (per besteldatum via
-  `stg_inkoop_db`, needs a small mart).
+  column in `fct_voorraad`).
 - ⬜ Ask the ERP developer what the stock page's draft-counting rule is (in_bestelling
   residual: 1.572 flessen on 2026-08-20).
 
