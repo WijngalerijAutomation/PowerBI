@@ -135,7 +135,7 @@ visuals.push(pivot(id(), { x: 24, y: 1034, w: 1232, h: 350 }, 27000,
   [conditionalFontEntry('Inkoop te laat code', [{ code: '1D', color: '#CC3B2F' }], 'Inkoop levering tabel')]));
 
 visuals.push(textbox(id(), { x: 24, y: 1400, w: 1232, h: 44 },
-  [run('Bestellijst: alleen wijnen mét vraag in de laatste 12 weken en mét leverancier · te laat is een bellijst, geen vonnis · alleen verzonden inkooporders tellen · levertijd met ~ is de 21-dagen standaardaanname · veelvoud = waargenomen uit de inkoophistorie (? = dun bewijs), geen contractueel minimum', caveatStyle)], 28000));
+  [run('Bestellijst: alleen wijnen mét vraag in de laatste 12 weken en mét leverancier · te laat is een bellijst, geen vonnis · alleen verzonden inkooporders tellen · levertijd met ~ is de 21-dagen standaardaanname · veelvoud = waargenomen uit de inkoophistorie (? = dun bewijs), geen contractueel minimum · vraag/wk = 12-weeks gemiddelde zonder uitbijterweek · — = incidenteel, geen prognose', caveatStyle)], 28000));
 
 // ---------- pagina ----------
 const page = pageDef({

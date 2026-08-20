@@ -214,6 +214,27 @@ layer has not started.
   en fct_voorraad. 98% van de verkochte flessen geclassificeerd; het seizoen is
   textbook (rosé ~9× zwaai winter↔zomer, rood het spiegelbeeld) en herhaalt over beide
   jaargangen. Serie-kleuren via scopeId-selectors (wijn-intuïtief) — dat werkt.
+- ✅ **Winsorised vraag/wk is de vraagdefinitie (2026-08-20).**
+  `fct_voorraad_db.vraag_per_week` = de 12-weeks rate met de uitbijterweek
+  gedropt — de winnaar van de walk-forward backtest
+  (`scripts/backtest_forecast.py`: volume-gewogen MAE 275,39 vs 287,28 kaal;
+  seizoenscorrectie verloor met 350+). `dekking_weken` en
+  `verwachte_uitverkoopdatum` rekenen erop; `voorraadstatus` niet (die
+  drempelt effectieve voorraad). `vraag_status` = 'incidenteel' (≤1 order
+  ooit, of 1 klant met ≤4 orders) toont in rapporten een streepje — geen
+  prognose is eerlijker dan een verzonnen getal. PBI: [Vraag per week],
+  [Verwachte vraag 8 weken], [Bestellen nu sub] en [Bestellijst vraag per
+  week] repointed; [Bestellijst sortering] rendert het -1-sorteersentinel
+  als streepje via formatString `0.0;"—";0.0`. Bedrijfstotaal 4.444/wk
+  winsorised vs 4.795/wk kaal. `gem_per_week_12w`/`_52w` blijven bewust
+  gepubliceerd als óngecorrigeerde vergelijking.
+- ⬜ **Backtest-vervolg (stap 2 van het vraag-plan):** `fct_demand_panel`
+  uitbreiden met `wijnsoort` en `beschikbaar` (grootboek-reconstructie,
+  vanaf 2025-02), dan varianten 9/10 (stockout-masked rate; masked ×
+  geshrunkte wijnsoort-index) scoren onder twee evaluaties — alle rijen én
+  alleen-beschikbare-weken, want de targets zelf zijn gecensureerd (de
+  winnaar-bias van −17,4 kan deels artefact zijn). Ship alleen bij winst;
+  dan hoort er forecast-vs-actual-rapportage bij (huisregel).
 - ⬜ **Volgende forecasting-stap: seizoensindex per wijnsoort in dbt**, als input voor
   de bestelhoeveelheid — het naamgebaseerde precedent (scripts/backtest_forecast.py)
   bewees dat categorie-seizoen per-wijn-seizoen verslaat en kan nu op grondwaarheid

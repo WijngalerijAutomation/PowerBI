@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Bestellijst: alleen wijnen mét vraag in de laatste 12 weken en mét leverancier · te laat is een bellijst, geen vonnis · alleen verzonden inkooporders tellen · levertijd met ~ is de 21-dagen standaardaanname · veelvoud = waargenomen uit de inkoophistorie (? = dun bewijs), geen contractueel minimum",
+                    "value": "Bestellijst: alleen wijnen mét vraag in de laatste 12 weken en mét leverancier · te laat is een bellijst, geen vonnis · alleen verzonden inkooporders tellen · levertijd met ~ is de 21-dagen standaardaanname · veelvoud = waargenomen uit de inkoophistorie (? = dun bewijs), geen contractueel minimum · vraag/wk = 12-weeks gemiddelde zonder uitbijterweek · — = incidenteel, geen prognose",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10px",
