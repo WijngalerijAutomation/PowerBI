@@ -274,6 +274,22 @@ layer has not started.
   advies; 5 handmatig nagerekend, exact. NB rule-1-les herbevestigd: de
   save vóór de reload clobberde de rapportbestanden — generator herstelde
   ze één-op-één.
+- ✅ **Het besteladvies is seizoensbewust (2026-08-21).** De Amie
+  Rosé-sanitycheck legde de fout bloot: het advies projecteerde de
+  zomerrate over zijn eigen sep/okt-doelwindow en adviseerde 2.712 flessen
+  bovenop 1.991 voorraad — zeven maanden wintervoorraad. Fix ALLEEN in de
+  beslissingslaag: nieuwe mart `seizoensindex_wijnsoort` (dicht
+  week-genormaliseerd — les: normaliseren op verkóchte product-weken maakt
+  de index vlak, de extensieve marge Ís het seizoen; clip-only — les 2:
+  n/(n+300)-demping halveerde een signaal dat geen ruis is en liet Amie op
+  ~1.000 staan) en `advies_seizoensfactor` = doelwindow-index ÷
+  basiswindow-index, geclipt [0,25; 3]. vraag_per_week/dekking/
+  voorraadstatus blijven óngecorrigeerd (drie backtestrondes). Geverifieerd:
+  Amie → 'voldoende' (factor 0,40–0,42, exact het ritme van de inkoper);
+  rood geboost 1,74–1,89× richting najaar; totaal advies 13.464 → 6.054.
+  NB de leesreplica (ep-soft-salad) kan na een prod-build MINUTEN achterlopen
+  — een XMLA-refresh direct na de build laadt stilletjes de vorige staat;
+  controleer een kanariewaarde vóór je de refresh vertrouwt.
 - ⬜ **Volgende forecasting-stap: seizoensindex per wijnsoort in dbt**, als input voor
   de bestelhoeveelheid — het naamgebaseerde precedent (scripts/backtest_forecast.py)
   bewees dat categorie-seizoen per-wijn-seizoen verslaat en kan nu op grondwaarheid
