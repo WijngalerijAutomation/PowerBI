@@ -19,7 +19,8 @@ table fct_voorraad
 
 		changedProperty = IsHidden
 
-	measure 'Vraag per week' = SUM(fct_voorraad[gem_per_week_12w])
+	/// Winsorised vraag (2026-08-20, was gem_per_week_12w) - consistent met de dekking_weken-kolom in de mart. De ongecorrigeerde rates staan in [Vraag per week 12w]/[52w].
+	measure 'Vraag per week' = SUM(fct_voorraad[vraag_per_week])
 		lineageTag: 0c84e7fa-aa8c-4332-90a6-3a72259e19b7
 
 		changedProperty = IsHidden
@@ -101,7 +102,8 @@ table fct_voorraad
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Verwachte vraag 8 weken' = ROUND([Vraag per week 12w] * 8, 0)
+	/// 8 weken op de winsorised rate (2026-08-20, was de kale 12w-rate).
+	measure 'Verwachte vraag 8 weken' = ROUND([Vraag per week] * 8, 0)
 		lineageTag: 6a1e2fbc-da16-4921-b7bc-271231accb09
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
@@ -802,6 +804,30 @@ table fct_voorraad
 		annotation SummarizationSetBy = Automatic
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	/// Winsorised 12-weeks vraag (flessen/week): de uitbijterweek gedropt volgens de backtest-winnaar (scripts/backtest_forecast.py, volume-gewogen MAE 275,39). Sinds 2026-08-20 de hoofddefinitie van vraag; dekking_weken en verwachte_uitverkoopdatum rekenen hierop. gem_per_week_12w is de ongecorrigeerde rate en wijkt bewust af.
+	column vraag_per_week
+		dataType: double
+		formatString: 0.00
+		lineageTag: e9bbacac-87a2-4956-9907-0bd69513fbd8
+		summarizeBy: sum
+		sourceColumn: vraag_per_week
+
+	/// 'incidenteel' = geen voorspelbaar vraagpatroon (hooguit 1 order ooit, of 1 klant met hooguit 4 orders). Rapporten tonen dan een streepje in plaats van een verzonnen getal.
+	column vraag_status
+		dataType: string
+		isHidden
+		lineageTag: 78a0ac43-ca23-402a-87df-9821347ab7e2
+		summarizeBy: none
+		sourceColumn: vraag_status
+
+	/// True wanneer de topweek uit de rate is gedropt - de 12-weeks vraag werd door een uitbijterweek gedomineerd.
+	column vraag_is_gewinsoriseerd
+		dataType: boolean
+		isHidden
+		lineageTag: 720a3b96-1590-4fb7-93f7-7fff527516ce
+		summarizeBy: none
+		sourceColumn: vraag_is_gewinsoriseerd
 
 	partition fct_voorraad = m
 		mode: import

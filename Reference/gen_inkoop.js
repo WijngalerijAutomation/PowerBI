@@ -82,6 +82,10 @@ visuals.push({
     visualContainerObjects: vcoPlain()
   }
 });
+// contextregel onder de slicer: advies-som vs contractueel leveranciersminimum;
+// de meting geeft BLANK zonder enkele selectie, dus de kaart is dan leeg
+visuals.push(subCard(vid(90), { x: 948, y: 376, w: 308, h: 20 }, '_Metingen', 'Leverancier minimum sub', 23500)); // vast id buiten de reeks: mag de gepinde nummering niet verschuiven
+
 const bestellijstFilters = [
   fIn('FilterBestellijstStatus', 'fct_voorraad', 'voorraadstatus', ['Niet leverbaar', 'Onder kritisch', 'Let op']),
   fColumn('FilterBestellijstVraag', 'fct_voorraad', 'flessen_12w', cmp(1, 'flessen_12w', '0D')),
@@ -102,6 +106,9 @@ visuals.push(pivot(id(), { x: 24, y: 392, w: 1232, h: 560 }, 24000,
     // waargenomen bestelveelvoud (GCD van de inkoophistorie — uitdrukkelijk
     // géén moq: dat ERP-veld is leeg); '?' bij < 3 regels bewijs
     measure('_Metingen', 'Bestellijst veelvoud', 'Veelvoud'),
+    // besteladvies: vraag x (levertijd + 8 wk) x 1,25 - effectief, afgerond
+    // op het veelvoud; '—' = geen prognose, 'niet auto' = ERP-vlag
+    measure('_Metingen', 'Bestellijst advies', 'Advies'),
     measure('_Metingen', 'Bestellijst leverancier', 'Leverancier')
   ],
   bestellijstFilters,
@@ -114,6 +121,7 @@ visuals.push(pivot(id(), { x: 24, y: 392, w: 1232, h: 560 }, 24000,
     { metadata: '_Metingen.Bestellijst sortering', w: 85 },
     { metadata: '_Metingen.Levertijd tabel', w: 85 },
     { metadata: '_Metingen.Bestellijst veelvoud', w: 80 },
+    { metadata: '_Metingen.Bestellijst advies', w: 75 },
     { metadata: '_Metingen.Bestellijst leverancier', w: 200 }
   ],
   // rood voor Niet leverbaar / Onder kritisch (Let op blijft inkt — de tekst zegt het al)
@@ -135,7 +143,7 @@ visuals.push(pivot(id(), { x: 24, y: 1034, w: 1232, h: 350 }, 27000,
   [conditionalFontEntry('Inkoop te laat code', [{ code: '1D', color: '#CC3B2F' }], 'Inkoop levering tabel')]));
 
 visuals.push(textbox(id(), { x: 24, y: 1400, w: 1232, h: 44 },
-  [run('Bestellijst: alleen wijnen mét vraag in de laatste 12 weken en mét leverancier · te laat is een bellijst, geen vonnis · alleen verzonden inkooporders tellen · levertijd met ~ is de 21-dagen standaardaanname · veelvoud = waargenomen uit de inkoophistorie (? = dun bewijs), geen contractueel minimum · vraag/wk = 12-weeks gemiddelde zonder uitbijterweek · — = incidenteel, geen prognose', caveatStyle)], 28000));
+  [run('Bestellijst: alleen wijnen mét vraag in de laatste 12 weken en mét leverancier · te laat is een bellijst, geen vonnis · alleen verzonden inkooporders tellen · levertijd met ~ is de 21-dagen standaardaanname · veelvoud = waargenomen uit de inkoophistorie (? = dun bewijs), geen contractueel minimum · vraag/wk = 12-weeks gemiddelde zonder uitbijterweek · — = incidenteel, geen prognose · advies = vraag × (levertijd + 8 wk) × 1,25, afgerond op het veelvoud · niet auto = ERP sluit automatisch bestellen uit', caveatStyle)], 28000));
 
 // ---------- pagina ----------
 const page = pageDef({

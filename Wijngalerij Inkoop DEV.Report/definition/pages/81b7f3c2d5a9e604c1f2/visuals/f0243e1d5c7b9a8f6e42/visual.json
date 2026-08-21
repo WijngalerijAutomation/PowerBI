@@ -133,6 +133,21 @@
                       "Entity": "_Metingen"
                     }
                   },
+                  "Property": "Bestellijst advies"
+                }
+              },
+              "queryRef": "_Metingen.Bestellijst advies",
+              "nativeQueryRef": "Bestellijst advies",
+              "displayName": "Advies"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Metingen"
+                    }
+                  },
                   "Property": "Bestellijst leverancier"
                 }
               },
@@ -450,6 +465,20 @@
           },
           "selector": {
             "metadata": "_Metingen.Bestellijst veelvoud"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "75D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Metingen.Bestellijst advies"
           }
         },
         {

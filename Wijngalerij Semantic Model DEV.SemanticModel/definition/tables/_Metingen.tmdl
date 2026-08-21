@@ -1623,6 +1623,7 @@ table _Metingen
 	measure 'Bestellen nu label' = FORMAT(COALESCE([Bestellen nu n], 0), "#,##0", "nl-NL") & " wijnen"
 		lineageTag: af3b76e6-6577-4473-8b1f-78047f1f35ea
 
+	/// Zelfde afbakening als de bestellijst; vraag op de winsorised rate (2026-08-20).
 	measure 'Bestellen nu sub' =
 			VAR V = SUMX(FILTER(fct_voorraad,
 			    fct_voorraad[is_wijn] = 1
@@ -1630,7 +1631,7 @@ table _Metingen
 			    && fct_voorraad[leverancier] <> ""
 			    && fct_voorraad[voorraadstatus] = "Onder kritisch"
 			    && fct_voorraad[flessen_12w] > 0),
-			    fct_voorraad[gem_per_week_12w])
+			    fct_voorraad[vraag_per_week])
 			RETURN IF(NOT ISBLANK(V), "samen " & FORMAT(V, "#,##0", "nl-NL") & " flessen/week vraag")
 		lineageTag: 95da4659-0ec7-4123-b6df-732d2ca14e7a
 
@@ -1665,8 +1666,11 @@ table _Metingen
 		formatString: #,0
 		lineageTag: ee8dbeb8-2dc6-4fd3-8ade-75e8063ae729
 
-	measure 'Bestellijst vraag per week' = SUM(fct_voorraad[gem_per_week_12w])
-		formatString: 0.0
+	/// Winsorised vraag/wk voor de bestellijst; een streepje bij vraag_status 'incidenteel' - geen voorspelbaar patroon, dus geen verzonnen getal.
+	measure 'Bestellijst vraag per week' =
+			VAR vs = MAX(fct_voorraad[vraag_status])
+			VAR v = SUM(fct_voorraad[vraag_per_week])
+			RETURN IF(vs = "incidenteel", "—", IF(NOT ISBLANK(v), FORMAT(v, "0.0", "nl-NL")))
 		lineageTag: c57c3827-5056-48c4-bf95-0da2093ca976
 
 	/// Dekking in weken als tekst voor de bestellijst; — waar de dekking ongedefinieerd is.
@@ -1684,9 +1688,9 @@ table _Metingen
 			    IF(Def = TRUE(), "~", "") & FORMAT(L, "0") & " dgn")
 		lineageTag: ca1c0219-77b4-44fe-8314-70573a73c14e
 
-	/// Dekking in weken, numeriek - de urgentiekolom EN de sortering van de bestellijst (oplopend: krapste dekking bovenaan). Zichtbaar geprojecteerd als 'Dekking (wk)': een pivotTable sorteert alleen op geprojecteerde velden, een niet-geprojecteerde sortDefinition valt stil terug op alfabetisch. COALESCE -1 zet een ongedefinieerde dekking bovenaan.
+	/// Dekking in weken, numeriek - de urgentiekolom EN de sortering van de bestellijst (oplopend: krapste dekking bovenaan). Zichtbaar geprojecteerd als 'Dekking (wk)': een pivotTable sorteert alleen op geprojecteerde velden. COALESCE -1 zet een ongedefinieerde dekking bovenaan; de formatString toont negatieven als een streepje, zodat het sorteersentinel (en de zeldzame negatieve dekking bij negatieve effectieve voorraad) niet als getal rendert.
 	measure 'Bestellijst sortering' = COALESCE(MAX(fct_voorraad[dekking_weken]), -1)
-		formatString: 0.0
+		formatString: 0.0;"—";0.0
 		lineageTag: 7d1b692c-41df-4c0a-a156-f1d5c93e1859
 
 	measure 'Bestellijst leverancier' = IF(NOT ISBLANK(SELECTEDVALUE(fct_voorraad[product_label])), MAX(fct_voorraad[leverancier]))
