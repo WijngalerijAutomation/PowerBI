@@ -290,6 +290,18 @@ layer has not started.
   NB de leesreplica (ep-soft-salad) kan na een prod-build MINUTEN achterlopen
   — een XMLA-refresh direct na de build laadt stilletjes de vorige staat;
   controleer een kanariewaarde vóór je de refresh vertrouwt.
+- ⏸ **ENIGE OPENSTAANDE STAP (sessie-einde 2026-08-21, ~09:00):** het
+  PBI-model toont nog de 06:33-staat (advies ZÓNDER seizoensfactor: Amie
+  2.712). Oorzaak vrijwel zeker hot-standby-freeze: Desktops gepoolde
+  Postgres-sessies pinnen een snapshot op de leesreplica en pauzeren de
+  WAL-replay. Herstel: **Inkoop DEV sluiten en heropenen → fct_voorraad
+  verversen (XMLA of Vernieuwen) → kanarie checken: Amie Rosé moet in de
+  bestellijst een LÉGE Advies-cel krijgen ('voldoende'), Zenko Primitivo
+  juist een advies (~360)** → screenshot. Prod main is al correct
+  (factor 0,42) en alles is gecommit/gepusht — dit is puur de
+  Desktop-dataverversing. Rapportbestanden op schijf = generator-output,
+  door Desktop ingelezen bij de laatste reload; opslaan of sluiten zonder
+  opslaan is allebei veilig.
 - ⬜ **Volgende forecasting-stap: seizoensindex per wijnsoort in dbt**, als input voor
   de bestelhoeveelheid — het naamgebaseerde precedent (scripts/backtest_forecast.py)
   bewees dat categorie-seizoen per-wijn-seizoen verslaat en kan nu op grondwaarheid
