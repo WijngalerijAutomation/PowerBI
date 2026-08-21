@@ -262,6 +262,18 @@ layer has not started.
   (nieuwe-listing-detectie), niet in de voorspelling. Er shipt niets; de
   winsorised rate blijft. Factoren gedroegen zich als ontworpen (cold start
   1,00 op stap 1–3; daarna 1,08–1,18; stap 4 tegen de 1,4-clip).
+- ✅ **Besteladvies live in de bestellijst (2026-08-21).** Kolom Advies:
+  `advies_flessen` = vraag × (levertijd + 8 wk) × 1,25 − effectieve voorraad,
+  naar boven afgerond op `advies_veelvoud` (waargenomen veelvoud bij ≥ 3
+  inkoopregels, anders 6). Marge 25% en horizon 8 wk zijn dbt-vars
+  (gebruikersbesluit 2026-08-21; v1-precedent FORWARD_COVERAGE_DAYS).
+  `advies_status` maakt elk niet-getal uitlegbaar (— / niet auto / leeg);
+  `no_auto_inkoop` eindelijk geplumbd (49 producten). Onder de
+  leverancier-slicer verschijnt bij selectie de som-vs-minimum-regel
+  ([Leverancier minimum sub]). Eerste build: 48 wijnen, 13.464 flessen
+  advies; 5 handmatig nagerekend, exact. NB rule-1-les herbevestigd: de
+  save vóór de reload clobberde de rapportbestanden — generator herstelde
+  ze één-op-één.
 - ⬜ **Volgende forecasting-stap: seizoensindex per wijnsoort in dbt**, als input voor
   de bestelhoeveelheid — het naamgebaseerde precedent (scripts/backtest_forecast.py)
   bewees dat categorie-seizoen per-wijn-seizoen verslaat en kan nu op grondwaarheid
