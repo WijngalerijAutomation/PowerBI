@@ -1703,6 +1703,27 @@ table _Metingen
 			RETURN IF(NOT ISBLANK(v), FORMAT(v, "0", "nl-NL") & IF(n < 3, " ?", ""))
 		lineageTag: 8049dac9-5eb1-48e6-b70a-2b24f00ba81e
 
+	/// Besteladvies voor de bestellijst: vraag x (levertijd + 8 wk) x 1,25 minus effectieve voorraad, afgerond op het veelvoud (mart-kolom advies_flessen). Streepje = geen prognose mogelijk; 'niet auto' = ERP sluit automatisch bestellen uit; leeg bij voldoende voorraad.
+	measure 'Bestellijst advies' =
+			VAR st = MAX(fct_voorraad[advies_status])
+			VAR a = SUM(fct_voorraad[advies_flessen])
+			RETURN SWITCH(st,
+			    "advies", FORMAT(a, "#,0", "nl-NL"),
+			    "incidenteel", "—",
+			    "geen vraag", "—",
+			    "niet automatisch", "niet auto",
+			    BLANK())
+		lineageTag: 0594c7f4-bf25-4a0a-9192-8c5caa936003
+
+	/// Contextregel onder de leverancier-slicer: som van het besteladvies bij de geselecteerde leverancier tegen diens contractuele minimum aantal flessen per bestelling. Alleen zichtbaar bij een enkele selectie met bekend minimum.
+	measure 'Leverancier minimum sub' =
+			VAR sel = HASONEVALUE(fct_voorraad[leverancier]) && ISFILTERED(fct_voorraad[leverancier])
+			VAR m = MAX(fct_voorraad[leverancier_min_flessen])
+			VAR a = CALCULATE(SUM(fct_voorraad[advies_flessen]), fct_voorraad[advies_status] = "advies")
+			RETURN IF(sel && NOT ISBLANK(m),
+			    "advies samen " & FORMAT(COALESCE(a, 0), "#,0", "nl-NL") & " flessen · minimum bij deze leverancier " & FORMAT(m, "#,0", "nl-NL") & " flessen")
+		lineageTag: d758c294-8ab0-420c-99cc-34807a38451c
+
 	column _
 		lineageTag: d79b2a64-f07a-4ba9-affb-d93dfbe19461
 		isNameInferred

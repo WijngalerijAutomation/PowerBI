@@ -829,6 +829,39 @@ table fct_voorraad
 		summarizeBy: none
 		sourceColumn: vraag_is_gewinsoriseerd
 
+	/// Besteladvies in flessen: vraag_per_week x (levertijd + 8 wk) x 1,25 minus effectieve voorraad, naar boven afgerond op advies_veelvoud. Alleen gevuld bij advies_status 'advies'. Marge 25% = gebruikersbesluit 2026-08-21 (backtestronde 3).
+	column advies_flessen
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: 49f3504f-33af-4966-a190-e2a20fb9fb9c
+		summarizeBy: sum
+		sourceColumn: advies_flessen
+
+	/// Waarom de adviescel toont wat hij toont: advies / voldoende / geen vraag / incidenteel / niet automatisch (ERP-vlag) / niet bestelbaar.
+	column advies_status
+		dataType: string
+		isHidden
+		lineageTag: c4bdcbae-37a3-4502-94e6-ecd89ed36e46
+		summarizeBy: none
+		sourceColumn: advies_status
+
+	/// Afrondingseenheid van het advies: waargenomen bestelveelvoud bij >= 3 inkoopregels, anders 6.
+	column advies_veelvoud
+		dataType: int64
+		isHidden
+		lineageTag: c824ffaa-d505-4063-96c3-3ca5cdc9ca0b
+		summarizeBy: none
+		sourceColumn: advies_veelvoud
+
+	/// ERP-vlag: dit product niet automatisch (laten) bestellen.
+	column geen_auto_inkoop
+		dataType: boolean
+		isHidden
+		lineageTag: 066fed19-f44c-433a-9a79-9c026c2f00ef
+		summarizeBy: none
+		sourceColumn: geen_auto_inkoop
+
 	partition fct_voorraad = m
 		mode: import
 		source =
